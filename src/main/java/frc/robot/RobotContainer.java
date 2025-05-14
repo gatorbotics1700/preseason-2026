@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+// import frc.robot.commands.AutoDriveCommand;
+// import frc.robot.commands.TeleopDriveCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,11 +24,15 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveTwoMeters;
+import frc.robot.commands.ElevatorCommand;
+// import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -44,9 +50,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private static final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController controller_two = new CommandXboxController(1);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -145,17 +153,31 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                     () -> {
-                      if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+                      if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                         drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d(Math.toRadians(180))));
+                            new Pose2d(
+                                drive.getPose().getTranslation(),
+                                new Rotation2d(Math.toRadians(180))));
                       } else {
                         drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d(Math.toRadians(180))));
-                      } 
-                    }, drive)
+                            new Pose2d(
+                                drive.getPose().getTranslation(),
+                                new Rotation2d(Math.toRadians(180))));
+                      }
+                    },
+                    drive)
                 .ignoringDisable(true));
 
     controller.x().onTrue(new DriveTwoMeters(drive));
+
+    controller_two.a().onTrue(new ElevatorCommand(elevatorSubsystem, 0));
+
+    controller_two.b().onTrue(new ElevatorCommand(elevatorSubsystem, 3));
+
+    controller_two.x().onTrue(new ElevatorCommand(elevatorSubsystem, 20));
+
+    controller_two.y().onTrue(new ElevatorCommand(elevatorSubsystem, -3));
   }
 
   /**
@@ -168,7 +190,19 @@ public class RobotContainer {
       return new PathPlannerAuto("New Auto");
     } catch (Exception ioe) {
       System.out.println("bad io error");
+      return Commands.none();
     }
-    return Commands.none();
+  }
+
+  public void stopElevator() {
+    elevatorSubsystem.stop();
+  }
+
+  public static Command MechStop() {
+    return new InstantCommand(elevatorSubsystem::stop);
+  }
+
+  public static Command getMechStopCommand() {
+    return MechStop();
   }
 }

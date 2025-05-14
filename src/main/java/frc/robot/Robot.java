@@ -22,6 +22,7 @@ import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+// PLEASE NOTE THIS IS NOT THE FIRST LOGGER OPTION VS CODE SUGGESTS IMPORTING
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -35,6 +36,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private Command mechStopCommand;
 
   public Robot() {
     // Record metadata
@@ -101,6 +103,11 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
   }
 
+  @Override
+  public void robotInit() {
+    mechStopCommand = robotContainer.getMechStopCommand();
+  }
+
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
@@ -125,7 +132,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    robotContainer.stopElevator();
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -145,13 +154,14 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
+    // container.setDefaultTeleopCommand();
+
+    // This makes sure that the autonomous stops running when teleop starts
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    mechStopCommand.schedule();
+    // container.stopElevator();
   }
 
   /** This function is called periodically during operator control. */

@@ -34,4 +34,24 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final int KRAKEN_TICKS_PER_REV = 2048;
+
+  // elevator mechanisms
+  public static final int ELEVATOR_CAN_ID = 17;
+  public static final double ELEVATOR_SPROCKET_TEETH = 16; // inches
+  public static final double ELEVATOR_GEAR_RATIO = 27.0;
+  public static final double ELEVATOR_INCHES_PER_SPROCKET_TOOTH = 0.25;
+  public static final double ELEVATOR_TICKS_PER_INCH =
+      KRAKEN_TICKS_PER_REV
+          * ELEVATOR_GEAR_RATIO
+          / ELEVATOR_SPROCKET_TEETH
+          / ELEVATOR_INCHES_PER_SPROCKET_TOOTH;
+  public static final double ELEVATOR_INCHES_PER_TICK = 1 / ELEVATOR_TICKS_PER_INCH;
+  public static final double ELEVATOR_LEVEL_ONE = 0.0;
+  public static final double ELEVATOR_LEVEL_TWO = 13.875;
+  public static final double ELEVATOR_LEVEL_THREE = 29.625;
+  public static final double ELEVATOR_LEVEL_FOUR = 54.0;
+  public static final int TOP_LIMIT_SWITCH_PORT = 5;
+  public static final int BOTTOM_LIMIT_SWITCH_PORT = 1;
 }
