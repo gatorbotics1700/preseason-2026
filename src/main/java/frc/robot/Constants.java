@@ -75,9 +75,22 @@ public class Constants {
     public static final double KRAKEN_TICKS_PER_REV = 2048; //same for falcons
     public static final double NEO_TICKS_PER_REV = 42;
 
+    // elevator mechanisms
+    public static final int ELEVATOR_CAN_ID = 17;
+    public static final double ELEVATOR_SPROCKET_DIAMETER = 1.22; // inches
+    public static final double ELEVATOR_GEAR_RATIO = 27.0;
+    public static final double ELEVATOR_TICKS_PER_INCH = ((KRAKEN_TICKS_PER_REV * ELEVATOR_GEAR_RATIO) / ELEVATOR_SPROCKET_DIAMETER / Math.PI)/2;
+    public static final double ELEVATOR_LEVEL_ONE = 0.0;
+    public static final double ELEVATOR_LEVEL_TWO = 13.875;
+    public static final double ELEVATOR_LEVEL_THREE = 29.625;
+    public static final double ELEVATOR_LEVEL_FOUR = 54.0; 
+    public static final int TOP_LIMIT_SWITCH_PORT = 9;
+    public static final int BOTTOM_LIMIT_SWITCH_PORT = 0;
+
     /* other information
      * degrees to ticks conversion: ticks per rev * gear ratio / 360
      */
     public static final double LOOPTIME_SECONDS = 0.02;
+
 }   
 
