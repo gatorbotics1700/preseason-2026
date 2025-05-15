@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
+// import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -37,9 +37,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         motor = new TalonFX(Constants.ELEVATOR_CAN_ID);
         motor.setNeutralMode(NeutralModeValue.Brake);
         
-        // motor.getConfigurator().apply(new TalonFXConfiguration()
-        //     .withMotorOutput(new MotorOutputConfigs()
-        //         .withInverted(InvertedValue.Clockwise_Positive))); 
+        motor.getConfigurator().apply(new TalonFXConfiguration()
+            .withMotorOutput(new MotorOutputConfigs()
+                .withInverted(InvertedValue.Clockwise_Positive))); 
 
         elevatorPIDController = new PIDController(kP, kI, kD);
 
@@ -54,24 +54,23 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("elevator current", getMotorStatorCurrent());
     }
 
-    public void setPosition(double desiredTicks){
+    public void setPosition(double desiredTicks) {
         double currentTicks = getCurrentTicks(); // in case the motor's positive and negative is reversed due to invert
         System.out.println("CURRENT INCHES: " + currentTicks / Constants.ELEVATOR_TICKS_PER_INCH);
         double error = desiredTicks - currentTicks;
         System.out.println("ERROR: " + error / Constants.ELEVATOR_TICKS_PER_INCH);
-        if(Math.abs(error) > DEADBAND){
+        if(Math.abs(error) > DEADBAND) {
             double output = elevatorPIDController.calculate(currentTicks, desiredTicks);
             System.out.println("ELEVATOR CURRENT PEAKED");
             System.out.println("CALCULATED OUTPUT: " + output);
             motor.setControl(dutyCycleOut.withOutput(output/100));
-            //elevatorMotor.setControl(positionVoltage.withPosition(desiredTicks));
-        }else{
+        } else {
             motor.setControl(dutyCycleOut.withOutput(0));
         }
     }
 
     public void setSpeed(double speed){
-        if(getMotorStatorCurrent()>1000){ // TODO: set current limit value
+        if(getMotorStatorCurrent() > 1000){ // TODO: set current limit value
             System.out.println("ELEVATOR CURRENT PEAKED");
             speed = 0;
         }
