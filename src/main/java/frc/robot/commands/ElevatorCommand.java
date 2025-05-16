@@ -8,23 +8,25 @@ public class ElevatorCommand extends Command {
 
     private ElevatorSubsystem elevatorSubsystem;
     private double speed;
-    private double desiredHeight; // in inches!
+    // private double desiredHeight; // in inches!
     private double desiredTicks;
     private boolean isUsingPos;
 
     private double DEADBAND = 1 * Constants.ELEVATOR_TICKS_PER_INCH; // 1 inch in ticks; TODO: change this value
     
-    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUsingPos, double desiredHeight, double speed){
+    public ElevatorCommand(ElevatorSubsystem elevatorSubsystem, boolean isUsingPos, double desiredTicks/*double desiredHeight*/, double speed){
         this.elevatorSubsystem = elevatorSubsystem;
         this.speed = speed; // only used with joystick, otherwise set to 0
-        this.desiredHeight = desiredHeight;
+        // this.desiredHeight = desiredHeight;
+        this.desiredTicks = desiredTicks;
         this.isUsingPos = isUsingPos;
         addRequirements(elevatorSubsystem);
     }
 
     @Override
     public void initialize(){
-        desiredTicks = elevatorSubsystem.determineInchesToTicks(desiredHeight);
+        //desiredTicks = elevatorSubsystem.determineInchesToTicks(desiredHeight);
+        elevatorSubsystem.setIsUsingPos(isUsingPos);
     }
     
     @Override 
@@ -32,7 +34,7 @@ public class ElevatorCommand extends Command {
         if(!isUsingPos){
             elevatorSubsystem.setSpeed(speed);
         } else {
-            elevatorSubsystem.setPosition(desiredTicks);
+            elevatorSubsystem.setSetPoint(desiredTicks);
         }
         System.out.println("MOTOR CURRENT: " + elevatorSubsystem.getMotorStatorCurrent());
     }
@@ -55,23 +57,23 @@ public class ElevatorCommand extends Command {
             return true;
         }
 
-        if(elevatorSubsystem.atBottomLimitSwitch() || elevatorSubsystem.atTopLimitSwitch()){
-            System.out.println("LIMIT SWITCH TRIGGERED - STOPPING");
+        // if(elevatorSubsystem.atBottomLimitSwitch() || elevatorSubsystem.atTopLimitSwitch()){
+        //     System.out.println("LIMIT SWITCH TRIGGERED - STOPPING");
+        //     elevatorSubsystem.setSpeed(0);
+        //     return true;
+        // }
+
+        if(elevatorSubsystem.atTopLimitSwitch() && desiredTicks > Math.abs(currentTicks)){
+            System.out.println("TOP LIMIT SWITCH TRIGGERED - STOPPING");
             elevatorSubsystem.setSpeed(0);
             return true;
         }
 
-        // if(elevatorSubsystem.atTopLimitSwitch() && desiredTicks > Math.abs(currentTicks)){
-        //     System.out.println("TOP LIMIT SWITCH TRIGGERED - STOPPING");
-        //     elevatorSubsystem.setSpeed(0);
-        //     return true;
-        // }
-
-        // if(elevatorSubsystem.atBottomLimitSwitch() && desiredTicks < Math.abs(currentTicks)){ 
-        //     System.out.println("BOTTOM LIMIT SWITCH TRIGGERED - STOPPING");
-        //     elevatorSubsystem.setSpeed(0);
-        //     return true;
-        // }
+        if(elevatorSubsystem.atBottomLimitSwitch() && desiredTicks < Math.abs(currentTicks)){ 
+            System.out.println("BOTTOM LIMIT SWITCH TRIGGERED - STOPPING");
+            elevatorSubsystem.setSpeed(0);
+            return true;
+        }
 
         double error = desiredTicks - currentTicks; 
         if(Math.abs(error) < DEADBAND){

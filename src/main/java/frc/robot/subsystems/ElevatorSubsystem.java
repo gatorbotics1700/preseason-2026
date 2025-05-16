@@ -25,6 +25,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private final PIDController elevatorPIDController;
 
+    private double setPoint;
+    private boolean isUsingPos;
+
     // TODO: test and change these values
     private static final double kP = 0.0005;
     private static final double kI = 0.0;
@@ -45,6 +48,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         topLimitSwitch = new DigitalInput(Constants.TOP_LIMIT_SWITCH_PORT);
         bottomLimitSwitch = new DigitalInput(Constants.BOTTOM_LIMIT_SWITCH_PORT);
+        setPoint = 0;
+        isUsingPos = false;
     }
 
     @Override
@@ -52,11 +57,27 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("top limit switch", topLimitSwitch.get());
         SmartDashboard.putBoolean("bottom limit switch", bottomLimitSwitch.get());
         SmartDashboard.putNumber("elevator current", getMotorStatorCurrent());
+        
+        System.out.println("CURRENT HEIGHT (IN): " + getCurrentTicks() / Constants.ELEVATOR_TICKS_PER_INCH);
+        System.out.println("CURRENT POS (TICKS): " + getCurrentTicks());
+        
+        if (isUsingPos) {
+            goToPosition(setPoint);
+        }
     }
 
-    public void setPosition(double desiredTicks) {
+    public void setIsUsingPos(boolean isUsingPos) {
+        this.isUsingPos = isUsingPos;
+    }
+
+    public void setSetPoint(double desiredTicks) {
+        System.out.println("SETTING THE SETPOINT");
+        setPoint = desiredTicks;
+    }
+    
+    public void goToPosition(double desiredTicks) {
         double currentTicks = getCurrentTicks(); // in case the motor's positive and negative is reversed due to invert
-        System.out.println("CURRENT INCHES: " + currentTicks / Constants.ELEVATOR_TICKS_PER_INCH);
+        // System.out.println("CURRENT INCHES: " + currentTicks / Constants.ELEVATOR_TICKS_PER_INCH);
         double error = desiredTicks - currentTicks;
         System.out.println("ERROR: " + error / Constants.ELEVATOR_TICKS_PER_INCH);
         if(Math.abs(error) > DEADBAND) {
@@ -75,6 +96,10 @@ public class ElevatorSubsystem extends SubsystemBase {
             speed = 0;
         }
         motor.setControl(dutyCycleOut.withOutput(speed));
+        if(speed == 0){
+            System.out.println("SET SPEED TO 0, MAINTAINING CURRENT POS");
+            goToPosition(getCurrentTicks());
+        }
     }
 
     public double getCurrentTicks(){ //getPosition() is in rotations so rotations * ticks per rev should give position in ticks
