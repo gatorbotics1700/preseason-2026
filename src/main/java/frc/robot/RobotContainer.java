@@ -9,6 +9,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +23,7 @@ public class RobotContainer {
     
     private final XboxController controller = new XboxController(0);
     private final XboxController controller_two = new XboxController(1);
-    
+    private final Joystick joystick = new Joystick(2);
     // private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
@@ -70,29 +71,12 @@ public class RobotContainer {
     //     }
     // }
 
-    // public void setDefaultTeleopCommand(){
-    //     System.out.println("SETTING DEFAULT TELEOP COMMAND");
-    //     var alliance = DriverStation.getAlliance();
-    //     if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red){
-    //         drivetrainSubsystem.setDefaultCommand(
-    //             new TeleopDriveCommand(
-    //                 drivetrainSubsystem,
-    //                 () -> modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
-    //                 () -> modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
-    //                 () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
-    //             )
-    //         );
-    //     }else if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue){
-    //         drivetrainSubsystem.setDefaultCommand(
-    //             new TeleopDriveCommand(
-    //                 drivetrainSubsystem,
-    //                 () -> -modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
-    //                 () -> -modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
-    //                 () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
-    //             )
-    //         );
-    //     }
-    // }
+    public void setDefaultElevatorCommand(){
+        System.out.println("SETTING DEFAULT ELEVATOR COMMAND");
+        elevatorSubsystem.setDefaultCommand(
+            new ElevatorCommand(elevatorSubsystem, false, 0, joystick.getY()));
+            
+    }
 
     // public DrivetrainSubsystem getDrivetrainSubsystem(){
     //     return drivetrainSubsystem;
