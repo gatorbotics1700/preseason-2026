@@ -29,11 +29,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean isUsingPos;
 
     // TODO: test and change these values
-    private static final double kP = 0.0005;
-    private static final double kI = 0.0;
+    private static final double kP = 0.001;
+    private static final double kI = 0.0002; // TODO: experiment with i variable
     private static final double kD = 0.00002;
 
-    private static final double DEADBAND = 0.5 * Constants.ELEVATOR_TICKS_PER_INCH; // 1 inch in ticks; TODO: test and change
+    private static final double DEADBAND = 500;
 
 
     public ElevatorSubsystem(){
@@ -48,7 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         topLimitSwitch = new DigitalInput(Constants.TOP_LIMIT_SWITCH_PORT);
         bottomLimitSwitch = new DigitalInput(Constants.BOTTOM_LIMIT_SWITCH_PORT);
-        setPoint = 0;
+        setPoint = getCurrentTicks();
         isUsingPos = false;
     }
 
@@ -57,8 +57,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("top limit switch", topLimitSwitch.get());
         SmartDashboard.putBoolean("bottom limit switch", bottomLimitSwitch.get());
         SmartDashboard.putNumber("elevator current", getMotorStatorCurrent());
+        SmartDashboard.putNumber("elevator speed", motor.get());
+
         
-        System.out.println("CURRENT HEIGHT (IN): " + getCurrentTicks() / Constants.ELEVATOR_TICKS_PER_INCH);
+        // System.out.println("CURRENT HEIGHT (IN): " + getCurrentTicks() / Constants.ELEVATOR_TICKS_PER_INCH);
         System.out.println("CURRENT POS (TICKS): " + getCurrentTicks());
         
         if (isUsingPos) {
@@ -76,25 +78,26 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
     
     public void goToPosition(double desiredTicks) {
+        System.out.println("GOING TO POSITION");
         double currentTicks = getCurrentTicks(); // in case the motor's positive and negative is reversed due to invert
         // System.out.println("CURRENT INCHES: " + currentTicks / Constants.ELEVATOR_TICKS_PER_INCH);
         double error = desiredTicks - currentTicks;
-        System.out.println("ERROR: " + error / Constants.ELEVATOR_TICKS_PER_INCH);
+        System.out.println("ERROR (in ticks): " + error);
         if(Math.abs(error) > DEADBAND) {
             double output = elevatorPIDController.calculate(currentTicks, desiredTicks);
-            System.out.println("ELEVATOR CURRENT PEAKED");
             System.out.println("CALCULATED OUTPUT: " + output);
-            motor.setControl(dutyCycleOut.withOutput(output/100));
+            motor.setControl(dutyCycleOut.withOutput(output/50)); // TODO: determine if dividing by 100 is an issue
         } else {
+            System.out.println("REACHED TARGET");
             motor.setControl(dutyCycleOut.withOutput(0));
         }
     }
 
     public void setSpeed(double speed){
-        if(getMotorStatorCurrent() > 1000){ // TODO: set current limit value
-            System.out.println("ELEVATOR CURRENT PEAKED");
-            speed = 0;
-        }
+        // if(getMotorStatorCurrent() > 1000){ // TODO: set current limit value
+        //     System.out.println("ELEVATOR CURRENT PEAKED");
+        //     speed = 0;
+        // }
         motor.setControl(dutyCycleOut.withOutput(speed));
         if(speed == 0){
             System.out.println("SET SPEED TO 0, MAINTAINING CURRENT POS");
