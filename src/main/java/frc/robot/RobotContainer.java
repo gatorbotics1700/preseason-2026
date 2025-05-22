@@ -71,7 +71,7 @@ public class RobotContainer {
     //     }
     // }
 
-    public void setDefaultElevatorCommand(){
+    public void setDefaultTeleopCommand(){
         System.out.println("SETTING DEFAULT ELEVATOR COMMAND");
         elevatorSubsystem.setDefaultCommand(
             new ElevatorCommand(elevatorSubsystem, false, 0, joystick.getY()));
