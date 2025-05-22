@@ -48,13 +48,13 @@ public class RobotContainer {
             .onTrue(new ElevatorCommand(elevatorSubsystem, false, 0, 0));
         
         new Trigger(controller_two::getBButtonPressed)
-            .onTrue(new ElevatorCommand(elevatorSubsystem, true, 5, 0));
+            .onTrue(new ElevatorCommand(elevatorSubsystem, true, 10000, 0));
         
         new Trigger(controller_two::getXButtonPressed)
-            .onTrue(new ElevatorCommand(elevatorSubsystem, true, 10, 0));
+            .onTrue(new ElevatorCommand(elevatorSubsystem, true, 3000, 0));
 
         new Trigger(controller_two::getYButtonPressed)
-            .onTrue(new ElevatorCommand(elevatorSubsystem, true, 20, 0));
+            .onTrue(new ElevatorCommand(elevatorSubsystem, true, -3500, 0));
 
         
     }
