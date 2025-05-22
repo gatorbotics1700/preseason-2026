@@ -87,6 +87,7 @@ public class Constants {
     public static final double ELEVATOR_LEVEL_FOUR = 54.0; 
     public static final int TOP_LIMIT_SWITCH_PORT = 5;
     public static final int BOTTOM_LIMIT_SWITCH_PORT = 1;
+    public static final double MAX_ELEVATOR_SPEED = 1;//TODO: find a real value
 
     /* other information
      * degrees to ticks conversion: ticks per rev * gear ratio / 360

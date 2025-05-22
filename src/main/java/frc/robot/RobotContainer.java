@@ -74,7 +74,7 @@ public class RobotContainer {
     public void setDefaultTeleopCommand(){
         System.out.println("SETTING DEFAULT ELEVATOR COMMAND");
         elevatorSubsystem.setDefaultCommand(
-            new ElevatorCommand(elevatorSubsystem, false, 0, joystick.getY()));
+            new ElevatorCommand(elevatorSubsystem, false, 0, modifyElevatorAxis(joystick.getY())));
             
     }
 
@@ -83,17 +83,17 @@ public class RobotContainer {
     // }
 
 
-    // private double deadband(double value, double deadband) {
-    //     if (Math.abs(value) > deadband) {
-    //         if (value > 0.0) {
-    //             return (value - deadband) / (1.0 - deadband);
-    //         } else {
-    //             return (value + deadband) / (1.0 - deadband);
-    //         }
-    //     } else {
-    //         return 0.0;
-    //     }
-    // }
+    private double deadband(double value, double deadband) {
+        if (Math.abs(value) > deadband) {
+            if (value > 0.0) {
+                return (value - deadband) / (1.0 - deadband);
+            } else {
+                return (value + deadband) / (1.0 - deadband);
+            }
+        } else {
+            return 0.0;
+        }
+    }
 
     // private double modifyAxis(double value) {
     //     value = deadband(value, 0.05);
@@ -108,4 +108,13 @@ public class RobotContainer {
 
     //     return value;
     // }
+
+    private double modifyElevatorAxis(double value) {
+        value = deadband(value, 0.05);
+
+        // Square the axis
+        value = Math.copySign(value * value, value);
+
+        return value;
+    }
 }
