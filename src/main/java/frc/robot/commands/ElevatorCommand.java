@@ -34,7 +34,7 @@ public class ElevatorCommand extends Command {
     @Override 
     public void execute(){
         if(!isUsingPos){
-            elevatorSubsystem.setSpeed(speed);
+            elevatorSubsystem.setSpeed(speed*Constants.MAX_ELEVATOR_SPEED);
         } else {
             elevatorSubsystem.setSetPoint(desiredTicks);
         }
