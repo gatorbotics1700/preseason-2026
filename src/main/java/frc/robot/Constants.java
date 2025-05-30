@@ -4,10 +4,22 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.com.swervedrivespecialties.swervelib.MechanicalConfiguration;
 import frc.com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
+import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.N4TPublisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 
 public class Constants {
+    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM;
+    public static enum Mode{
+        REAL,
+        SIM,
+        REPLAY
+    }
     //for a 25x25 drivetrain
     // public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.508;
     // public static final double DRIVETRAIN_WHEELBASE_METERS = 0.508;
