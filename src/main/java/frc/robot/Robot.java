@@ -27,24 +27,24 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
     }
 
-    @Override
-    public void autonomousInit() {
-         m_autonomousCommand = container.getAutonomousCommand();
+    // @Override
+    // public void autonomousInit() {
+    //      m_autonomousCommand = container.getAutonomousCommand();
 
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
-    }   
+    //     if (m_autonomousCommand != null) {
+    //         m_autonomousCommand.schedule();
+    //     }
+    // }   
 
-    @Override
-    public void teleopInit() {
-        container.setDefaultTeleopCommand();
+    // @Override
+    // public void teleopInit() {
+    //     container.setDefaultTeleopCommand();
 
-        // This makes sure that the autonomous stops running when teleop starts
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
-    }
+    //     // This makes sure that the autonomous stops running when teleop starts
+    //     if (m_autonomousCommand != null) {
+    //         m_autonomousCommand.cancel();
+    //     }
+    // }
 
     @Override
     public void teleopPeriodic() {

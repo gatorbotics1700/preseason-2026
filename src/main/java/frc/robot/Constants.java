@@ -79,5 +79,7 @@ public class Constants {
      * degrees to ticks conversion: ticks per rev * gear ratio / 360
      */
     public static final double LOOPTIME_SECONDS = 0.02;
+
+    public static final int ELEVATOR_CAN_ID = 30;
 }   
 
