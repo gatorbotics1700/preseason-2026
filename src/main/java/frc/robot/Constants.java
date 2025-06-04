@@ -9,7 +9,6 @@ import frc.com.swervedrivespecialties.swervelib.MechanicalConfiguration;
 import frc.com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.N4TPublisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 

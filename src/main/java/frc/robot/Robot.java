@@ -11,7 +11,8 @@ import frc.robot.Constants.Mode;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.N4TPublisher;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
@@ -19,7 +20,7 @@ public class Robot extends LoggedRobot {
     private RobotContainer container;
 
     public Robot() {
-        Logger.recordMetaData("ProjectName", "MyProject");
+        Logger.recordMetadata("ProjectName", "MyProject");
         if(Constants.currentMode == Mode.REAL){
             Logger.addDataReceiver(new WPILOGWriter());
             Logger.addDataReceiver(new NT4Publisher());
