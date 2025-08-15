@@ -34,4 +34,14 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  /* other information
+   * degrees to ticks conversion: ticks per rev * gear ratio / 360
+   */
+  public static final double LOOPTIME_SECONDS = 0.02;
+
+  public static final int TURRET_MOTOR_CAN_ID = 36;
+  public static final double TURRET_DEADBAND = 0.75;
+  public static final int TURRET_GEAR_RATIO =
+      42; // 3:1 gearbox and 14:1 for shaft gear to big central gear
 }

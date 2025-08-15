@@ -22,16 +22,20 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveTwoMeters;
+import frc.robot.commands.TurretCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -43,6 +47,11 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final TurretSubsystem turretSubsystem;
+
+  private final XboxController controller2 = new XboxController(1);
+
+  // private final SendableChooser<Command> autoChooser;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -86,6 +95,12 @@ public class RobotContainer {
                 new ModuleIO() {});
         break;
     }
+
+    Supplier<Pose2d> robotPose =
+        () -> {
+          return drive.getPose();
+        };
+    turretSubsystem = new TurretSubsystem(robotPose);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -150,6 +165,18 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.x().onTrue(new DriveTwoMeters(drive));
+
+    new Trigger(controller2::getYButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(0))));
+
+    new Trigger(controller2::getBButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(90))));
+
+    new Trigger(controller2::getAButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(180))));
+
+    new Trigger(controller2::getXButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(270))));
   }
 
   /**
@@ -164,5 +191,48 @@ public class RobotContainer {
       System.out.println("bad io error");
     }
     return Commands.none();
+  }
+
+  // autoChooser = AutoBuilder.buildAutoChooser();
+
+  // SmartDashboard.putData("Auto Chooser", autoChooser);
+
+  // public Command getAutonomousCommand() {
+  //     try {
+  //         Command auto = autoChooser.getSelected();
+  //         System.out.println("Auto loaded successfully: " + autoChooser.getSelected().getName());
+  //         return auto;
+  //     } catch (Exception e) {
+  //         System.err.println("Failed to load auto path: " + e.getMessage());
+  //         e.printStackTrace();
+  //         return new AutoDriveCommand(drivetrainSubsystem);
+  //     }
+  // }
+
+  public void setDefaultTeleopCommand() {}
+
+  public Drive getDrivetrainSubsystem() {
+    return drive;
+  }
+
+  private double deadband(double value, double deadband) {
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0) {
+        return (value - deadband) / (1.0 - deadband);
+      } else {
+        return (value + deadband) / (1.0 - deadband);
+      }
+    } else {
+      return 0.0;
+    }
+  }
+
+  private double modifyAxis(double value) {
+    value = deadband(value, 0.05);
+
+    // Square the axis
+    value = Math.copySign(value * value, value);
+
+    return value;
   }
 }
