@@ -3,12 +3,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystemInterface;
 
 public class AutoDriveCommand extends Command {
-    private final DrivetrainSubsystem drivetrain;
+    private final DrivetrainSubsystemInterface drivetrain;
     
-    public AutoDriveCommand(DrivetrainSubsystem drivetrain) {
+    public AutoDriveCommand(DrivetrainSubsystemInterface drivetrain) {
         this.drivetrain = drivetrain;
         addRequirements(drivetrain);
     }

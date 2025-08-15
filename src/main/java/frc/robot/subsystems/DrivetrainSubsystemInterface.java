@@ -57,7 +57,7 @@ public interface DrivetrainSubsystemInterface extends Subsystem {
 
   void driveToPose(Pose2d desiredPose);
 
-  void turnToAngle(Rotation2d desiredAngle);
+  //void turnToAngle(Rotation2d desiredAngle);
 
   // starts out pointing at apriltag, then turns to be parallel with the tag once it's close enough
   void driveToPoseWithInitialAngle(Pose2d desiredPose, Rotation2d pointingToTagAngle);

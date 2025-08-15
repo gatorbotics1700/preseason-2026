@@ -2,17 +2,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystemInterface;
 
 import java.util.function.DoubleSupplier;
 
 public class TeleopDriveCommand extends Command {
-    private final DrivetrainSubsystem drivetrain;
+    private final DrivetrainSubsystemInterface drivetrain;
     private final DoubleSupplier translationXSupplier;
     private final DoubleSupplier translationYSupplier;
     private final DoubleSupplier rotationSupplier;
 
-    public TeleopDriveCommand(DrivetrainSubsystem drivetrain,
+    public TeleopDriveCommand(DrivetrainSubsystemInterface drivetrain,
             DoubleSupplier translationXSupplier,
             DoubleSupplier translationYSupplier,
             DoubleSupplier rotationSupplier) {
@@ -36,9 +36,9 @@ public class TeleopDriveCommand extends Command {
 
         drivetrain.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        translationXPercent * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-                        translationYPercent * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-                        rotationPercent * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
+                        translationXPercent * DrivetrainSubsystemInterface.MAX_VELOCITY_METERS_PER_SECOND,
+                        translationYPercent * DrivetrainSubsystemInterface.MAX_VELOCITY_METERS_PER_SECOND,
+                        rotationPercent * DrivetrainSubsystemInterface.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND,
                         drivetrain.getRotation()));
     }
 

@@ -11,6 +11,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 
+//TODO: we do a lot of things with changing heading and reseting odometry, how does that change with sim?
+//TODO: and slow drive, that's definitely messed up, redundant somewhere
+
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
@@ -27,6 +30,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -62,7 +66,7 @@ import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface {
+public class DrivetrainSim extends SubsystemBase implements DrivetrainSubsystemInterface {
     // TunerConstants doesn't include these constants, so they are declared locally
     static final double ODOMETRY_FREQUENCY =
             new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
@@ -122,7 +126,7 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
                 new SwerveModulePosition(),
                 new SwerveModulePosition()
             };
-    private final SwerveDrivePoseEstimator poseEstimator =
+    private final SwerveDrivePoseEstimator odometry =
             new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
 
     private final Consumer<Pose2d> resetSimulationPoseCallBack;
@@ -131,7 +135,7 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
     private boolean slowDrive = false;
     private static final double SLOW_DRIVE_SCALAR = 0.5; // 50% speed in slow mode
 
-    public Drive(
+    public DrivetrainSim(
             GyroIO gyroIO,
             ModuleIO flModuleIO,
             ModuleIO frModuleIO,
@@ -155,8 +159,8 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
         AutoBuilder.configure(
                 this::getPose,
                 this::setPose,
-                this::getChassisSpeeds,
-                this::runVelocity,
+                this::getRobotRelativeSpeeds,
+                this::driveRobotRelative,
                 new PPHolonomicDriveController(new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
                 PP_CONFIG,
                 () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
@@ -225,7 +229,7 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
             }
 
             // Apply update
-            poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+            odometry.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
         }
 
         // Update gyro alert
@@ -237,15 +241,12 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
      *
      * @param speeds Speeds in meters/sec
      */
-    public void runVelocity(ChassisSpeeds speeds) {
+    public void setStates(SwerveModuleState[] setpointStates) {
         // Calculate module setpoints
-        speeds = ChassisSpeeds.discretize(speeds, 0.02);
-        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
 
         // Log unoptimized setpoints and setpoint speeds
         Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
-        Logger.recordOutput("SwerveChassisSpeeds/Setpoints", speeds);
 
         // Send setpoints to modules
         for (int i = 0; i < 4; i++) {
@@ -265,7 +266,9 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
 
     /** Stops the drive. */
     public void stop() {
-        runVelocity(new ChassisSpeeds());
+        ChassisSpeeds speeds = new ChassisSpeeds();
+        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
+        setStates(setpointStates);
     }
 
     /**
@@ -302,7 +305,7 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
     }
 
     /** Returns the module positions (turn angles and drive positions) for all of the modules. */
-    private SwerveModulePosition[] getModulePositions() {
+    public SwerveModulePosition[] getModulePositionArray() {
         SwerveModulePosition[] states = new SwerveModulePosition[4];
         for (int i = 0; i < 4; i++) {
             states[i] = modules[i].getPosition();
@@ -312,7 +315,7 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
 
     /** Returns the measured chassis speeds of the robot. */
     @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-    private ChassisSpeeds getChassisSpeeds() {
+    public ChassisSpeeds getRobotRelativeSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
 
@@ -342,7 +345,7 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
     /** Returns the current odometry pose. */
     @AutoLogOutput(key = "Odometry/Robot")
     public Pose2d getPose() {
-        return poseEstimator.getEstimatedPosition();
+        return odometry.getEstimatedPosition();
     }
 
     /** Returns the current odometry rotation. */
@@ -350,10 +353,14 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
         return getPose().getRotation();
     }
 
+    public double getRobotRotationDegrees(){
+        return getPose().getRotation().getDegrees();
+    }
+
     /** Resets the current odometry pose. */
     public void setPose(Pose2d pose) {
         resetSimulationPoseCallBack.accept(pose);
-        poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
+        odometry.resetPosition(rawGyroRotation, getModulePositionArray(), pose);
     }
 
     /** Returns the maximum linear speed in meters per sec. */
@@ -391,8 +398,10 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                     speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, getRotation());
         }
-
-        runVelocity(speeds);
+        
+        speeds = ChassisSpeeds.discretize(speeds, Constants.LOOPTIME_SECONDS);
+        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
+        setStates(setpointStates);
     }
 
     @Override
@@ -404,14 +413,11 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
                     speeds.vyMetersPerSecond * SLOW_DRIVE_SCALAR,
                     speeds.omegaRadiansPerSecond * SLOW_DRIVE_SCALAR);
         }
-
-        runVelocity(speeds);
+        speeds = ChassisSpeeds.discretize(speeds, Constants.LOOPTIME_SECONDS);
+        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(speeds);
+        setStates(setpointStates);
     }
 
-    @Override
-    public ChassisSpeeds getRobotRelativeSpeeds() {
-        return getChassisSpeeds();
-    }
 
     @Override
     public void resetPose(Pose2d pose) {
@@ -436,6 +442,18 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
                         getMaxAngularSpeedRadPerSec(),
                         getMaxAngularSpeedRadPerSec() / 2.0))
         );
+    }
+
+    //starts out pointing at apriltag, then turns to be parallel with the tag once it's close enough
+    public void driveToPoseWithInitialAngle(Pose2d desiredPose, Rotation2d pointingToTagAngle) { 
+        Pose2d currentPose = odometry.getEstimatedPosition();
+        double xError = desiredPose.getX() - currentPose.getX();
+        double yError = desiredPose.getY() - currentPose.getY();
+        if (Math.abs(xError) > 0.6 && Math.abs(yError) > 0.6) {
+            desiredPose = new Pose2d(desiredPose.getX(), desiredPose.getY(), pointingToTagAngle);
+            System.out.println("POINTING TO ANGLE");
+        }
+        driveToPose(desiredPose);
     }
 
     @Override
@@ -480,17 +498,65 @@ public class Drive extends SubsystemBase implements DrivetrainSubsystemInterface
         }
     }
 
+    public void robotRelativeHeading(double offsetAngle) {
+        var alliance = DriverStation.getAlliance();
+        Rotation2d zeroedAngle = null;
+        if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red){
+            zeroedAngle = Rotation2d.fromDegrees(180.0 - offsetAngle);
+        } else if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue){
+            zeroedAngle = Rotation2d.fromDegrees(0.0 - offsetAngle);
+        }
+        if(zeroedAngle != null){
+            odometry.resetPosition(
+                getRotation(),
+                new SwerveModulePosition[] { modules[0].getPosition(), modules[1].getPosition(),
+                    modules[2].getPosition(), modules[3].getPosition() },
+                new Pose2d(odometry.getEstimatedPosition().getX(), odometry.getEstimatedPosition().getY(),
+                    zeroedAngle)
+            );
+        } else {
+            System.err.println("zeroed angle was null -- setting to 0");
+            odometry.resetPosition(
+                getRotation(),
+                new SwerveModulePosition[] { modules[0].getPosition(), modules[1].getPosition(),
+                    modules[2].getPosition(), modules[3].getPosition() },
+                new Pose2d(odometry.getEstimatedPosition().getX(), odometry.getEstimatedPosition().getY(),
+                    Rotation2d.fromDegrees(0.0))
+            );
+        }   
+    }
+
+    public Rotation2d angleToPoint(double deltaX, double deltaY){ //delta being the target-current point
+        return new Rotation2d(Math.atan2(deltaY, deltaX));
+    }
+
     @Override
     public void facePoint(Translation2d target) {
         Pose2d currentPose = getPose();
         double deltaX = target.getX() - currentPose.getX();
         double deltaY = target.getY() - currentPose.getY();
-        Rotation2d targetRotation = new Rotation2d(Math.atan2(deltaY, deltaX));
+        Rotation2d targetRotation = angleToPoint(deltaX,deltaY);
         // Create a pose that maintains current position but updates rotation
         Pose2d targetPose = new Pose2d(currentPose.getTranslation(), targetRotation);
         System.out.println("driving to " + targetPose);
         
         // Use PathPlanner's pose following to rotate to the target angle
         this.driveToPose(targetPose);
+    }
+
+        public void driveADirection(double direction){ 
+        //direction should be robot relative and in degrees. for clarity direction means angle at which we are driving, it does not refer to the robot heading
+        //for anyone that knows polar coordinates you can think of direction as theta and in this case our r would be infinite because we just keep driving
+        Pose2d currentPose = odometry.getEstimatedPosition();
+        //the robot drives field relative so we need to find the field relative direction we want to drive in by adding the current heading to the desired robot relative drive direction
+        double fieldRelativeDirection = direction+currentPose.getRotation().getDegrees();
+        fieldRelativeDirection = MathUtil.inputModulus(fieldRelativeDirection, -180, 180);
+
+        //think unit circle and the math will make sense (basically scaling x and y speed to get us to drive in at a specific angle)
+        double xSpeed = Math.cos(Math.toRadians(fieldRelativeDirection))*0.9;
+        double ySpeed = Math.sin(Math.toRadians(fieldRelativeDirection))*0.9;
+        double rotationSpeed = 0; //because we aren't altering heading
+        
+        drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, currentPose.getRotation()));
     }
 }

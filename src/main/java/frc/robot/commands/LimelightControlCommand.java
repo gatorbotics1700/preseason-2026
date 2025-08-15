@@ -4,21 +4,21 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.DrivetrainSubsystemInterface;
 import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class LimelightControlCommand extends Command {
     private final LimelightSubsystem limelightSubsystem;
-    private final DrivetrainSubsystem drivetrainSubsystem;
+    private final DrivetrainSubsystemInterface drivetrainSubsystem;
     private final XboxController controller;
     private final int pipeline;
     private Pose2d desiredPose;
     private Pose2d lineUpOffset;
     private Rotation2d pointingToTagAngle; //field relative angle to point the robot at the apriltag
     private boolean dontStart = false;
-    public LimelightControlCommand(LimelightSubsystem limelightSubsystem, DrivetrainSubsystem drivetrainSubsystem,
+    public LimelightControlCommand(LimelightSubsystem limelightSubsystem, DrivetrainSubsystemInterface drivetrainSubsystem,
             int pipeline, XboxController controller, Pose2d lineUpOffset) {
         this.limelightSubsystem = limelightSubsystem;
         this.drivetrainSubsystem = drivetrainSubsystem;
