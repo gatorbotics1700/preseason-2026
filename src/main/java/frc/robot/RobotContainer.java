@@ -3,6 +3,8 @@ package frc.robot;
 import frc.robot.commands.AutoDriveCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.commands.TurretCommand;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -16,8 +18,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
     private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+    private final TurretSubsystem turretSubsystem = new TurretSubsystem();
     
     private final XboxController controller = new XboxController(0);
+    private final XboxController controller2 = new XboxController(1);
     
     private final SendableChooser<Command> autoChooser;
 
@@ -38,6 +42,18 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        new Trigger(controller2::getYButtonPressed)
+            .onTrue(new TurretCommand(turretSubsystem, 0));
+
+        new Trigger(controller2::getBButtonPressed)
+            .onTrue(new TurretCommand(turretSubsystem, 90));
+        
+        new Trigger(controller2::getAButtonPressed)
+            .onTrue(new TurretCommand(turretSubsystem, 180));
+
+        new Trigger(controller2::getXButtonPressed)
+            .onTrue(new TurretCommand(turretSubsystem, 270));
     }
 
     public Command getAutonomousCommand() {
