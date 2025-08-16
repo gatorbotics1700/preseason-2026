@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class RobotContainer {
-    // private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+    private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
     private final TurretSubsystem turretSubsystem = new TurretSubsystem();
     
     private final XboxController controller = new XboxController(0);
@@ -109,6 +109,7 @@ public class RobotContainer {
         }
     }
 
+
     // private double modifyAxis(double value) {
     //     value = deadband(value, 0.05);
 
@@ -122,4 +123,8 @@ public class RobotContainer {
 
     //     return value;
     // }
+    
+    public DrivetrainSubsystem getDrivetrainSubsystem(){
+        return drivetrainSubsystem;
+    }
 }

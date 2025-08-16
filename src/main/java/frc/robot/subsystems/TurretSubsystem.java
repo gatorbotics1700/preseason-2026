@@ -53,6 +53,8 @@ public class TurretSubsystem extends SubsystemBase {
         }
     }
 
+    
+
     public double getTurretAngle(){
         System.out.println("CURRENT POSITION (TICKS): " + motor.getPosition().getValueAsDouble());
         return (motor.getPosition().getValueAsDouble()/*  / Constants.KRAKEN_TICKS_PER_REV)*/ * 360 / Constants.TURRET_GEAR_RATIO) % 360;

@@ -1,12 +1,16 @@
 package frc.robot;
 
+import javax.lang.model.type.DeclaredType;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger; //PLEASE NOTE THIS IS NOT THE FIRST LOGGER OPTION VS CODE SUGGESTS IMPORTING
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
@@ -36,6 +40,7 @@ public class Robot extends LoggedRobot {
         // }
     }   
 
+
     @Override
     public void teleopInit() {
         // container.setDefaultTeleopCommand();
@@ -59,5 +64,23 @@ public class Robot extends LoggedRobot {
     @Override
     public void testPeriodic(){
 
+    }
+
+    public double getTargetTurretAngle() {
+      //  pose2d(x,y, rotation2d);
+        //atan2(y,x) 
+        //delta Y = targetY - currentY;
+        //delta X = targetX - currentx;
+        //angleToTarget = atan2(deltaY, deltaX);
+        
+        Pose2d currentRobotPose = container.getDrivetrainSubsystem().getPose();
+        Translation2d targetCoords = new Translation2d(1,1);
+        double deltaY = targetCoords.getY() - currentRobotPose.getY();
+        double deltaX = targetCoords.getX() - currentRobotPose.getX();
+        double angleToTarget = Math.atan2(deltaY, deltaX);
+        
+        return angleToTarget;
+
+        
     }
 }
