@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -15,9 +16,9 @@ public class TurretSubsystem extends SubsystemBase {
 
     private static DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
-    private static final double kP = 0.0;
+    private static final double kP = 0.005;
     private static final double kI = 0.0;
-    private static final double kD = 0.0;
+    private static final double kD = 0.0005;
 
     private double speed;
 
@@ -27,6 +28,7 @@ public class TurretSubsystem extends SubsystemBase {
         pidController = new PIDController(kP, kI, kD);
 
         speed = 0.0;
+        System.out.println("STARTING ANGLE: " + getTurretAngle());
     }
 
     public void turnToAngle(double desiredAngle){
@@ -34,10 +36,14 @@ public class TurretSubsystem extends SubsystemBase {
         double currentAngle = getTurretAngle();
         System.out.println("CURRENT ANGLE: " + currentAngle);
         double error = currentAngle - desiredAngle;
+        //if (Math.abs(error) > 180)
+        error = MathUtil.inputModulus(error, -180, 180);
         System.out.println("ERROR: " + error);
 
+
         if (Math.abs(error) > Constants.TURRET_DEADBAND) {
-            double output = pidController.calculate(angleToTicks(currentAngle), angleToTicks(desiredAngle));
+            double output = pidController.calculate(error);
+          //  double output = pidController.calculate(angleToTicks(currentAngle), angleToTicks(desiredAngle));
             System.out.println("CALCULATED OUTPUT: " + output);
             System.out.println("TURNING TO DESIRED ANGLE");
             setSpeed(output);
@@ -48,7 +54,8 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public double getTurretAngle(){
-        return ((motor.getPosition().getValueAsDouble() / Constants.KRAKEN_TICKS_PER_REV) * 360) % 360;
+        System.out.println("CURRENT POSITION (TICKS): " + motor.getPosition().getValueAsDouble());
+        return (motor.getPosition().getValueAsDouble()/*  / Constants.KRAKEN_TICKS_PER_REV)*/ * 360 / Constants.TURRET_GEAR_RATIO) % 360;
     }
 
     public void setSpeed(double speed) {
@@ -57,6 +64,6 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public double angleToTicks(double degrees) {
-        return ((degrees % 360) / 360) * Constants.KRAKEN_TICKS_PER_REV;
+        return ((degrees % 360) / 360) * Constants.TURRET_GEAR_RATIO; // * Constants.KRAKEN_TICKS_PER_REV;
     }
 }

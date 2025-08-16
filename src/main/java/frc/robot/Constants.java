@@ -81,6 +81,7 @@ public class Constants {
     public static final double LOOPTIME_SECONDS = 0.02;
 
     public static final int TURRET_MOTOR_CAN_ID = 36;
-    public static final double TURRET_DEADBAND = 3;
+    public static final double TURRET_DEADBAND = 1.5;
+    public static final int TURRET_GEAR_RATIO = 42; //3:1 gearbox and 14:1 for shaft gear to big central gear
 }   
 
