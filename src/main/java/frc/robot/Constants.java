@@ -80,7 +80,7 @@ public class Constants {
      */
     public static final double LOOPTIME_SECONDS = 0.02;
 
-    public static final int TURRET_MOTOR_CAN_ID = 0;
+    public static final int TURRET_MOTOR_CAN_ID = 36;
     public static final double TURRET_DEADBAND = 3;
 }   
 

@@ -32,15 +32,18 @@ public class TurretSubsystem extends SubsystemBase {
     public void turnToAngle(double desiredAngle){
         desiredAngle = desiredAngle % 360;
         double currentAngle = getTurretAngle();
+        System.out.println("CURRENT ANGLE: " + currentAngle);
         double error = currentAngle - desiredAngle;
+        System.out.println("ERROR: " + error);
 
         if (Math.abs(error) > Constants.TURRET_DEADBAND) {
-            double output = pidController.calculate(currentAngle, desiredAngle);
+            double output = pidController.calculate(angleToTicks(currentAngle), angleToTicks(desiredAngle));
             System.out.println("CALCULATED OUTPUT: " + output);
-            motor.setControl(dutyCycleOut.withOutput(output));
+            System.out.println("TURNING TO DESIRED ANGLE");
+            setSpeed(output);
         } else {
             System.out.println("REACHED TARGET");
-            motor.setControl(dutyCycleOut.withOutput(0));
+            setSpeed(0);
         }
     }
 
@@ -49,6 +52,11 @@ public class TurretSubsystem extends SubsystemBase {
     }
 
     public void setSpeed(double speed) {
+        System.out.println("SETTING SPEED TO: " + speed);
         motor.setControl(dutyCycleOut.withOutput(speed));
+    }
+
+    public double angleToTicks(double degrees) {
+        return ((degrees % 360) / 360) * Constants.KRAKEN_TICKS_PER_REV;
     }
 }
