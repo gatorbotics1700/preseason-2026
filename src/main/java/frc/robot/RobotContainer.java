@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.AutoDriveCommand;
+import frc.robot.commands.DriveTwoMeters;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -41,6 +42,9 @@ public class RobotContainer {
 
         if (Robot.isReal()) {
             this.drivetrain = new DrivetrainSubsystem(); // Real implementation
+
+        new Trigger(controller::getXButtonPressed)
+            .onTrue(new DriveTwoMeters((DrivetrainSubsystem)drivetrain));
         }
         else {
             //TODO: we probably shouldn't put this code here

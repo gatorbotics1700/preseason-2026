@@ -78,6 +78,8 @@ public class DrivetrainSubsystem extends SubsystemBase implements DrivetrainSubs
     public static double transmitErrors = CANivore.getStatus().TEC;
     public static double receiveErrors = CANivore.getStatus().REC;
 
+    private Pose2d targetPose = new Pose2d();
+
 
     public DrivetrainSubsystem() {
         slowDrive = false;
@@ -513,4 +515,12 @@ public class DrivetrainSubsystem extends SubsystemBase implements DrivetrainSubs
         
         drive(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotationSpeed, currentPose.getRotation()));
     }
+
+    public void setTargetPose(Pose2d targetPose) {
+        this.targetPose = targetPose;
+      }
+    
+      public Pose2d getTargetPose() {
+        return targetPose;
+      }
 }
