@@ -336,23 +336,25 @@ public class DrivetrainSubsystem extends SubsystemBase implements DrivetrainSubs
                 backRightModule.getPosition() 
             }
         );
-        boolean doRejectUpdate = false;
+        // boolean doRejectUpdate = false;
         
-        LimelightHelpers.SetRobotOrientation("limelight", odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        // LimelightHelpers.SetRobotOrientation("limelight", odometry.getEstimatedPosition().getRotation().getDegrees(), 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-        if(mt2 != null){
-            if(Math.abs(pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 720){
-                doRejectUpdate = true;
-            }
-            if(mt2.tagCount == 0){
-                doRejectUpdate = true;
-            }
-            if(!doRejectUpdate){
-                //this line sets the amount the pigeon odometry can be off by in each axis before vision odometry takes over. we trust the pigeon for heading, hence the reaaaaally big number
-                odometry.setVisionMeasurementStdDevs(VecBuilder.fill(.05, .05, 999999)); 
-                odometry.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-            }
-        }
+        // if(mt2 != null){
+        //     if(Math.abs(pigeon.getAngularVelocityZWorld().getValueAsDouble()) > 720){
+        //         doRejectUpdate = true;
+        //     }
+        //     if(mt2.tagCount == 0){
+        //         doRejectUpdate = true;
+        //     }
+        //     if(!doRejectUpdate){
+        //         //this line sets the amount the pigeon odometry can be off by in each axis before vision odometry takes over. we trust the pigeon for heading, hence the reaaaaally big number
+        //         odometry.setVisionMeasurementStdDevs(VecBuilder.fill(.05, .05, 999999)); 
+        //         odometry.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+        //     }
+        // }
+
+        System.out.println("limelight estimated location: " + mt2);
         
         SmartDashboard.putNumber("Gyroscope Angle", getRotation().getDegrees());
         SmartDashboard.putNumber("Pose X", odometry.getEstimatedPosition().getX());
