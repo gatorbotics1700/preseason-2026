@@ -25,7 +25,7 @@ public class TurretSubsystem extends SubsystemBase {
     private static final double kP = 0.005;
     private static final double kI = 0.0;
     private static final double kD = 0.0005;
-    private static final Translation2d TARGET = (1,1);
+    private static final Translation2d TARGET = new Translation2d(1,1);
 
     private double speed;
 
@@ -87,7 +87,7 @@ public class TurretSubsystem extends SubsystemBase {
           double deltaY = target.getY() - currentRobotPose.getY();
           double deltaX = target.getX() - currentRobotPose.getX();
           double angleToTarget = Math.atan2(deltaY, deltaX);
-          double turretAngle = angleToTarget + robotPose.getRotation().getRadians(); //TODO probably not the function name - fix this later
+          double turretAngle = angleToTarget + currentRobotPose.getRotation().getRadians();
           return turretAngle;
           
       }
