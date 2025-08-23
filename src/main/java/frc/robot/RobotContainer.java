@@ -36,14 +36,14 @@ public class RobotContainer {
         System.out.println("RobotContainer initializing");
 
         // Zero gyroscope button binding
-        // new Trigger(controller::getBackButtonPressed)
-        //         .onTrue(new InstantCommand(drivetrainSubsystem::zeroGyroscope));
+        new Trigger(controller::getBackButtonPressed)
+                .onTrue(new InstantCommand(drivetrainSubsystem::zeroGyroscope));
 
-        // new Trigger(controller::getRightBumperButtonPressed)
-        //         .onTrue(new InstantCommand(drivetrainSubsystem::setSlowDrive));
+        new Trigger(controller::getRightBumperButtonPressed)
+                .onTrue(new InstantCommand(drivetrainSubsystem::setSlowDrive));
 
-        // new Trigger(controller::getLeftBumperButtonPressed)
-        //     .onTrue(new InstantCommand(drivetrainSubsystem::toggleRobotRelativeDrive));
+        new Trigger(controller::getLeftBumperButtonPressed)
+            .onTrue(new InstantCommand(drivetrainSubsystem::toggleRobotRelativeDrive));
         
         // autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -74,33 +74,33 @@ public class RobotContainer {
     //     }
     // }
 
-    // public void setDefaultTeleopCommand(){
-    //     System.out.println("SETTING DEFAULT TELEOP COMMAND");
-    //     var alliance = DriverStation.getAlliance();
-    //     if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red){
-    //         drivetrainSubsystem.setDefaultCommand(
-    //             new TeleopDriveCommand(
-    //                 drivetrainSubsystem,
-    //                 () -> modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
-    //                 () -> modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
-    //                 () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
-    //             )
-    //         );
-    //     }else if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue){
-    //         drivetrainSubsystem.setDefaultCommand(
-    //             new TeleopDriveCommand(
-    //                 drivetrainSubsystem,
-    //                 () -> -modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
-    //                 () -> -modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
-    //                 () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
-    //             )
-    //         );
-    //     }
-    // }
+    public void setDefaultTeleopCommand(){
+        System.out.println("SETTING DEFAULT TELEOP COMMAND");
+        var alliance = DriverStation.getAlliance();
+        if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red){
+            drivetrainSubsystem.setDefaultCommand(
+                new TeleopDriveCommand(
+                    drivetrainSubsystem,
+                    () -> modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
+                    () -> modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
+                    () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
+                )
+            );
+        }else if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue){
+            drivetrainSubsystem.setDefaultCommand(
+                new TeleopDriveCommand(
+                    drivetrainSubsystem,
+                    () -> -modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
+                    () -> -modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
+                    () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
+                )
+            );
+        }
+    }
 
-    // public DrivetrainSubsystem getDrivetrainSubsystem(){
-    //     return drivetrainSubsystem;
-    // }
+    public DrivetrainSubsystem getDrivetrainSubsystem(){
+        return drivetrainSubsystem;
+    }
 
 
     private double deadband(double value, double deadband) {
@@ -116,21 +116,18 @@ public class RobotContainer {
     }
 
 
-    // private double modifyAxis(double value) {
-    //     value = deadband(value, 0.05);
+    private double modifyAxis(double value) {
+        value = deadband(value, 0.05);
 
-    //     // Square the axis
-    //     value = Math.copySign(value * value, value);
+        // Square the axis
+        value = Math.copySign(value * value, value);
 
-    //     if(drivetrainSubsystem.getSlowDrive()){
-    //         return (0.5 * value);
+        if(drivetrainSubsystem.getSlowDrive()){
+            return (0.5 * value);
 
-    //     }
+        }
 
-    //     return value;
-    // }
-    
-    public DrivetrainSubsystem getDrivetrainSubsystem(){
-        return drivetrainSubsystem;
+        return value;
     }
+
 }

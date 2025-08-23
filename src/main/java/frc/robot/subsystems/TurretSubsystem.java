@@ -46,6 +46,7 @@ public class TurretSubsystem extends SubsystemBase {
 
     public void turnToAngle(double desiredAngle){
         desiredAngle = desiredAngle % 360;
+        System.out.println("DESIRED ANGLE: " + desiredAngle);
         double currentAngle = getTurretAngle();
         System.out.println("CURRENT ANGLE: " + currentAngle);
         double error = currentAngle - desiredAngle;
@@ -88,7 +89,7 @@ public class TurretSubsystem extends SubsystemBase {
           double deltaX = target.getX() - currentRobotPose.getX();
           double angleToTarget = Math.atan2(deltaY, deltaX);
           double turretAngle = angleToTarget + currentRobotPose.getRotation().getRadians();
-          return turretAngle;
-          
+        //   System.out.println("TARGET TURRET ANGLE: " + turretAngle);
+          return turretAngle;          
       }
 }

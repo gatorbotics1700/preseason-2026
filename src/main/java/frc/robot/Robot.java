@@ -43,7 +43,7 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopInit() {
-        // container.setDefaultTeleopCommand();
+        container.setDefaultTeleopCommand();
 
         // This makes sure that the autonomous stops running when teleop starts
         // if (m_autonomousCommand != null) {

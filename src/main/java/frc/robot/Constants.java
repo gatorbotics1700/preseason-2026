@@ -44,7 +44,7 @@ public class Constants {
     public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(229.57);
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(52.1191);
     public static final MechanicalConfiguration MODULE_CONFIGURATION = SdsModuleConfigurations.MK4I_L2;
-    public static final String CANIVORE_BUS_NAME = "TRex";
+    public static final String CANIVORE_BUS_NAME = "";
     public static final Pose3d LIMELIGHT_OFFSETS = new Pose3d(0.3394, 0.039 -0.03, 0.196, new Rotation3d(Math.toRadians(1), Math.toRadians(-19.5), Math.toRadians(-3.0)));
     public static final double CENTER_TO_BUMPER_OFFSET = 0.4445;
     public static final double CENTER_TO_CHASSIS_OFFSET = 0.381;
