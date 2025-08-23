@@ -6,6 +6,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.commands.TurretCommand;
 
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -15,10 +17,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.math.geometry.Pose2d;
 
 public class RobotContainer {
     private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
-    private final TurretSubsystem turretSubsystem = new TurretSubsystem();
+    Supplier<Pose2d> robotPose= () -> {
+        return drivetrainSubsystem.getPose();
+    };
+    private final TurretSubsystem turretSubsystem = new TurretSubsystem(robotPose);
     
     private final XboxController controller = new XboxController(0);
     private final XboxController controller2 = new XboxController(1);

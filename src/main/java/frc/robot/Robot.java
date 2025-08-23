@@ -66,21 +66,5 @@ public class Robot extends LoggedRobot {
 
     }
 
-    public double getTargetTurretAngle() {
-      //  pose2d(x,y, rotation2d);
-        //atan2(y,x) 
-        //delta Y = targetY - currentY;
-        //delta X = targetX - currentx;
-        //angleToTarget = atan2(deltaY, deltaX);
-        
-        Pose2d currentRobotPose = container.getDrivetrainSubsystem().getPose();
-        Translation2d targetCoords = new Translation2d(1,1);
-        double deltaY = targetCoords.getY() - currentRobotPose.getY();
-        double deltaX = targetCoords.getX() - currentRobotPose.getX();
-        double angleToTarget = Math.atan2(deltaY, deltaX);
-        
-        return angleToTarget;
-
-        
-    }
+    
 }
