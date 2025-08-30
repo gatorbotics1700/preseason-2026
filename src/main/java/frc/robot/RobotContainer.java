@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class RobotContainer {
     private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
@@ -50,16 +51,16 @@ public class RobotContainer {
         // SmartDashboard.putData("Auto Chooser", autoChooser);
 
         new Trigger(controller2::getYButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, 0));
+            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(0))));
 
         new Trigger(controller2::getBButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, 90));
+            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(90))));
         
         new Trigger(controller2::getAButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, 180));
+            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(180))));
 
         new Trigger(controller2::getXButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, 270));
+            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(270))));
     }
 
     // public Command getAutonomousCommand() {

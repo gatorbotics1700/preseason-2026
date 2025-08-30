@@ -50,10 +50,14 @@ public class Constants {
     public static final double CENTER_TO_CHASSIS_OFFSET = 0.381;
 
     //dory
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(191.3379 + 180);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(59.6777 + 180);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(334.4238 + 180);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(101.6895 + 180);
+    // public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(191.3379 - 90);
+    // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(59.6777 - 90);
+    // public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(334.4238 - 90);
+    // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(101.6895 - 90);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(99.84);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(329.87);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(242.58);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(16.436);
     public static final MechanicalConfiguration MODULE_CONFIGURATION = SdsModuleConfigurations.MK4I_L2;
     public static final String CANIVORE_BUS_NAME = "";
     

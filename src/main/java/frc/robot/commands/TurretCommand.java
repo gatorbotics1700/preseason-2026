@@ -3,13 +3,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.TurretSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 public class TurretCommand extends Command {
 
     private TurretSubsystem turretSubsystem;
-    private double desiredAngle;
+    private Rotation2d desiredAngle;
     
-    public TurretCommand(TurretSubsystem turretSubsystem, double desiredAngle){
+    public TurretCommand(TurretSubsystem turretSubsystem, Rotation2d desiredAngle){
         this.turretSubsystem = turretSubsystem;
         this.desiredAngle = desiredAngle;
         addRequirements(turretSubsystem);
@@ -29,10 +30,10 @@ public class TurretCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        double currentAngle = turretSubsystem.getTurretAngle();
+        Rotation2d currentAngle = turretSubsystem.getTurretAngle();
 
-        double error = desiredAngle - currentAngle;
-        if (Math.abs(error) < Constants.TURRET_DEADBAND) {
+        Rotation2d error = desiredAngle.minus(currentAngle);
+        if (Math.abs(error.getDegrees()) < Constants.TURRET_DEADBAND) {
             System.out.println("REACHED TARGET");
             turretSubsystem.setSpeed(0);
             turretSubsystem.setUseAngle(false);
