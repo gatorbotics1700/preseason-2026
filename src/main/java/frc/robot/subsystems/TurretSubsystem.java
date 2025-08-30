@@ -39,7 +39,7 @@ public class TurretSubsystem extends SubsystemBase {
         this.robotPose = robotPose;
         pidController = new PIDController(kP, kI, kD);
         useAngle = false;
-        motor.getConfigurator().apply(new TalonFXConfiguration().withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)));
+        //motor.getConfigurator().apply(new TalonFXConfiguration().withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)));
 
         speed = 0.0;
         System.out.println("STARTING ANGLE: " + getTurretAngle());
@@ -56,7 +56,7 @@ public class TurretSubsystem extends SubsystemBase {
         System.out.println("DESIRED ANGLE: " + desiredAngle);
         double currentAngle = getTurretAngle();
         System.out.println("CURRENT ANGLE: " + currentAngle);
-        double error = currentAngle - desiredAngle;
+        double error = /*desiredAngle - currentAngle;*/ currentAngle - desiredAngle;
         //if (Math.abs(error) > 180)
         error = MathUtil.inputModulus(error, -180, 180);
         // System.out.println("ERROR: " + error);
@@ -76,7 +76,7 @@ public class TurretSubsystem extends SubsystemBase {
 
 
     public double getTurretAngle(){
-        System.out.println("CURRENT POSITION (TICKS): " + motor.getPosition().getValueAsDouble());
+        System.out.println("CURRENT TURRET ANGLE DEGREES " + (motor.getPosition().getValueAsDouble()/*  / Constants.KRAKEN_TICKS_PER_REV)*/ * 360 / Constants.TURRET_GEAR_RATIO) % 360);
         return (motor.getPosition().getValueAsDouble()/*  / Constants.KRAKEN_TICKS_PER_REV)*/ * 360 / Constants.TURRET_GEAR_RATIO) % 360;
     }
 
