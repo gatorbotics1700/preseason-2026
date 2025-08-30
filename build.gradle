@@ -108,3 +108,11 @@ task(replayWatch, type: JavaExec) {
     mainClass = "org.littletonrobotics.junction.ReplayWatch"
     classpath = sourceSets.main.runtimeClasspath
 }
+
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/tests/java']
+        }
+    }
+}
