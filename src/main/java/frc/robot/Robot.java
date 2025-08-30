@@ -13,7 +13,7 @@ import frc.robot.subsystems.BeamBreakSubsystem;
 public class Robot extends LoggedRobot {
     // private Command m_autonomousCommand;
     // private RobotContainer container;
-    private BeamBreakSubsystem beamBreakSubsystem;
+    private BeamBreakSubsystem beamBreakSubsystem = new BeamBreakSubsystem();
 
     public Robot() {
         Logger.start();
