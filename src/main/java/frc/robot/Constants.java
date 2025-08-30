@@ -39,15 +39,23 @@ public class Constants {
     // public static final double CENTER_TO_BUMPER_OFFSET = 0.3937;
 
     //comp bot
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(268.0664);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(231.3281);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(229.57);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(52.1191);
-    public static final MechanicalConfiguration MODULE_CONFIGURATION = SdsModuleConfigurations.MK4I_L2;
-    public static final String CANIVORE_BUS_NAME = "";
+    // public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(268.0664);
+    // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(231.3281);
+    // public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(229.57);
+    // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(52.1191);
+    // public static final MechanicalConfiguration MODULE_CONFIGURATION = SdsModuleConfigurations.MK4I_L2;
+    // public static final String CANIVORE_BUS_NAME = "";
     public static final Pose3d LIMELIGHT_OFFSETS = new Pose3d(0.3394, 0.039 -0.03, 0.196, new Rotation3d(Math.toRadians(1), Math.toRadians(-19.5), Math.toRadians(-3.0)));
     public static final double CENTER_TO_BUMPER_OFFSET = 0.4445;
     public static final double CENTER_TO_CHASSIS_OFFSET = 0.381;
+
+    //dory
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(191.3379 + 180);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(59.6777 + 180);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(334.4238 + 180);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(101.6895 + 180);
+    public static final MechanicalConfiguration MODULE_CONFIGURATION = SdsModuleConfigurations.MK4I_L2;
+    public static final String CANIVORE_BUS_NAME = "";
     
     public static final Pose2d FRONT_CENTER_ALIGN_OFFSET = new Pose2d(CENTER_TO_BUMPER_OFFSET, 0, new Rotation2d(0)); //offset from center of robot to where we want to line up with the april tag
     public static final Pose2d INTAKE_ALIGN_OFFSET = new Pose2d(CENTER_TO_BUMPER_OFFSET - 0.3, 0, new Rotation2d(0)); //offset from center of robot to where we want to line up with the april tag
@@ -81,7 +89,7 @@ public class Constants {
     public static final double LOOPTIME_SECONDS = 0.02;
 
     public static final int TURRET_MOTOR_CAN_ID = 36;
-    public static final double TURRET_DEADBAND = 1.5;
+    public static final double TURRET_DEADBAND = 0.75;
     public static final int TURRET_GEAR_RATIO = 42; //3:1 gearbox and 14:1 for shaft gear to big central gear
 }   
 

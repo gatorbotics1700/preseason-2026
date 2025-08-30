@@ -16,6 +16,11 @@ public class TurretCommand extends Command {
     }
 
     @Override
+    public void initialize() {
+        turretSubsystem.setUseAngle(true);
+    }
+
+    @Override
     public void execute() {
         turretSubsystem.turnToAngle(desiredAngle);
     }
@@ -30,6 +35,7 @@ public class TurretCommand extends Command {
         if (Math.abs(error) < Constants.TURRET_DEADBAND) {
             System.out.println("REACHED TARGET");
             turretSubsystem.setSpeed(0);
+            turretSubsystem.setUseAngle(false);
             return true;
         }
         return false;

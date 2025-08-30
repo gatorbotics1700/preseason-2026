@@ -2,8 +2,11 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -22,11 +25,11 @@ public class TurretSubsystem extends SubsystemBase {
 
     private static DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
-    private static final double kP = 0.005;
+    private static final double kP = 0.025;
     private static final double kI = 0.0;
-    private static final double kD = 0.0005;
+    private static final double kD = 0.0;
     private static final Translation2d TARGET = new Translation2d(1,1);
-
+    private boolean useAngle;
     private double speed;
 
     private Supplier<Pose2d> robotPose;
@@ -35,13 +38,17 @@ public class TurretSubsystem extends SubsystemBase {
         motor = new TalonFX(Constants.TURRET_MOTOR_CAN_ID);
         this.robotPose = robotPose;
         pidController = new PIDController(kP, kI, kD);
+        useAngle = false;
+        motor.getConfigurator().apply(new TalonFXConfiguration().withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)));
 
         speed = 0.0;
         System.out.println("STARTING ANGLE: " + getTurretAngle());
     }
 
     public void periodic(){
-        turnToAngle(getTargetTurretAngle(TARGET));
+        if (useAngle == false){
+            turnToAngle(Math.toDegrees(getTargetTurretAngle(TARGET)));
+        }
     }
 
     public void turnToAngle(double desiredAngle){
@@ -52,13 +59,13 @@ public class TurretSubsystem extends SubsystemBase {
         double error = currentAngle - desiredAngle;
         //if (Math.abs(error) > 180)
         error = MathUtil.inputModulus(error, -180, 180);
-        System.out.println("ERROR: " + error);
+        // System.out.println("ERROR: " + error);
 
 
         if (Math.abs(error) > Constants.TURRET_DEADBAND) {
             double output = pidController.calculate(error);
           //  double output = pidController.calculate(angleToTicks(currentAngle), angleToTicks(desiredAngle));
-            System.out.println("CALCULATED OUTPUT: " + output);
+            // System.out.println("CALCULATED OUTPUT: " + output);
             System.out.println("TURNING TO DESIRED ANGLE");
             setSpeed(output);
         } else {
@@ -87,9 +94,16 @@ public class TurretSubsystem extends SubsystemBase {
           Pose2d currentRobotPose = robotPose.get();
           double deltaY = target.getY() - currentRobotPose.getY();
           double deltaX = target.getX() - currentRobotPose.getX();
+          System.out.println("delta x: " + deltaX);
+          System.out.println("delta y" + deltaY);
           double angleToTarget = Math.atan2(deltaY, deltaX);
+          System.out.println("ATAN2 : "+ Math.toDegrees(angleToTarget));
           double turretAngle = angleToTarget + currentRobotPose.getRotation().getRadians();
         //   System.out.println("TARGET TURRET ANGLE: " + turretAngle);
           return turretAngle;          
       }
+
+    public void setUseAngle(boolean useAngle){
+        this.useAngle = useAngle;
+    }
 }
