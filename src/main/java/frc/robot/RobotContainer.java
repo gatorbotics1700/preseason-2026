@@ -1,134 +1,236 @@
+// Copyright 2021-2025 FRC 6328
+// http://github.com/Mechanical-Advantage
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+
 package frc.robot;
 
-import frc.robot.commands.AutoDriveCommand;
-import frc.robot.commands.TeleopDriveCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.commands.TurretCommand;
-
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveTwoMeters;
+import frc.robot.commands.TurretCommand;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIO;
+import frc.robot.subsystems.drive.GyroIOPigeon2;
+import frc.robot.subsystems.drive.ModuleIO;
+import frc.robot.subsystems.drive.ModuleIOSim;
+import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import java.util.function.Supplier;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * subsystems, commands, and button mappings) should be declared here.
+ */
 public class RobotContainer {
-    private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
-    Supplier<Pose2d> robotPose= () -> {
-        return drivetrainSubsystem.getPose();
-    };
-    private final TurretSubsystem turretSubsystem = new TurretSubsystem(robotPose);
-    
-    private final XboxController controller = new XboxController(0);
-    private final XboxController controller2 = new XboxController(1);
-    
-    // private final SendableChooser<Command> autoChooser;
+  // Subsystems
+  private final Drive drive;
+  private final TurretSubsystem turretSubsystem;
 
-    public RobotContainer() {
-        // Print initial joystick values
-        System.out.println("RobotContainer initializing");
+  private final XboxController controller2 = new XboxController(1);
 
-        // Zero gyroscope button binding
-        new Trigger(controller::getBackButtonPressed)
-                .onTrue(new InstantCommand(drivetrainSubsystem::zeroGyroscope));
+  // private final SendableChooser<Command> autoChooser;
 
-        new Trigger(controller::getRightBumperButtonPressed)
-                .onTrue(new InstantCommand(drivetrainSubsystem::setSlowDrive));
+  // Controller
+  private final CommandXboxController controller = new CommandXboxController(0);
+  // Dashboard inputs
+  private final LoggedDashboardChooser<Command> autoChooser;
 
-        new Trigger(controller::getLeftBumperButtonPressed)
-            .onTrue(new InstantCommand(drivetrainSubsystem::toggleRobotRelativeDrive));
-        
-        // autoChooser = AutoBuilder.buildAutoChooser();
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  public RobotContainer() {
+    switch (Constants.currentMode) {
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        drive =
+            new Drive(
+                new GyroIOPigeon2(),
+                new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                new ModuleIOTalonFX(TunerConstants.FrontRight),
+                new ModuleIOTalonFX(TunerConstants.BackLeft),
+                new ModuleIOTalonFX(TunerConstants.BackRight));
+        break;
 
-        // SmartDashboard.putData("Auto Chooser", autoChooser);
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIOSim(TunerConstants.FrontLeft),
+                new ModuleIOSim(TunerConstants.FrontRight),
+                new ModuleIOSim(TunerConstants.BackLeft),
+                new ModuleIOSim(TunerConstants.BackRight));
+        break;
 
-        new Trigger(controller2::getYButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(0))));
-
-        new Trigger(controller2::getBButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(90))));
-        
-        new Trigger(controller2::getAButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(180))));
-
-        new Trigger(controller2::getXButtonPressed)
-            .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(270))));
+      default:
+        // Replayed robot, disable IO implementations
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {},
+                new ModuleIO() {});
+        break;
     }
 
-    // public Command getAutonomousCommand() {
-    //     try {
-    //         Command auto = autoChooser.getSelected();
-    //         System.out.println("Auto loaded successfully: " + autoChooser.getSelected().getName());
-    //         return auto;
-    //     } catch (Exception e) {
-    //         System.err.println("Failed to load auto path: " + e.getMessage());
-    //         e.printStackTrace();
-    //         return new AutoDriveCommand(drivetrainSubsystem);
-    //     }
-    // }
+    Supplier<Pose2d> robotPose =
+        () -> {
+          return drive.getPose();
+        };
+    turretSubsystem = new TurretSubsystem(robotPose);
 
-    public void setDefaultTeleopCommand(){
-        System.out.println("SETTING DEFAULT TELEOP COMMAND");
-        var alliance = DriverStation.getAlliance();
-        if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red){
-            drivetrainSubsystem.setDefaultCommand(
-                new TeleopDriveCommand(
-                    drivetrainSubsystem,
-                    () -> modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
-                    () -> modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
-                    () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
-                )
-            );
-        }else if(alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue){
-            drivetrainSubsystem.setDefaultCommand(
-                new TeleopDriveCommand(
-                    drivetrainSubsystem,
-                    () -> -modifyAxis(0.9*controller.getRightY()),    // Changed to raw values
-                    () -> -modifyAxis(0.9*controller.getRightX()),     // Changed to raw values
-                    () -> -modifyAxis(0.8*controller.getLeftX())    // Changed to raw values
-                )
-            );
-        }
+    // Set up auto routines
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    // Set up SysId routines
+    autoChooser.addOption(
+        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    autoChooser.addOption(
+        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Forward)",
+        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Quasistatic Reverse)",
+        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    autoChooser.addOption(
+        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    // Configure the button bindings
+    configureButtonBindings();
+  }
+
+  /**
+   * Use this method to define your button->command mappings. Buttons can be created by
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   */
+  private void configureButtonBindings() {
+    // Default command, normal field-relative drive
+    drive.setDefaultCommand(
+        DriveCommands.joystickDrive(
+            drive,
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> -controller.getRightX()));
+
+    // Lock to 0° when A button is held
+    controller
+        .a()
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> new Rotation2d()));
+
+    // Switch to X pattern when X button is pressed
+    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    // Reset gyro to 0° when B button is pressed
+    controller
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
+
+    controller.x().onTrue(new DriveTwoMeters(drive));
+
+    new Trigger(controller2::getYButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(0))));
+
+    new Trigger(controller2::getBButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(90))));
+
+    new Trigger(controller2::getAButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(180))));
+
+    new Trigger(controller2::getXButtonPressed)
+        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(270))));
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    try {
+      return new PathPlannerAuto("New Auto");
+    } catch (Exception ioe) {
+      System.out.println("bad io error");
     }
+    return Commands.none();
+  }
 
-    public DrivetrainSubsystem getDrivetrainSubsystem(){
-        return drivetrainSubsystem;
+  // autoChooser = AutoBuilder.buildAutoChooser();
+
+  // SmartDashboard.putData("Auto Chooser", autoChooser);
+
+  // public Command getAutonomousCommand() {
+  //     try {
+  //         Command auto = autoChooser.getSelected();
+  //         System.out.println("Auto loaded successfully: " + autoChooser.getSelected().getName());
+  //         return auto;
+  //     } catch (Exception e) {
+  //         System.err.println("Failed to load auto path: " + e.getMessage());
+  //         e.printStackTrace();
+  //         return new AutoDriveCommand(drivetrainSubsystem);
+  //     }
+  // }
+
+  public void setDefaultTeleopCommand() {}
+
+  public Drive getDrivetrainSubsystem() {
+    return drive;
+  }
+
+  private double deadband(double value, double deadband) {
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0) {
+        return (value - deadband) / (1.0 - deadband);
+      } else {
+        return (value + deadband) / (1.0 - deadband);
+      }
+    } else {
+      return 0.0;
     }
+  }
 
+  private double modifyAxis(double value) {
+    value = deadband(value, 0.05);
 
-    private double deadband(double value, double deadband) {
-        if (Math.abs(value) > deadband) {
-            if (value > 0.0) {
-                return (value - deadband) / (1.0 - deadband);
-            } else {
-                return (value + deadband) / (1.0 - deadband);
-            }
-        } else {
-            return 0.0;
-        }
-    }
-
-
-    private double modifyAxis(double value) {
-        value = deadband(value, 0.05);
-
-        // Square the axis
-        value = Math.copySign(value * value, value);
-
-        if(drivetrainSubsystem.getSlowDrive()){
-            return (0.5 * value);
-
-        }
-
-        return value;
-    }
-
+    // Square the axis
+    value = Math.copySign(value * value, value);
+    return value;
+  }
 }
