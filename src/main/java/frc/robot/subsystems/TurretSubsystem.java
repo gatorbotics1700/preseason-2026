@@ -103,7 +103,7 @@ public class TurretSubsystem extends SubsystemBase {
     // System.out.println("delta y" + deltaY);
     Rotation2d angleToTarget = new Rotation2d(Math.atan2(deltaY, deltaX));
     // System.out.println("ATAN2 : "+ angleToTarget.getDegrees());
-    Rotation2d turretAngle = angleToTarget.plus(currentRobotPose.getRotation());
+    Rotation2d turretAngle = angleToTarget.minus(currentRobotPose.getRotation());
     //   System.out.println("TARGET TURRET ANGLE: " + turretAngle);
     return turretAngle;
   }
