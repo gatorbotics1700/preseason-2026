@@ -1,0 +1,57 @@
+package frc.robot.subsystems;
+
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
+public class PassThroughSubsystem extends SubsystemBase {
+  private TalonFX motor1;
+  private TalonFX motor2;
+  private double voltage;
+
+  private final int receiverPort = Constants.RECEIVER_PORT;
+  private final int transmitterPort = Constants.TRANSMITTER_PORT;
+
+  private boolean lastState;
+
+  DigitalInput receiver = new DigitalInput(receiverPort);
+  DigitalOutput transmitter = new DigitalOutput(transmitterPort);
+
+  PassThroughSubsystem() {
+    motor1 = new TalonFX(Constants.PASS_THROUGH_MOTOR_1_CAN_ID);
+    motor2 = new TalonFX(Constants.PASS_THROUGH_MOTOR_2_CAN_ID);
+  }
+
+  @Override
+  public void periodic(){
+    transmitter.set(true);
+    if(receiver.get()){
+        System.out.println("OPEN");
+    } else {
+        System.out.println("CLOSED");
+    }
+  }
+
+  public void setMotorVoltage(double voltage){
+    this.voltage = voltage;
+    System.out.println("Setting motors to: " + this.voltage);
+    motor1.setVoltage(this.voltage);
+    motor2.setVoltage(this.voltage);
+    
+  }
+
+  public double getVoltage(){
+    return voltage;
+  }
+
+  public boolean getLimitSwitchOpen(){
+    if(receiver.get()){
+        return true;
+    }
+    return false;
+  }
+
+}
