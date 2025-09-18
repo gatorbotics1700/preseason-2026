@@ -39,7 +39,7 @@ public class PassThroughSubsystem extends SubsystemBase {
     this.voltage = voltage;
     System.out.println("Setting motors to: " + this.voltage);
     motor1.setVoltage(this.voltage);
-    motor2.setVoltage(this.voltage);
+    motor2.setVoltage(-(this.voltage)); //TODO: check which motor needs to spin in the other direction
     
   }
 
@@ -47,7 +47,7 @@ public class PassThroughSubsystem extends SubsystemBase {
     return voltage;
   }
 
-  public boolean getLimitSwitchOpen(){
+  public boolean isBeambreakClear(){ //TODO: Get beambreak code from the beambreak branch and fix this later
     if(receiver.get()){
         return true;
     }
