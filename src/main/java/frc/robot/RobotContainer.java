@@ -34,6 +34,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -70,8 +71,10 @@ public class RobotContainer {
         this.vision =
             new Vision(
                 drive,
-                new VisionIOPhotonVisionSim(
-                    VisionConstants.CAMERA_0_NAME, VisionConstants.ROBOT_TO_CAMERA_0, drive::getPose));
+                new VisionIOLimelight(
+                    VisionConstants.CAMERA_0_NAME,
+                    drive::getRotation,
+                    VisionConstants.ROBOT_TO_CAMERA_0));
         break;
 
       case SIM:
@@ -88,7 +91,9 @@ public class RobotContainer {
             new Vision(
                 drive,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.CAMERA_0_NAME, VisionConstants.ROBOT_TO_CAMERA_0, drive::getPose));
+                    VisionConstants.CAMERA_0_NAME,
+                    VisionConstants.ROBOT_TO_CAMERA_0,
+                    drive::getPose));
         break;
 
       default:
