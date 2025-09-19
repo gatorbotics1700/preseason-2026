@@ -23,26 +23,26 @@ public class ScoreCommands {
 
     public static Command Trough(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("TROUGH!");
-        return new ElevatorCommand(elevatorSubsystem, Constants.ELEVATOR_LEVEL_ONE)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.TROUGH_VOLTAGE));
+        return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, false));
     }
     
     public static Command LevelTwo(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("LEVEL 2!");
-        return new ElevatorCommand(elevatorSubsystem, Constants.ELEVATOR_LEVEL_TWO)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.L2_VOLTAGE));
+        return new ElevatorCommand(elevatorSubsystem, Constants.L2_HEIGHT)
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, false));
     }
-    
+
 
     public static Command LevelThree(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("LEVEL 3!");
-        return new ElevatorCommand(elevatorSubsystem, Constants.ELEVATOR_LEVEL_THREE)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.L3_VOLTAGE));
+        return new ElevatorCommand(elevatorSubsystem, Constants.L3_HEIGHT)
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, false));
     }
 
-    public static Command Intake(PassThroughSubsystem passThroughSubsystem){
-            System.out.println("INTAKING!");
-            PassThroughCommand passThroughCommand = new PassThroughCommand(passThroughSubsystem, Constants.INTAKING_VOLTAGE);
-            return passThroughCommand;
+    public static Command Intake(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
+        System.out.println("INTAKING!");
+        return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, true));
     }
 }

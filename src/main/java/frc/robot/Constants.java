@@ -48,10 +48,6 @@ public final class Constants {
           / ELEVATOR_SPROCKET_TEETH
           / ELEVATOR_INCHES_PER_SPROCKET_TOOTH;
   public static final double ELEVATOR_INCHES_PER_TICK = 1 / ELEVATOR_TICKS_PER_INCH;
-  public static final double ELEVATOR_LEVEL_ONE = 0.0;
-  public static final double ELEVATOR_LEVEL_TWO = 13.875;
-  public static final double ELEVATOR_LEVEL_THREE = 29.625;
-  public static final double ELEVATOR_LEVEL_FOUR = 54.0;
   public static final int TOP_LIMIT_SWITCH_PORT = 5;
   public static final int BOTTOM_LIMIT_SWITCH_PORT = 1;
 
@@ -63,11 +59,13 @@ public final class Constants {
   public static final int RECEIVER_PORT = 3;
   public static final int TRANSMITTER_PORT = 2;
 
-  public static final double INTAKE_HEIGHT = 22.6;
+  //in inches
+  public static final double INTAKE_HEIGHT = 22.6; 
   public static final double L1_HEIGHT = 23.75;
   public static final double L2_HEIGHT = 34.14;
   public static final double L3_HEIGHT = 49; //should be max height of elevator, maybe more than 49 so it caps off limitswitch
 
+  public static final double OUT_IN_VOLTAGE = 0; // TODO: replace 0 with actual value
 
 
 }
