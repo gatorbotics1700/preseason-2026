@@ -24,25 +24,25 @@ public class ScoreCommands {
     public static Command Trough(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("TROUGH!");
         return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, false));
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING));
     }
     
     public static Command LevelTwo(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("LEVEL 2!");
         return new ElevatorCommand(elevatorSubsystem, Constants.L2_HEIGHT)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, false));
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING));
     }
 
 
     public static Command LevelThree(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("LEVEL 3!");
         return new ElevatorCommand(elevatorSubsystem, Constants.L3_HEIGHT)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, false));
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING));
     }
 
     public static Command Intake(ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem){
         System.out.println("INTAKING!");
         return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
-        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, true));
+        .andThen(new PassThroughCommand(passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
     }
 }

@@ -13,9 +13,6 @@ public class PassThroughSubsystem extends SubsystemBase {
   private TalonFX motor2;
   private double voltage;
 
-  public final boolean INTAKING = true;
-  public final boolean OUTTAKING = false;
-
   LoggedNetworkBoolean beamBreakState = new LoggedNetworkBoolean("/beamBreak/state", false);
 
   private final int receiverPort = Constants.RECEIVER_PORT;
