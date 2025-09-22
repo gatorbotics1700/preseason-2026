@@ -2,40 +2,42 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PassThroughSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 public class PassThroughCommand extends Command {
     private PassThroughSubsystem passThroughSubsystem;
+    private ElevatorSubsystem elevatorSubsystem;
     private final double voltage;
     private boolean isIntaking;
 
+    private final boolean state;
+
+
+
     
-    public PassThroughCommand(PassThroughSubsystem passThroughSubsystem, double voltage, boolean isIntaking){
+    public PassThroughCommand(PassThroughSubsystem passThroughSubsystem, ElevatorSubsystem elevatorSubsystem, double voltage, boolean state){
         this.passThroughSubsystem = passThroughSubsystem;
+        this.elevatorSubsystem = elevatorSubsystem;
         this.voltage = voltage;
-        this.isIntaking = isIntaking;
+        this.state = state;
         addRequirements(passThroughSubsystem);
     }
 
 @Override
 public void execute() {
     passThroughSubsystem.setMotorVoltage(voltage);
-    if (isIntaking) {
-        System.out.println("INTAKING");
-    } else {
-        System.out.println ("OUTTAKING");
-    }
     System.out.println("VOLTAGE: " + voltage);    
 }
 
 @Override
 public boolean isFinished() {
-    if(isIntaking){ // if intaking TODO: check sign of intaking voltage, if less/greater than 0
-        if(passThroughSubsystem.isBeambreakClear()==false){ //if coral is in beambreak
+    if(state == passThroughSubsystem.INTAKING){ // if intaking TODO: check sign of intaking voltage, if less/greater than 0
+        if(passThroughSubsystem.isBeamBroken()==false){ //if coral is in beambreak
             passThroughSubsystem.setMotorVoltage(0);
             return true;
         }
-   } else { //if scoring TODO: check sign of each level's voltage
-        if(passThroughSubsystem.isBeambreakClear()){ //if coral is out of beambreak
+   } else if (state == passThroughSubsystem.OUTTAKING){ //if scoring TODO: check sign of each level's voltage
+        if(passThroughSubsystem.isBeamBroken()){ //if coral is out of beambreak
             passThroughSubsystem.setMotorVoltage(0);
             return true;
         }

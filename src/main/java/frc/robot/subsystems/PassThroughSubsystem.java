@@ -14,6 +14,9 @@ public class PassThroughSubsystem extends SubsystemBase {
 
   private final int receiverPort = Constants.RECEIVER_PORT;
   private final int transmitterPort = Constants.TRANSMITTER_PORT;
+
+  public final boolean INTAKING = true;
+  public final boolean OUTTAKING = false;
   
   DigitalInput receiver = new DigitalInput(receiverPort);
   DigitalOutput transmitter = new DigitalOutput(transmitterPort);
@@ -45,15 +48,11 @@ public class PassThroughSubsystem extends SubsystemBase {
     return voltage;
   }
 
-  public boolean isBeambreakClear(){ //logic check + check for clarity
-        transmitter.set(true);
-        if(receiver.get()){
-            System.out.println("OPEN");
-            return true;
-        } else {
-            System.out.println("CLOSED");
-            return false;
-      }
+  public boolean isBeamBroken(){ //TODO: Get beambreak code from the beambreak branch and fix this later
+    if(receiver.get()){
+        return true;
+    }
+    return false;
   }
 } 
 
