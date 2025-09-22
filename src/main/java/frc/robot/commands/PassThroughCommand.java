@@ -2,22 +2,17 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PassThroughSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 
 public class PassThroughCommand extends Command {
     private PassThroughSubsystem passThroughSubsystem;
-    private ElevatorSubsystem elevatorSubsystem;
     private final double voltage;
     private boolean isIntaking;
 
     private final boolean state;
 
-
-
     
-    public PassThroughCommand(PassThroughSubsystem passThroughSubsystem, ElevatorSubsystem elevatorSubsystem, double voltage, boolean state){
+    public PassThroughCommand(PassThroughSubsystem passThroughSubsystem, double voltage, boolean state){
         this.passThroughSubsystem = passThroughSubsystem;
-        this.elevatorSubsystem = elevatorSubsystem;
         this.voltage = voltage;
         this.state = state;
         addRequirements(passThroughSubsystem);

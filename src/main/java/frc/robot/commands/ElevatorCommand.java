@@ -35,6 +35,10 @@ public class ElevatorCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return true;
+    //CHECK TO SEE IF CURRENT POSITION IS AT 
+    if(Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()) <= DEADBAND){
+      return true;
+    }
+    return false;
   }
 }

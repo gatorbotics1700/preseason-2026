@@ -6,11 +6,17 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class PassThroughSubsystem extends SubsystemBase {
   private TalonFX motor1;
   private TalonFX motor2;
   private double voltage;
+
+  public final boolean INTAKING = true;
+  public final boolean OUTTAKING = false;
+
+  LoggedNetworkBoolean beamBreakState = new LoggedNetworkBoolean("/beamBreak/state", false);
 
   private final int receiverPort = Constants.RECEIVER_PORT;
   private final int transmitterPort = Constants.TRANSMITTER_PORT;
@@ -29,11 +35,7 @@ public class PassThroughSubsystem extends SubsystemBase {
   @Override
   public void periodic(){
     transmitter.set(true);
-    if(receiver.get()){
-        System.out.println("OPEN");
-    } else {
-        System.out.println("CLOSED");
-    }
+    beamBreakState.set(receiver.get());
   }
 
   public void setMotorVoltage(double voltage){
