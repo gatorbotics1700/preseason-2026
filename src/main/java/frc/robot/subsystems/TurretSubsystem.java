@@ -22,7 +22,7 @@ public class TurretSubsystem extends SubsystemBase {
   private static final double kP = 0.025;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
-  private static final Translation2d TARGET = new Translation2d(2, 2);
+  private Translation2d target = new Translation2d(0, 0);
   private boolean useAngle;
   private double speed;
 
@@ -40,9 +40,13 @@ public class TurretSubsystem extends SubsystemBase {
     // System.out.println("STARTING ANGLE: " + getTurretAngle());
   }
 
+  public void setTargetPoint(Translation2d targetPoint) {
+    target = targetPoint;
+  }
+
   public void periodic() {
     if (useAngle == false) {
-      turnToAngle(getTargetTurretAngle(TARGET));
+      turnToAngle(getTargetTurretAngle(target));
     }
   }
 
@@ -110,5 +114,9 @@ public class TurretSubsystem extends SubsystemBase {
 
   public void setUseAngle(boolean useAngle) {
     this.useAngle = useAngle;
+  }
+
+  public boolean getUseAngle() {
+    return useAngle;
   }
 }

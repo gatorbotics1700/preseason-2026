@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.TurretSubsystem;
@@ -9,6 +10,7 @@ public class TurretCommand extends Command {
 
   private TurretSubsystem turretSubsystem;
   private Rotation2d desiredAngle;
+  private Translation2d desiredPoint;
 
   public TurretCommand(TurretSubsystem turretSubsystem, Rotation2d desiredAngle) {
     this.turretSubsystem = turretSubsystem;
@@ -16,14 +18,28 @@ public class TurretCommand extends Command {
     addRequirements(turretSubsystem);
   }
 
+  public TurretCommand(TurretSubsystem turretSubsystem, Translation2d desiredPoint) {
+    this.turretSubsystem = turretSubsystem;
+    this.desiredPoint = desiredPoint;
+    addRequirements(turretSubsystem);
+  }
+
   @Override
   public void initialize() {
-    turretSubsystem.setUseAngle(true);
+    if (desiredAngle != null) {
+      turretSubsystem.setUseAngle(true);
+    } else {
+      turretSubsystem.setUseAngle(false);
+    }
   }
 
   @Override
   public void execute() {
-    turretSubsystem.turnToAngle(desiredAngle);
+    if (turretSubsystem.getUseAngle()) {
+      turretSubsystem.turnToAngle(desiredAngle);
+    } else {
+      turretSubsystem.setTargetPoint(desiredPoint);
+    }
   }
 
   @Override

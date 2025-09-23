@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -159,14 +160,20 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                     () -> {
-                      if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+                      if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                         drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d(Math.toRadians(180))));
+                            new Pose2d(
+                                drive.getPose().getTranslation(),
+                                new Rotation2d(Math.toRadians(180))));
                       } else {
                         drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d(Math.toRadians(180))));
-                      } 
-                    }, drive)
+                            new Pose2d(
+                                drive.getPose().getTranslation(),
+                                new Rotation2d(Math.toRadians(180))));
+                      }
+                    },
+                    drive)
                 .ignoringDisable(true));
 
     controller.x().onTrue(new DriveTwoMeters(drive));
@@ -178,10 +185,10 @@ public class RobotContainer {
         .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(90))));
 
     new Trigger(controller2::getAButtonPressed)
-        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(180))));
+        .onTrue(new TurretCommand(turretSubsystem, new Translation2d(2, 2)));
 
     new Trigger(controller2::getXButtonPressed)
-        .onTrue(new TurretCommand(turretSubsystem, new Rotation2d(Math.toRadians(270))));
+        .onTrue(new TurretCommand(turretSubsystem, new Translation2d(2, -2)));
   }
 
   /**
