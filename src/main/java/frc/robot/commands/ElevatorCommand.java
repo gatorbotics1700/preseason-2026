@@ -10,7 +10,7 @@ public class ElevatorCommand extends Command {
   private double desiredChange;
   private double desiredInches;
 
-  private double DEADBAND = 500; // 1 inch in ticks; TODO: change this value
+  private double deadband = 500; // 1 inch in ticks; TODO: change this value
 
   public ElevatorCommand(
       ElevatorSubsystem elevatorSubsystem, double desiredChange /*double desiredHeight*/) {
@@ -35,8 +35,8 @@ public class ElevatorCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    //CHECK TO SEE IF CURRENT POSITION IS AT 
-    if(Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()) <= DEADBAND){
+    // CHECK TO SEE IF CURRENT POSITION IS AT
+    if (Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()) <= deadband) {
       return true;
     }
     return false;

@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
-
 public class ElevatorSubsystem extends SubsystemBase {
   private TalonFX motor;
   private static DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
@@ -24,9 +23,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   private final DigitalInput topLimitSwitch;
   private final DigitalInput bottomLimitSwitch;
-
-
-  
 
   private double setPoint;
 
