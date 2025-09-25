@@ -51,7 +51,7 @@ public class ScoreCommands extends Command{
   public static Command Intake(
       ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem) {
     System.out.println("INTAKING!");
-    return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
+    return new ElevatorCommand(elevatorSubsystem, Constants.INTAKE_HEIGHT)
         .andThen(
             new PassThroughCommand(
                 passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
