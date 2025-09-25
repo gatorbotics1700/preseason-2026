@@ -6,7 +6,6 @@ import frc.robot.subsystems.PassThroughSubsystem;
 public class PassThroughCommand extends Command {
   private PassThroughSubsystem passThroughSubsystem;
   private final double voltage;
-  private boolean isIntaking;
 
   private final boolean state;
 

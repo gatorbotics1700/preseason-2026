@@ -30,9 +30,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveTwoMeters;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ScoreCommands;
+import frc.robot.commands.PassThroughCommand;
 // import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.PassThroughSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -51,6 +54,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private static final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private static final PassThroughSubsystem passThroughSubsystem = new PassThroughSubsystem();
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -171,13 +175,13 @@ public class RobotContainer {
 
     controller.x().onTrue(new DriveTwoMeters(drive));
 
-    controller_two.a().onTrue(new ElevatorCommand(elevatorSubsystem, 0));
+    controller_two.a().onTrue(ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem)); //trough
 
-    controller_two.b().onTrue(new ElevatorCommand(elevatorSubsystem, 3));
+    controller_two.b().onTrue(ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem)); //level two
 
-    controller_two.x().onTrue(new ElevatorCommand(elevatorSubsystem, 20));
+    controller_two.x().onTrue(ScoreCommands.LevelThree(elevatorSubsystem, passThroughSubsystem)); //level three
 
-    controller_two.y().onTrue(new ElevatorCommand(elevatorSubsystem, -3));
+    controller_two.y().onTrue(ScoreCommands.Intake(elevatorSubsystem, passThroughSubsystem)); //intaking
   }
 
   /**

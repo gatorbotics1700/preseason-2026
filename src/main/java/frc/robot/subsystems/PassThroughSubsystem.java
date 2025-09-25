@@ -23,7 +23,7 @@ public class PassThroughSubsystem extends SubsystemBase {
   DigitalInput receiver = new DigitalInput(receiverPort);
   DigitalOutput transmitter = new DigitalOutput(transmitterPort);
 
-  PassThroughSubsystem() {
+  public PassThroughSubsystem() {
     motor1 = new TalonFXS(Constants.PASS_THROUGH_MOTOR_1_CAN_ID);
     motor2 = new TalonFXS(Constants.PASS_THROUGH_MOTOR_2_CAN_ID);
   }
@@ -48,7 +48,7 @@ public class PassThroughSubsystem extends SubsystemBase {
 
   public boolean
       isBeamBroken() { // TODO: Get beambreak code from the beambreak branch and fix this later
-    if (receiver.get()) {
+    if (receiver.get()) { //whatever lets us know if beambreak has coral in it
       return true;
     }
     return false;

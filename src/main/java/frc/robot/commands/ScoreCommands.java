@@ -6,7 +6,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.PassThroughSubsystem;
 
-public class ScoreCommands {
+public class ScoreCommands extends Command{
   public static Command Level(
       int level, ElevatorSubsystem m_elevatorSub, PassThroughSubsystem m_passThroughSubsystem) {
     System.out.println("IN SCORE COMMAND!!!");
@@ -56,4 +56,14 @@ public class ScoreCommands {
             new PassThroughCommand(
                 passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
   }
+
+  @Override
+  public void initialize() {
+  }
+
+  @Override
+  public void execute() {
+    System.out.println("SCORE COMMAND");
+  }
+
 }
