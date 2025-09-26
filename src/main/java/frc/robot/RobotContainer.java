@@ -85,117 +85,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    PathConstraints constraints =
-        new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
-
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      // We have 12 buttons, but we have different coordinates for red versus blue alliance, so we
-      // need to check which alliance coordinates we use
-
-      Q1LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-
-      Q1RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q2LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q2RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q3LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q3RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q4LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q4RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q5LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q5RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q6LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q6RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-
-    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
-
-      Q1LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q1RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q2LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q2RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q3LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q3RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q4LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q4RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q5LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q5RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q6LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-      Q6RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(
-                  AutoBuilder.pathfindToPose(new Pose2d(5, 5, new Rotation2d()), constraints)));
-    }
-
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -312,6 +201,120 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.x().onTrue(new DriveTwoMeters(drive));
+
+    PathConstraints constraints =
+        new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      // We have 12 buttons, but we have different coordinates for red versus blue alliance, so we
+      // need to check which alliance coordinates we use
+
+      Q1LeftLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(10,true), constraints)));
+
+      Q1RightLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(10,false), constraints)));
+      Q2LeftLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(9,true), constraints)));
+      Q2RightLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(9,false), constraints)));
+      Q3LeftLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(8,true), constraints)));
+      Q3RightLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(8,false), constraints)));
+      Q4LeftLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(7,true), constraints)));
+      Q4RightLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(7,false), constraints)));
+      Q5LeftLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(6,true), constraints)));
+      Q5RightLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(6,false), constraints)));
+      Q6LeftLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(11,true), constraints)));
+      Q6RightLineup.onTrue(
+          Commands.runOnce(() -> System.out.println("starting auto thing"))
+              .andThen(
+                  AutoBuilder.pathfindToPose(vision.getLineupPose(11,false), constraints)));
+
+    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
+        // We have 12 buttons, but we have different coordinates for red versus blue alliance, so we
+        // need to check which alliance coordinates we use
+  
+        Q1LeftLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(10,true), constraints)));
+  
+        Q1RightLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(10,false), constraints)));
+        Q2LeftLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(9,true), constraints)));
+        Q2RightLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(9,false), constraints)));
+        Q3LeftLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(8,true), constraints)));
+        Q3RightLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(8,false), constraints)));
+        Q4LeftLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(7,true), constraints)));
+        Q4RightLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(7,false), constraints)));
+        Q5LeftLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(6,true), constraints)));
+        Q5RightLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(6,false), constraints)));
+        Q6LeftLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(11,true), constraints)));
+        Q6RightLineup.onTrue(
+            Commands.runOnce(() -> System.out.println("starting auto thing"))
+                .andThen(
+                    AutoBuilder.pathfindToPose(vision.getLineupPose(11,false), constraints)));
+  
+      }
   }
 
   /**

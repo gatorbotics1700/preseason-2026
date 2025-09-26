@@ -13,13 +13,20 @@
 
 package frc.robot.subsystems.vision;
 
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -189,5 +196,18 @@ public class Vision extends SubsystemBase {
 
   public Pose3d getTagPose(int tagid) {
     return this.tagPoses.get(tagid);
+  }
+
+  public Pose2d getLineupPose(int tagId, boolean isLeftPipe) {
+    AprilTagFieldLayout layout = VisionConstants.APRIL_TAG_LAYOUT;
+    Pose3d tagPose = layout.getTagPose(tagId).get();
+    Distance lineupXOffset = Centimeters.of(45.72);
+    Distance lineupYOffset = Centimeters.of(10);
+    if (isLeftPipe) {
+      lineupYOffset = Centimeters.of(-10);
+    }
+    Transform3d lineup = new Transform3d(lineupXOffset, lineupYOffset, Centimeters.of(0.0), new Rotation3d());
+    Pose2d fieldRelativePose = tagPose.transformBy(lineup).toPose2d().transformBy(new Transform2d(0, 0, new Rotation2d(Degrees.of(270))));
+    return fieldRelativePose;
   }
 }
