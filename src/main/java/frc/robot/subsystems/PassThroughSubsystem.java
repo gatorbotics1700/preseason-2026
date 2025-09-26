@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,6 +12,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 public class PassThroughSubsystem extends SubsystemBase {
   private TalonFXS motor1;
   private TalonFXS motor2;
+  // private SparkMax motor1;
+  // private SparkMax motor2;
   private double voltage;
 
   LoggedNetworkBoolean beamBreakState = new LoggedNetworkBoolean("/beamBreak/state", false);
@@ -26,6 +30,8 @@ public class PassThroughSubsystem extends SubsystemBase {
   public PassThroughSubsystem() {
     motor1 = new TalonFXS(Constants.PASS_THROUGH_MOTOR_1_CAN_ID);
     motor2 = new TalonFXS(Constants.PASS_THROUGH_MOTOR_2_CAN_ID);
+    // motor1 = new SparkMax(Constants.PASS_THROUGH_MOTOR_1_CAN_ID, MotorType.kBrushless);
+    // motor2 = new SparkMax(Constants.PASS_THROUGH_MOTOR_2_CAN_ID, MotorType.kBrushless);
   }
 
   @Override
@@ -48,7 +54,7 @@ public class PassThroughSubsystem extends SubsystemBase {
 
   public boolean
       isBeamBroken() { // TODO: Get beambreak code from the beambreak branch and fix this later
-    if (receiver.get()) { //whatever lets us know if beambreak has coral in it
+    if (receiver.get()) { // whatever lets us know if beambreak has coral in it
       return true;
     }
     return false;
