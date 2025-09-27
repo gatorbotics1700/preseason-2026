@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.generated.TunerConstants;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -60,7 +61,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   private double motorPositionOffset = 0;
 
   public ElevatorSubsystem() {
-    motor = new TalonFX(Constants.ELEVATOR_CAN_ID);
+    motor = new TalonFX(Constants.ELEVATOR_CAN_ID, TunerConstants.kCANBus);
     motor.setNeutralMode(NeutralModeValue.Brake);
 
     motor
@@ -100,9 +101,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     if ((voltage > 0 && topLimitSwitch.get()) || (voltage < 0 && bottomLimitSwitch.get())) {
-      System.out.println("Current inches: " + getCurrentInches());
-      System.out.println(
-          "Current inches minus 1: " + (getCurrentInches() - 1.0 * Math.signum(voltage)));
+      // System.out.println("Current inches: " + getCurrentInches());
+      // System.out.println(
+      //     "Current inches minus 1: " + (getCurrentInches() - 1.0 * Math.signum(voltage)));
       setSetPoint(getCurrentInches() - 1.0 * Math.signum(voltage));
       // stop(getCurrentInches() - 1.0*Math.signum(voltage));
       // motor.setVoltage(0); //assuming >0 is up and <0 down - test later

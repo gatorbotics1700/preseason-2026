@@ -1,8 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFXS;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
