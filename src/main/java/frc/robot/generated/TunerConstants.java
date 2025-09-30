@@ -178,10 +178,10 @@ public class TunerConstants {
   //   private static final Angle kBackLeftEncoderOffset = Radians.of(-1.025);
   //   private static final Angle kBackRightEncoderOffset = Radians.of(-0.858);
 
-  private static final Angle kFrontLeftEncoderOffset = Radians.of(-0.798);
-  private static final Angle kFrontRightEncoderOffset = Radians.of(3.086);
-  private static final Angle kBackLeftEncoderOffset = Radians.of(1.154);
-  private static final Angle kBackRightEncoderOffset = Radians.of(2.675);
+  private static final Angle kFrontLeftEncoderOffset = Radians.of(-0.815 - Math.PI / 2);
+  private static final Angle kFrontRightEncoderOffset = Radians.of(-0.115);
+  private static final Angle kBackLeftEncoderOffset = Radians.of(2.227);
+  private static final Angle kBackRightEncoderOffset = Radians.of(-0.804);
 
   public static final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>

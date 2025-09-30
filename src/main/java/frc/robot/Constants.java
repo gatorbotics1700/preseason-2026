@@ -48,7 +48,7 @@ public final class Constants {
           / ELEVATOR_SPROCKET_TEETH
           / ELEVATOR_INCHES_PER_SPROCKET_TOOTH;
   public static final double ELEVATOR_INCHES_PER_TICK = 1 / ELEVATOR_TICKS_PER_INCH;
-  public static final int TOP_LIMIT_SWITCH_PORT = 2;
+  public static final int TOP_LIMIT_SWITCH_PORT = 6;
   public static final int BOTTOM_LIMIT_SWITCH_PORT = 9;
 
   // pass through mechanism
@@ -56,8 +56,8 @@ public final class Constants {
   public static final int PASS_THROUGH_MOTOR_2_CAN_ID = 36;
 
   // beambreak ports
-  public static final int RECEIVER_PORT = 0;
-  public static final int TRANSMITTER_PORT = 1;
+  public static final int RECEIVER_PORT = 7;
+  public static final int TRANSMITTER_PORT = 8;
 
   // in inches
   public static final double INTAKE_HEIGHT = 22.6;
@@ -66,5 +66,5 @@ public final class Constants {
   public static final double L3_HEIGHT =
       49; // should be max height of elevator, maybe more than 49 so it caps off limitswitch
 
-  public static final double OUT_IN_VOLTAGE = 0; // TODO: replace 0 with actual value
+  public static final double OUT_IN_VOLTAGE = 2.0;
 }
