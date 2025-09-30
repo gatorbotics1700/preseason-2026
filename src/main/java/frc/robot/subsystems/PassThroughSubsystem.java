@@ -36,6 +36,7 @@ public class PassThroughSubsystem extends SubsystemBase {
   public void periodic() {
     transmitter.set(true);
     beamBreakState.set(receiver.get());
+    System.out.println("beambreak value: " + receiver.get());
   }
 
   public void setVoltage(double voltage) {

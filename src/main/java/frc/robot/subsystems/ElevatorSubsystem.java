@@ -94,6 +94,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     double voltage = calculateVoltage();
 
+    System.out.println("top limit switch: " + topLimitSwitch.get());
+    System.out.println("bottom limit switch: " + bottomLimitSwitch.get());
+
     // System.out.println("CURRENT HEIGHT (IN): " + getCurrentInches());
     if (bottomLimitSwitch.get() && voltage <= 0) {
       motorPositionOffset = convertTicksToInches(getCurrentTicks());

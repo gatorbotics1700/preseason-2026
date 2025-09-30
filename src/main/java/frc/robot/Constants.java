@@ -48,16 +48,16 @@ public final class Constants {
           / ELEVATOR_SPROCKET_TEETH
           / ELEVATOR_INCHES_PER_SPROCKET_TOOTH;
   public static final double ELEVATOR_INCHES_PER_TICK = 1 / ELEVATOR_TICKS_PER_INCH;
-  public static final int TOP_LIMIT_SWITCH_PORT = 5;
-  public static final int BOTTOM_LIMIT_SWITCH_PORT = 1;
+  public static final int TOP_LIMIT_SWITCH_PORT = 2;
+  public static final int BOTTOM_LIMIT_SWITCH_PORT = 9;
 
   // pass through mechanism
-  public static final int PASS_THROUGH_MOTOR_1_CAN_ID = 0; // TODO: set
-  public static final int PASS_THROUGH_MOTOR_2_CAN_ID = 0; // TODO: set
+  public static final int PASS_THROUGH_MOTOR_1_CAN_ID = 35;
+  public static final int PASS_THROUGH_MOTOR_2_CAN_ID = 36;
 
   // beambreak ports
-  public static final int RECEIVER_PORT = 3;
-  public static final int TRANSMITTER_PORT = 2;
+  public static final int RECEIVER_PORT = 0;
+  public static final int TRANSMITTER_PORT = 1;
 
   // in inches
   public static final double INTAKE_HEIGHT = 22.6;

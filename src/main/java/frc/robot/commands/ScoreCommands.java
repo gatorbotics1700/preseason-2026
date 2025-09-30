@@ -24,10 +24,10 @@ public class ScoreCommands extends Command {
   public static Command Trough(
       ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem) {
     System.out.println("TROUGH!");
-    return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
-        .andThen(
-            new PassThroughCommand(
-                passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING));
+    // return new ElevatorCommand(elevatorSubsystem, Constants.L1_HEIGHT)
+    //     .andThen(
+    return new PassThroughCommand(
+        passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING);
   }
 
   public static Command LevelTwo(
@@ -51,10 +51,10 @@ public class ScoreCommands extends Command {
   public static Command Intake(
       ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem) {
     System.out.println("INTAKING!");
-    return new ElevatorCommand(elevatorSubsystem, Constants.INTAKE_HEIGHT)
-        .andThen(
-            new PassThroughCommand(
-                passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
+    // return new ElevatorCommand(elevatorSubsystem, Constants.INTAKE_HEIGHT)
+    //     .andThen(
+    return new PassThroughCommand(
+        passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING);
   }
 
   @Override
