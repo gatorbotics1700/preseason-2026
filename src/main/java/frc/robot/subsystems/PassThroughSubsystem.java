@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -8,8 +8,8 @@ import frc.robot.Constants;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class PassThroughSubsystem extends SubsystemBase {
-  private TalonFXS motor1;
-  private TalonFXS motor2;
+  private TalonFX motor1;
+  private TalonFX motor2;
   // private SparkMax motor1;
   // private SparkMax motor2;
   private double voltage;
@@ -26,8 +26,8 @@ public class PassThroughSubsystem extends SubsystemBase {
   DigitalOutput transmitter = new DigitalOutput(transmitterPort);
 
   public PassThroughSubsystem() {
-    motor1 = new TalonFXS(Constants.PASS_THROUGH_MOTOR_1_CAN_ID);
-    motor2 = new TalonFXS(Constants.PASS_THROUGH_MOTOR_2_CAN_ID);
+    motor1 = new TalonFX(Constants.PASS_THROUGH_MOTOR_1_CAN_ID);
+    motor2 = new TalonFX(Constants.PASS_THROUGH_MOTOR_2_CAN_ID);
     // motor1 = new SparkMax(Constants.PASS_THROUGH_MOTOR_1_CAN_ID, MotorType.kBrushless);
     // motor2 = new SparkMax(Constants.PASS_THROUGH_MOTOR_2_CAN_ID, MotorType.kBrushless);
   }
