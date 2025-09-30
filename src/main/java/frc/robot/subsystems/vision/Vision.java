@@ -202,9 +202,9 @@ public class Vision extends SubsystemBase {
     AprilTagFieldLayout layout = VisionConstants.APRIL_TAG_LAYOUT;
     Pose3d tagPose = layout.getTagPose(tagId).get();
     Distance lineupXOffset = Centimeters.of(45.72);
-    Distance lineupYOffset = Centimeters.of(10);
+    Distance lineupYOffset = Centimeters.of(-10);
     if (isLeftPipe) {
-      lineupYOffset = Centimeters.of(-10);
+      lineupYOffset = Centimeters.of(10);
     }
     Transform3d lineup =
         new Transform3d(lineupXOffset, lineupYOffset, Centimeters.of(0.0), new Rotation3d());
