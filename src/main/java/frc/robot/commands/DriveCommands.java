@@ -311,33 +311,33 @@ public class DriveCommands {
   public static Pose2d getLineupTagPose(Alliance alliance, ReefSide side) {
     if (alliance == Alliance.Red) {
       switch (side) {
-        case Q4:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(7).get().toPose2d();
-        case Q5:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(6).get().toPose2d();
-        case Q6:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(11).get().toPose2d();
         case Q1:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(10).get().toPose2d();
         case Q2:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(9).get().toPose2d();
         case Q3:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(8).get().toPose2d();
+        case Q4:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(7).get().toPose2d();
+        case Q5:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(6).get().toPose2d();
+        case Q6:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(11).get().toPose2d();
       }
     } else {
       switch (side) {
-        case Q4:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(18).get().toPose2d();
-        case Q5:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(19).get().toPose2d();
-        case Q6:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(20).get().toPose2d();
         case Q1:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(21).get().toPose2d();
         case Q2:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(22).get().toPose2d();
         case Q3:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(17).get().toPose2d();
+        case Q4:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(18).get().toPose2d();
+        case Q5:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(19).get().toPose2d();
+        case Q6:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(20).get().toPose2d();
       }
     }
     return null;
@@ -345,35 +345,35 @@ public class DriveCommands {
 
   public static Command Lineup(ReefSide side, boolean isLeft) {
     PathConstraints constraints =
-        new PathConstraints(5, 8.0, Units.degreesToRadians(360), Units.degreesToRadians(720));
+        new PathConstraints(1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
-    Pose2d lineupTagPose = getLineupTagPose(alliance, side);
+    Pose2d pose = getLineupTagPose(alliance, side);
     // should never happen, but just in case we don't find a pose for a reef side
-    if (lineupTagPose == null) {
+    if (pose == null) {
       System.out.println("No pose found for " + side);
       return Commands.none();
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
     if (isLeft) {
-      lineupTagPose =
-          lineupTagPose.transformBy(
+      pose =
+          pose.transformBy(
               new Transform2d(
                   Centimeters.of(50), Centimeters.of(-30), new Rotation2d(Degrees.of(180))));
     } else {
-      lineupTagPose =
-          lineupTagPose.transformBy(
+      pose =
+          pose.transformBy(
               new Transform2d(
                   Centimeters.of(50), Centimeters.of(30), new Rotation2d(Degrees.of(180))));
     }
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
     Pose2d preLineup =
-        lineupTagPose.transformBy(
+        pose.transformBy(
             new Transform2d(
                 Centimeters.of(-100), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
     return AutoBuilder.pathfindToPose(preLineup, constraints)
-        .andThen(AutoBuilder.pathfindToPose(lineupTagPose, constraints));
+        .andThen(AutoBuilder.pathfindToPose(pose, constraints));
   }
 }
