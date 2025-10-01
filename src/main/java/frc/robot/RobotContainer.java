@@ -23,11 +23,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveCommands.ReefSide;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -205,14 +208,20 @@ public class RobotContainer {
     controller
         .x()
         .onTrue(
-            Commands.runOnce(() -> System.out.println("starting auto thing"))
-                .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(10, true), constraints)));
+            new InstantCommand(
+                () -> {
+                  CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(ReefSide.FRONT, true));
+                }));
 
     controller
         .y()
         .onTrue(
-            Commands.runOnce(() -> System.out.println("starting auto thing"))
-                .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(10, false), constraints)));
+            new InstantCommand(
+                () -> {
+                  CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(ReefSide.BACK_RIGHT, false));
+                }));
 
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
