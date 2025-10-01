@@ -300,43 +300,43 @@ public class DriveCommands {
   }
 
   public static enum ReefSide {
-    FRONT,
-    FRONT_LEFT,
-    BACK_LEFT,
-    BACK,
-    BACK_RIGHT,
-    FRONT_RIGHT
+    Q1,
+    Q2,
+    Q3,
+    Q4,
+    Q5,
+    Q6
   }
 
-  public static Pose2d getLineupPose(Alliance alliance, ReefSide side) {
+  public static Pose2d getLineupTagPose(Alliance alliance, ReefSide side) {
     if (alliance == Alliance.Red) {
       switch (side) {
-        case FRONT:
+        case Q4:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(7).get().toPose2d();
-        case FRONT_LEFT:
+        case Q5:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(6).get().toPose2d();
-        case BACK_LEFT:
+        case Q6:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(11).get().toPose2d();
-        case BACK:
+        case Q1:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(10).get().toPose2d();
-        case BACK_RIGHT:
+        case Q2:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(9).get().toPose2d();
-        case FRONT_RIGHT:
+        case Q3:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(8).get().toPose2d();
       }
     } else {
       switch (side) {
-        case FRONT:
+        case Q4:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(18).get().toPose2d();
-        case FRONT_LEFT:
+        case Q5:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(19).get().toPose2d();
-        case BACK_LEFT:
+        case Q6:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(20).get().toPose2d();
-        case BACK:
+        case Q1:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(21).get().toPose2d();
-        case BACK_RIGHT:
+        case Q2:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(22).get().toPose2d();
-        case FRONT_RIGHT:
+        case Q3:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(17).get().toPose2d();
       }
     }
@@ -349,31 +349,31 @@ public class DriveCommands {
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
-    Pose2d pose = getLineupPose(alliance, side);
+    Pose2d lineupTagPose = getLineupTagPose(alliance, side);
     // should never happen, but just in case we don't find a pose for a reef side
-    if (pose == null) {
+    if (lineupTagPose == null) {
       System.out.println("No pose found for " + side);
       return Commands.none();
     }
-    // figure out our desired final lineup spot by transforming out from the tag, and 
+    // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
     if (isLeft) {
-      pose =
-          pose.transformBy(
+      lineupTagPose =
+          lineupTagPose.transformBy(
               new Transform2d(
                   Centimeters.of(50), Centimeters.of(-30), new Rotation2d(Degrees.of(180))));
     } else {
-      pose =
-          pose.transformBy(
+      lineupTagPose =
+          lineupTagPose.transformBy(
               new Transform2d(
                   Centimeters.of(50), Centimeters.of(30), new Rotation2d(Degrees.of(180))));
     }
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
     Pose2d preLineup =
-        pose.transformBy(
+        lineupTagPose.transformBy(
             new Transform2d(
                 Centimeters.of(-100), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
     return AutoBuilder.pathfindToPose(preLineup, constraints)
-        .andThen(AutoBuilder.pathfindToPose(pose, constraints));
+        .andThen(AutoBuilder.pathfindToPose(lineupTagPose, constraints));
   }
 }

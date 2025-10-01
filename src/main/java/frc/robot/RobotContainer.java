@@ -19,7 +19,6 @@ import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -205,101 +204,77 @@ public class RobotContainer {
     PathConstraints constraints =
         new PathConstraints(1, 2.0, Units.degreesToRadians(180), Units.degreesToRadians(360));
 
-    controller
-        .x()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.FRONT, true));
-                }));
+    Q1LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+            }));
 
-    controller
-        .y()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.BACK_RIGHT, false));
-                }));
+    Q1RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
+            }));
 
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      // We have 12 buttons, but we have different coordinates for red versus blue alliance, so we
-      // need to check which alliance coordinates we use
-      Q2LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(9, true), constraints)));
-      Q2RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(9, false), constraints)));
-      Q3LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(8, true), constraints)));
-      Q3RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(8, false), constraints)));
-      Q4LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(7, true), constraints)));
-      Q4RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(7, false), constraints)));
-      Q5LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(6, true), constraints)));
-      Q5RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(6, false), constraints)));
-      Q6LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(11, true), constraints)));
-      Q6RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(11, false), constraints)));
+    Q2LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, true));
+            }));
 
-    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
-      // We have 12 buttons, but we have different coordinates for red versus blue alliance, so we
-      // need to check which alliance coordinates we use
+    Q2RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, false));
+            }));
 
-      Q1LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(10, true), constraints)));
+    Q3LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, true));
+            }));
 
-      Q1RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(10, false), constraints)));
-      Q2LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(9, true), constraints)));
-      Q2RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(9, false), constraints)));
-      Q3LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(8, true), constraints)));
-      Q3RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(8, false), constraints)));
-      Q4LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(7, true), constraints)));
-      Q4RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(7, false), constraints)));
-      Q5LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(6, true), constraints)));
-      Q5RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(6, false), constraints)));
-      Q6LeftLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(11, true), constraints)));
-      Q6RightLineup.onTrue(
-          Commands.runOnce(() -> System.out.println("starting auto thing"))
-              .andThen(AutoBuilder.pathfindToPose(vision.getLineupPose(11, false), constraints)));
-    }
+    Q3RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, false));
+            }));
+
+    Q4LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, true));
+            }));
+
+    Q4RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, false));
+            }));
+
+    Q5LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, true));
+            }));
+
+    Q5RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, false));
+            }));
+
+    Q6LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, true));
+            }));
+
+    Q6RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
+            }));
   }
 
   /**
