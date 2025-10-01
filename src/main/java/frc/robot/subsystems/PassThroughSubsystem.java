@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.generated.TunerConstants;
 
 public class PassThroughSubsystem extends SubsystemBase {
   private TalonFX motor1;
@@ -24,8 +25,8 @@ public class PassThroughSubsystem extends SubsystemBase {
   DigitalOutput transmitter = new DigitalOutput(transmitterPort);
 
   public PassThroughSubsystem() {
-    motor1 = new TalonFX(Constants.PASS_THROUGH_MOTOR_1_CAN_ID);
-    motor2 = new TalonFX(Constants.PASS_THROUGH_MOTOR_2_CAN_ID);
+    motor1 = new TalonFX(Constants.PASS_THROUGH_MOTOR_1_CAN_ID, TunerConstants.kCANBus);
+    motor2 = new TalonFX(Constants.PASS_THROUGH_MOTOR_2_CAN_ID, TunerConstants.kCANBus);
     // motor1 = new SparkMax(Constants.PASS_THROUGH_MOTOR_1_CAN_ID, MotorType.kBrushless);
     // motor2 = new SparkMax(Constants.PASS_THROUGH_MOTOR_2_CAN_ID, MotorType.kBrushless);
   }

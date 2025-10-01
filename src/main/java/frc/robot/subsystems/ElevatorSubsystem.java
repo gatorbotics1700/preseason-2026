@@ -29,14 +29,14 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // TODO: test and change these values
   // private static final double kP = 0; //0.0001
-  LoggedNetworkNumber kP = new LoggedNetworkNumber("/Tuning/kP", 24);
+  LoggedNetworkNumber kP = new LoggedNetworkNumber("/Tuning/kP", 0.0); // 24
   // private static final double kI = 0; //0.0002
   LoggedNetworkNumber kI = new LoggedNetworkNumber("/Tuning/kI", 0.0);
   // private static final double kD = 0; //0.00002
-  LoggedNetworkNumber kD = new LoggedNetworkNumber("/Tuning/kD", 0.15);
+  LoggedNetworkNumber kD = new LoggedNetworkNumber("/Tuning/kD", 0.0); // 0.15
 
   // private static double kDt = 0.02;
-  LoggedNetworkNumber kDt = new LoggedNetworkNumber("/Tuning/kDt", 0.02);
+  LoggedNetworkNumber kDt = new LoggedNetworkNumber("/Tuning/kDt", 0.02); // 0.02
 
   LoggedNetworkNumber kMaxVelocity = new LoggedNetworkNumber("/Tuning/kMaxVelocity", 17);
   LoggedNetworkNumber kMaxAcceleration = new LoggedNetworkNumber("/Tuning/kMaxAcceleration", 17);
@@ -44,12 +44,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   // private static final double kS = 0;
   LoggedNetworkNumber kS = new LoggedNetworkNumber("/Tuning/kS", 0.0);
   // private static final double kG = 0.8;
-  LoggedNetworkNumber kG = new LoggedNetworkNumber("/Tuning/kG", 0.2);
+  LoggedNetworkNumber kG = new LoggedNetworkNumber("/Tuning/kG", 0.2); // 0.2
   // private static final double kV = 10.89;
-  LoggedNetworkNumber kV = new LoggedNetworkNumber("/Tuning/kV", 0.8);
+  LoggedNetworkNumber kV = new LoggedNetworkNumber("/Tuning/kV", 0.0); // 0.8
   // private static final double kA = 0; //0.01
   LoggedNetworkNumber kA =
-      new LoggedNetworkNumber("/Tuning/kA", 0.1); // TODO:actually figure out how to tune this
+      new LoggedNetworkNumber(
+          "/Tuning/kA", 0.0); // 0.1 // TODO:actually figure out how to tune this
 
   private TrapezoidProfile.Constraints m_constraints =
       new TrapezoidProfile.Constraints(kMaxVelocity.get(), kMaxAcceleration.get());
@@ -199,6 +200,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void stop() {
+    System.out.println("elevator stop");
     stop(getCurrentInches());
   }
 
