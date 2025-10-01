@@ -26,12 +26,12 @@ public class PassThroughCommand extends Command {
   @Override
   public boolean isFinished() {
     if (state == passThroughSubsystem.INTAKING) {
-      if (passThroughSubsystem.isBeamBroken() == false) { // if coral is in beambreak
+      if (passThroughSubsystem.isBeamBroken() == true) { // if coral is in beambreak
         passThroughSubsystem.setVoltage(0);
         return true;
       }
     } else if (state == passThroughSubsystem.OUTTAKING) {
-      if (passThroughSubsystem.isBeamBroken()) { // if coral is out of beambreak
+      if (passThroughSubsystem.isBeamBroken() == false) { // if coral is out of beambreak
         passThroughSubsystem.setVoltage(0);
         return true;
       }

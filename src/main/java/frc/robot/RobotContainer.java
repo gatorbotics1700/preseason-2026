@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveTwoMeters;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.PassThroughCommand;
 import frc.robot.commands.ScoreCommands;
 // import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.generated.TunerConstants;
@@ -173,13 +175,19 @@ public class RobotContainer {
 
     controller.x().onTrue(new DriveTwoMeters(drive));
 
-    controller_two
-        .a()
-        .onTrue(ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem)); // trough
+    controller_two.a().onTrue(new ElevatorCommand(elevatorSubsystem, 3));
+    // controller_two
+    //     .a()
+    //     .onTrue(ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem)); // trough
 
+    // controller_two
+    //     .b()
+    //     .onTrue(ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem)); // level two
     controller_two
         .b()
-        .onTrue(ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem)); // level two
+        .onTrue(
+            new PassThroughCommand(
+                passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
 
     controller_two
         .x()

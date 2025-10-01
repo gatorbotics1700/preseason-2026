@@ -66,5 +66,5 @@ public final class Constants {
   public static final double L3_HEIGHT =
       49; // should be max height of elevator, maybe more than 49 so it caps off limitswitch
 
-  public static final double OUT_IN_VOLTAGE = 2.0;
+  public static final double OUT_IN_VOLTAGE = 2;
 }
