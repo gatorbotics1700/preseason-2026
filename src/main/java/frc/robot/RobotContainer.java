@@ -65,7 +65,7 @@ public class RobotContainer {
 
   // Controllers
   private final CommandXboxController controller = new CommandXboxController(0);
-  private final CommandXboxController controller_two = new CommandXboxController(1);
+  private final CommandXboxController controller_two = new CommandXboxController(3);
 
   private final GenericHID buttonBoard1A = new GenericHID(1);
   private final GenericHID buttonBoard1B = new GenericHID(2);
