@@ -29,11 +29,11 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   // TODO: test and change these values
   // private static final double kP = 0; //0.0001
-  LoggedNetworkNumber kP = new LoggedNetworkNumber("/Tuning/kP", 0.0); // 24
+  LoggedNetworkNumber kP = new LoggedNetworkNumber("/Tuning/kP", 24 / 3); // 24
   // private static final double kI = 0; //0.0002
   LoggedNetworkNumber kI = new LoggedNetworkNumber("/Tuning/kI", 0.0);
   // private static final double kD = 0; //0.00002
-  LoggedNetworkNumber kD = new LoggedNetworkNumber("/Tuning/kD", 0.0); // 0.15
+  LoggedNetworkNumber kD = new LoggedNetworkNumber("/Tuning/kD", 0.15 / 3); // 0.15
 
   // private static double kDt = 0.02;
   LoggedNetworkNumber kDt = new LoggedNetworkNumber("/Tuning/kDt", 0.02); // 0.02
@@ -44,14 +44,15 @@ public class ElevatorSubsystem extends SubsystemBase {
   // private static final double kS = 0;
   LoggedNetworkNumber kS = new LoggedNetworkNumber("/Tuning/kS", 0.0);
   // private static final double kG = 0.8;
-  LoggedNetworkNumber kG = new LoggedNetworkNumber("/Tuning/kG", 0.2); // 0.2
+  LoggedNetworkNumber kG = new LoggedNetworkNumber("/Tuning/kG", 0.55);
   // private static final double kV = 10.89;
-  LoggedNetworkNumber kV = new LoggedNetworkNumber("/Tuning/kV", 0.0); // 0.8
+  LoggedNetworkNumber kV = new LoggedNetworkNumber("/Tuning/kV", 0.8 / 3);
   // private static final double kA = 0; //0.01
   LoggedNetworkNumber kA =
       new LoggedNetworkNumber(
           "/Tuning/kA", 0.0); // 0.1 // TODO:actually figure out how to tune this
 
+  LoggedNetworkNumber tunableSetPoint = new LoggedNetworkNumber("/Tuning/tunableSetPoint", 0);
   private TrapezoidProfile.Constraints m_constraints =
       new TrapezoidProfile.Constraints(kMaxVelocity.get(), kMaxAcceleration.get());
   private ProfiledPIDController m_controller =
@@ -63,8 +64,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public ElevatorSubsystem() {
     motor = new TalonFX(Constants.ELEVATOR_CAN_ID, TunerConstants.kCANBus);
-    motor.setNeutralMode(NeutralModeValue.Brake);
-
     motor
         .getConfigurator()
         .apply(
@@ -79,13 +78,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // feedforward.setKs(kS.get());
-    // feedforward.setKg(kG.get());
-    // feedforward.setKv(kV.get());
-    // feedforward.setKa(kA.get());
+    setSetPoint(tunableSetPoint.get());
+    feedforward.setKs(kS.get());
+    feedforward.setKg(kG.get());
+    feedforward.setKv(kV.get());
+    feedforward.setKa(kA.get());
     m_controller.setP(kP.get());
     m_controller.setI(kI.get());
     m_controller.setD(kD.get());
+
     // System.out.println("kP: " + kP.get());
 
     SmartDashboard.putBoolean("top limit switch", topLimitSwitch.get());
@@ -102,15 +103,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     if (bottomLimitSwitch.get() && voltage <= 0) {
       motorPositionOffset = convertTicksToInches(getCurrentTicks());
       voltage = calculateVoltage();
+      System.out.println("RESETTING POSITION OFFSET");
     }
 
-    if ((voltage > 0 && topLimitSwitch.get()) || (voltage < 0 && bottomLimitSwitch.get())) {
-      // System.out.println("Current inches: " + getCurrentInches());
-      // System.out.println(
-      //     "Current inches minus 1: " + (getCurrentInches() - 1.0 * Math.signum(voltage)));
-      setSetPoint(getCurrentInches() - 1.0 * Math.signum(voltage));
-      // stop(getCurrentInches() - 1.0*Math.signum(voltage));
-      // motor.setVoltage(0); //assuming >0 is up and <0 down - test later
+    if ((voltage > 0 && topLimitSwitch.get())) {
+
+      setSetPoint(getCurrentInches() - 1.0);
+
+    } else if (voltage < 0 && bottomLimitSwitch.get()) {
+      setSetPoint(getCurrentInches());
     } else {
       motor.setVoltage(voltage);
     }
@@ -202,6 +203,19 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void stop() {
     System.out.println("elevator stop");
     stop(getCurrentInches());
+  }
+
+  public void setBrakeMode() {
+    motor.setNeutralMode(NeutralModeValue.Brake);
+
+    motor
+        .getConfigurator()
+        .apply(
+            new TalonFXConfiguration()
+                .withMotorOutput(
+                    new MotorOutputConfigs()
+                        .withNeutralMode(NeutralModeValue.Brake)
+                        .withInverted(InvertedValue.Clockwise_Positive)));
   }
 
   public void stop(double desiredInches) {

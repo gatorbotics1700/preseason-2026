@@ -6,8 +6,9 @@ import frc.robot.subsystems.PassThroughSubsystem;
 public class PassThroughCommand extends Command {
   private PassThroughSubsystem passThroughSubsystem;
   private final double voltage;
-
   private final boolean state;
+
+  private double endTime = 0.0;
 
   public PassThroughCommand(
       PassThroughSubsystem passThroughSubsystem, double voltage, boolean state) {
@@ -32,10 +33,13 @@ public class PassThroughCommand extends Command {
       }
     } else if (state == passThroughSubsystem.OUTTAKING) {
       if (passThroughSubsystem.isBeamBroken() == false) { // if coral is out of beambreak
-        // TODO: add a delay here
-        passThroughSubsystem.setVoltage(0);
-        return true;
+        endTime = System.currentTimeMillis();
       }
+    }
+    if (endTime != 0.0 && System.currentTimeMillis() - endTime >= 500) {
+      passThroughSubsystem.setVoltage(0);
+      endTime = 0.0;
+      return true;
     }
     return false;
   }

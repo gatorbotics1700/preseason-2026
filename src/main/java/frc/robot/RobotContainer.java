@@ -179,14 +179,15 @@ public class RobotContainer {
         .a()
         .onTrue(ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem)); // trough
 
-    // controller_two
-    //     .b()
-    //     .onTrue(ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem)); // level two
     controller_two
         .b()
-        .onTrue(
-            new PassThroughCommand(
-                passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
+        .onTrue(ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem)); // level two
+
+    // controller_two
+    //     .y()
+    //     .onTrue(
+    //         new PassThroughCommand(
+    //             passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
 
     controller_two
         .x()
@@ -228,5 +229,9 @@ public class RobotContainer {
 
   public static Command getMechStopCommand() {
     return MechStop();
+  }
+
+  public ElevatorSubsystem getElevatorSubsystem() {
+    return elevatorSubsystem;
   }
 }
