@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.PassThroughSubsystem;
 
@@ -26,6 +27,10 @@ public class PassThroughCommand extends Command {
 
   @Override
   public boolean isFinished() {
+    if(DriverStation.isDisabled()) {
+      return true;
+    }
+
     if (state == passThroughSubsystem.INTAKING) {
       if (passThroughSubsystem.isBeamBroken() == true) { // if coral is in beambreak
         passThroughSubsystem.setVoltage(0);

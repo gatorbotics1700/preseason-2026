@@ -130,6 +130,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     robotContainer.getElevatorSubsystem().setBrakeMode();
+    CommandScheduler.getInstance().cancelAll();
   }
 
   /** This function is called periodically when disabled. */

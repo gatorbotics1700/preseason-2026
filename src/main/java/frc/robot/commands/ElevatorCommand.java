@@ -38,7 +38,6 @@ public class ElevatorCommand extends Command {
   public boolean isFinished() {
     // CHECK TO SEE IF CURRENT POSITION IS AT
     if (DriverStation.isDisabled()) {
-      System.out.println("FINISHGINC COMMAND");
       return true;
     }
     if (Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()) <= deadband) {
