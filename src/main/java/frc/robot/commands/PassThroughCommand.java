@@ -32,7 +32,7 @@ public class PassThroughCommand extends Command {
       }
     } else if (state == passThroughSubsystem.OUTTAKING) {
       if (passThroughSubsystem.isBeamBroken() == false) { // if coral is out of beambreak
-        //TODO: add a delay here
+        // TODO: add a delay here
         passThroughSubsystem.setVoltage(0);
         return true;
       }
