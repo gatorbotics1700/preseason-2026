@@ -75,9 +75,6 @@ public class RobotContainer {
   private final GenericHID buttonBoard1A = new GenericHID(1);
   private final GenericHID buttonBoard1B = new GenericHID(2);
 
-  private final GenericHID buttonBoard2A = new GenericHID(3);
-  private final GenericHID buttonBoard2B = new GenericHID(4);
-
   private final Trigger Q1LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(1));
   private final Trigger Q1RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(2));
 
@@ -109,7 +106,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight),
                 (pose) -> {});
-        this.vision =
+        vision =
             new Vision(
                 drive,
                 new VisionIOLimelight(
@@ -226,7 +223,6 @@ public class RobotContainer {
 
     controller.x().onTrue(new DriveTwoMeters(drive));
 
-    // controller_two.a().onTrue(new ElevatorCommand(elevatorSubsystem, 3));
     controller_two
         .a()
         .onTrue(ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem)); // trough
@@ -234,12 +230,6 @@ public class RobotContainer {
     controller_two
         .b()
         .onTrue(ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem)); // level two
-
-    // controller_two
-    //     .y()
-    //     .onTrue(
-    //         new PassThroughCommand(
-    //             passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
 
     controller_two
         .x()
@@ -254,6 +244,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(elevatorSubsystem::stop)
                 .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false)));
+
     PathConstraints constraints =
         new PathConstraints(1, 2.0, Units.degreesToRadians(180), Units.degreesToRadians(360));
 
