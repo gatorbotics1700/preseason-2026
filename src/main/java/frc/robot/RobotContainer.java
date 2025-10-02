@@ -17,17 +17,22 @@ package frc.robot;
 // import frc.robot.commands.TeleopDriveCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveCommands.ReefSide;
 import frc.robot.commands.DriveTwoMeters;
 import frc.robot.commands.PassThroughCommand;
 import frc.robot.commands.ScoreCommands;
@@ -41,6 +46,10 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -54,13 +63,38 @@ public class RobotContainer {
   private final Drive drive;
   private static final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private static final PassThroughSubsystem passThroughSubsystem = new PassThroughSubsystem();
+  private final Vision vision;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
   private final CommandXboxController controller_two = new CommandXboxController(1);
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser; // we chillin :D
+
+  private final GenericHID buttonBoard1A = new GenericHID(1);
+  private final GenericHID buttonBoard1B = new GenericHID(2);
+
+  private final GenericHID buttonBoard2A = new GenericHID(3);
+  private final GenericHID buttonBoard2B = new GenericHID(4);
+
+  private final Trigger Q1LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(1));
+  private final Trigger Q1RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(2));
+
+  private final Trigger Q2LeftLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(2));
+  private final Trigger Q2RightLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(1));
+
+  private final Trigger Q3LeftLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(4));
+  private final Trigger Q3RightLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(3));
+
+  private final Trigger Q4LeftLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(6));
+  private final Trigger Q4RightLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(5));
+
+  private final Trigger Q5LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(5));
+  private final Trigger Q5RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(6));
+
+  private final Trigger Q6LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(3));
+  private final Trigger Q6RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(4));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -73,7 +107,15 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontLeft),
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
-                new ModuleIOTalonFX(TunerConstants.BackRight));
+                new ModuleIOTalonFX(TunerConstants.BackRight),
+                (pose) -> {});
+        this.vision =
+            new Vision(
+                drive,
+                new VisionIOLimelight(
+                    VisionConstants.CAMERA_0_NAME,
+                    drive::getRotation,
+                    VisionConstants.ROBOT_TO_CAMERA_0));
         break;
 
       case SIM:
@@ -84,7 +126,15 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontLeft),
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+                new ModuleIOSim(TunerConstants.BackRight),
+                (pose) -> {});
+        vision =
+            new Vision(
+                drive,
+                new VisionIOPhotonVisionSim(
+                    VisionConstants.CAMERA_0_NAME,
+                    VisionConstants.ROBOT_TO_CAMERA_0,
+                    drive::getPose));
         break;
 
       default:
@@ -95,7 +145,9 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {},
-                new ModuleIO() {});
+                new ModuleIO() {},
+                (pose) -> {});
+        vision = new Vision(drive);
         break;
     }
 
@@ -166,7 +218,7 @@ public class RobotContainer {
                         drive.setPose(
                             new Pose2d(
                                 drive.getPose().getTranslation(),
-                                new Rotation2d(Math.toRadians(180))));
+                                new Rotation2d(Math.toRadians(0))));
                       }
                     },
                     drive)
@@ -201,6 +253,80 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(elevatorSubsystem::stop)
                 .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false)));
+    PathConstraints constraints =
+        new PathConstraints(1, 2.0, Units.degreesToRadians(180), Units.degreesToRadians(360));
+
+    Q1LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+            }));
+
+    Q1RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
+            }));
+
+    Q2LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, true));
+            }));
+
+    Q2RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, false));
+            }));
+
+    Q3LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, true));
+            }));
+
+    Q3RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, false));
+            }));
+
+    Q4LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, true));
+            }));
+
+    Q4RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, false));
+            }));
+
+    Q5LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, true));
+            }));
+
+    Q5RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, false));
+            }));
+
+    Q6LeftLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, true));
+            }));
+
+    Q6RightLineup.onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
+            }));
   }
 
   /**
