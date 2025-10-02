@@ -27,7 +27,7 @@ public class PassThroughCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    if(DriverStation.isDisabled()) {
+    if (DriverStation.isDisabled()) {
       return true;
     }
 
