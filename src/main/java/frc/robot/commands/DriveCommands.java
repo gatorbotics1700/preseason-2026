@@ -350,6 +350,7 @@ public class DriveCommands {
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
     Pose2d pose = getLineupTagPose(alliance, side);
+    System.out.println(pose);
     // should never happen, but just in case we don't find a pose for a reef side
     if (pose == null) {
       System.out.println("No pose found for " + side);

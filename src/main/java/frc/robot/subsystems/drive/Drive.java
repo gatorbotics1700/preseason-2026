@@ -408,13 +408,4 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   public Pose2d getTargetPose() {
     return targetPose;
   }
-
-  public void addVisionMeasurement(
-      Pose2d visionRobotPoseMeters,
-      double timestampSeconds,
-      Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.addVisionMeasurement(
-        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
-    System.out.println(visionRobotPoseMeters.toString());
-  }
 }

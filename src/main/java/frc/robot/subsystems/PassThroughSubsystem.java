@@ -50,7 +50,7 @@ public class PassThroughSubsystem extends SubsystemBase {
   }
 
   public boolean isBeamBroken() {
-    System.out.println("BEAM BROKEN? " + !receiver.get());
+    // System.out.println("BEAM BROKEN? " + !receiver.get());
     return !receiver.get();
   }
 }
