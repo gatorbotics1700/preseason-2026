@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.ReefSide;
 import frc.robot.commands.DriveTwoMeters;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.PassThroughCommand;
 import frc.robot.commands.ScoreCommands;
 import frc.robot.generated.TunerConstants;
@@ -95,16 +96,19 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Named Commands
-    NamedCommands.registerCommand("Score Trough", ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem));
-    NamedCommands.registerCommand("Score L2", ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem));
-    NamedCommands.registerCommand("Score L3", ScoreCommands.LevelThree(elevatorSubsystem, passThroughSubsystem));
+    NamedCommands.registerCommand(
+        "Score Trough", ScoreCommands.Trough(elevatorSubsystem, passThroughSubsystem));
+    NamedCommands.registerCommand(
+        "Score L2", ScoreCommands.LevelTwo(elevatorSubsystem, passThroughSubsystem));
 
-    NamedCommands.registerCommand("Q1 Left Lineup",
+    NamedCommands.registerCommand(
+        "Q1 Left Lineup",
         new InstantCommand(
             () -> {
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
             }));
-    NamedCommands.registerCommand("Q1 Right Lineup",
+    NamedCommands.registerCommand(
+        "Q1 Right Lineup",
         new InstantCommand(
             () -> {
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
@@ -122,6 +126,14 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight),
                 (pose) -> {});
+        // drive =
+        //     new Drive(
+        //         new GyroIO() {},
+        //         new ModuleIOSim(TunerConstants.FrontLeft),
+        //         new ModuleIOSim(TunerConstants.FrontRight),
+        //         new ModuleIOSim(TunerConstants.BackLeft),
+        //         new ModuleIOSim(TunerConstants.BackRight),
+        //         (pose) -> {});
         vision =
             new Vision(
                 drive,
@@ -249,17 +261,15 @@ public class RobotContainer {
 
     controller_two
         .x()
-        .onTrue(ScoreCommands.LevelThree(elevatorSubsystem, passThroughSubsystem)); // level three
+        .onTrue(
+            new InstantCommand(elevatorSubsystem::stop)
+                .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false)));
 
     controller_two
         .y()
         .onTrue(ScoreCommands.Intake(elevatorSubsystem, passThroughSubsystem)); // intaking
 
-    controller_two
-        .rightBumper()
-        .onTrue(
-            new InstantCommand(elevatorSubsystem::stop)
-                .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false)));
+    controller_two.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, 0));
 
     PathConstraints constraints =
         new PathConstraints(1, 2.0, Units.degreesToRadians(180), Units.degreesToRadians(360));

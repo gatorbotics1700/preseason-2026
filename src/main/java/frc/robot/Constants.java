@@ -60,13 +60,9 @@ public final class Constants {
   public static final int TRANSMITTER_PORT = 8;
 
   // in inches
-  public static final double CARRIAGE_OFFSET = 4.875;
-  public static final double INTAKE_HEIGHT = 22.6 - CARRIAGE_OFFSET; // perhaps 18.5
-  public static final double L1_HEIGHT = 23.75 - CARRIAGE_OFFSET;
-  public static final double L2_HEIGHT = 18;
-  public static final double L3_HEIGHT =
-      49 - CARRIAGE_OFFSET; // should be max height of elevator, maybe more than 49 so it caps off
-  // limitswitch
+  public static final double INTAKE_HEIGHT = 4;
+  public static final double L1_HEIGHT = 0.0; // TODO: set
+  public static final double L2_HEIGHT = 14.5;
 
   public static final double OUT_IN_VOLTAGE = 3.75;
 }

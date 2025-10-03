@@ -8,16 +8,16 @@ public class ElevatorCommand extends Command {
 
   private ElevatorSubsystem elevatorSubsystem;
   // private double desiredHeight; // in inches!
-  private double desiredChange;
+  private double desiredHeight;
   private double desiredInches;
 
   private double deadband = 1; // 1 inch in ticks; TODO: change this value
 
   public ElevatorCommand(
-      ElevatorSubsystem elevatorSubsystem, double desiredChange /*double desiredHeight*/) {
+      ElevatorSubsystem elevatorSubsystem, double desiredHeight /*double desiredHeight*/) {
     this.elevatorSubsystem = elevatorSubsystem;
     // this.desiredHeight = desiredHeight;
-    this.desiredChange = desiredChange;
+    this.desiredHeight = desiredHeight;
     addRequirements(elevatorSubsystem);
   }
 
@@ -25,8 +25,8 @@ public class ElevatorCommand extends Command {
   public void initialize() {
     // desiredTicks = elevatorSubsystem.determineInchesToTicks(desiredHeight);
     // System.out.println("setting isUsingPos to " + isUsingPos);
-    desiredInches = elevatorSubsystem.getCurrentInches() + desiredChange;
-    elevatorSubsystem.setSetPoint(desiredInches);
+    // desiredInches = elevatorSubsystem.getCurrentInches() + desiredChange;
+    elevatorSubsystem.setSetPoint(desiredHeight);
   }
 
   @Override
@@ -40,8 +40,13 @@ public class ElevatorCommand extends Command {
     if (DriverStation.isDisabled()) {
       return true;
     }
+
+    System.out.println(Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()));
     if (Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()) <= deadband) {
       System.out.println("FINISHING COMMAND");
+      return true;
+    }
+    if (elevatorSubsystem.atTopLimitSwitch()) {
       return true;
     }
     return false;

@@ -22,7 +22,7 @@ public class PassThroughCommand extends Command {
   @Override
   public void execute() {
     passThroughSubsystem.setVoltage(voltage);
-    System.out.println("VOLTAGE: " + voltage);
+    // System.out.println("VOLTAGE: " + voltage);
   }
 
   @Override

@@ -78,7 +78,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    setSetPoint(tunableSetPoint.get());
+    // setSetPoint(tunableSetPoint.get());
     feedforward.setKs(kS.get());
     feedforward.setKg(kG.get());
     feedforward.setKv(kV.get());

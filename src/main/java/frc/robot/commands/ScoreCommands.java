@@ -14,8 +14,6 @@ public class ScoreCommands extends Command {
       return Trough(m_elevatorSub, m_passThroughSubsystem);
     } else if (level == 2) {
       return LevelTwo(m_elevatorSub, m_passThroughSubsystem);
-    } else if (level == 3) {
-      return LevelThree(m_elevatorSub, m_passThroughSubsystem);
     }
 
     return Commands.waitSeconds(2); // if all else fails, return a wait command
@@ -39,22 +37,13 @@ public class ScoreCommands extends Command {
                 passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING));
   }
 
-  public static Command LevelThree(
-      ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem) {
-    System.out.println("LEVEL 3!");
-    return new ElevatorCommand(elevatorSubsystem, Constants.L3_HEIGHT)
-        .andThen(
-            new PassThroughCommand(
-                passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.OUTTAKING));
-  }
-
   public static Command Intake(
       ElevatorSubsystem elevatorSubsystem, PassThroughSubsystem passThroughSubsystem) {
     System.out.println("INTAKING!");
-    // return new ElevatorCommand(elevatorSubsystem, Constants.INTAKE_HEIGHT)
-    //     .andThen(
-    return new PassThroughCommand(
-        passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING);
+    return new ElevatorCommand(elevatorSubsystem, Constants.INTAKE_HEIGHT)
+        .andThen(
+            new PassThroughCommand(
+                passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
   }
 
   @Override
