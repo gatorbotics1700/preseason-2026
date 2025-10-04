@@ -9,7 +9,6 @@ public class ElevatorCommand extends Command {
   private ElevatorSubsystem elevatorSubsystem;
   // private double desiredHeight; // in inches!
   private double desiredHeight;
-  private double desiredInches;
 
   private double deadband = 1; // 1 inch in ticks; TODO: change this value
 
@@ -41,8 +40,8 @@ public class ElevatorCommand extends Command {
       return true;
     }
 
-    System.out.println(Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()));
-    if (Math.abs(desiredInches - elevatorSubsystem.getCurrentInches()) <= deadband) {
+    System.out.println(Math.abs(desiredHeight - elevatorSubsystem.getCurrentInches()));
+    if (Math.abs(desiredHeight - elevatorSubsystem.getCurrentInches()) <= deadband) {
       System.out.println("FINISHING COMMAND");
       return true;
     }
