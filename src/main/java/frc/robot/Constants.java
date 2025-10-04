@@ -65,4 +65,5 @@ public final class Constants {
   public static final double L2_HEIGHT = 14.5;
 
   public static final double OUT_IN_VOLTAGE = 3.75;
+  public static final double SHOOT_VOLTAGE = -5;
 }

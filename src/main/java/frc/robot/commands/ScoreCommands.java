@@ -46,6 +46,13 @@ public class ScoreCommands extends Command {
                 passThroughSubsystem, Constants.OUT_IN_VOLTAGE, passThroughSubsystem.INTAKING));
   }
 
+  // public static Command Shoot(
+  //   PassThroughSubsystem passThroughSubsystem) {
+  //     System.out.println("SHOOTING!");
+  //     return new PassThroughCommand(passThroughSubsystem, Constants.SHOOT_VOLTAGE,
+  // passThroughSubsystem.OUTTAKING);
+  //   }
+
   @Override
   public void initialize() {}
 

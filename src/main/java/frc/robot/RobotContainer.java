@@ -247,7 +247,7 @@ public class RobotContainer {
                         drive.setPose(
                             new Pose2d(
                                 drive.getPose().getTranslation(),
-                                new Rotation2d(Math.toRadians(180))));
+                                new Rotation2d(Math.toRadians(0))));
                       } else {
                         drive.setPose(
                             new Pose2d(
@@ -278,7 +278,7 @@ public class RobotContainer {
     controller_two
         .x()
         .onTrue(
-            new InstantCommand(elevatorSubsystem::stop)
+            new ElevatorCommand(elevatorSubsystem, 0)
                 .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false)));
 
     controller_two
