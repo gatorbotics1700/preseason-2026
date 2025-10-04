@@ -160,14 +160,15 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // container.setDefaultTeleopCommand();
+    CommandScheduler.getInstance().cancelAll();
+    robotContainer.setDefaultTeleopCommand();
 
     // This makes sure that the autonomous stops running when teleop starts
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
     mechStopCommand.schedule();
-    // container.stopElevator();
+    // con vvvvvvvvvtainer.stopElevator();
   }
 
   /** This function is called periodically during operator control. */

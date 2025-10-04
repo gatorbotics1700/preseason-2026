@@ -297,7 +297,9 @@ public class DriveCommands {
     Q3,
     Q4,
     Q5,
-    Q6
+    Q6,
+    LeftSubstation,
+    RightSubstation
   }
 
   public static Pose2d getLineupTagPose(Alliance alliance, ReefSide side) {
@@ -315,6 +317,11 @@ public class DriveCommands {
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(6).get().toPose2d();
         case Q6:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(11).get().toPose2d();
+        case LeftSubstation:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(1).get().toPose2d();
+        case RightSubstation:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(2).get().toPose2d();
+        
       }
     } else {
       switch (side) {
@@ -330,6 +337,10 @@ public class DriveCommands {
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(19).get().toPose2d();
         case Q6:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(20).get().toPose2d();
+        case LeftSubstation:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(13).get().toPose2d();
+        case RightSubstation:
+          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(12).get().toPose2d();
       }
     }
     return null;
@@ -367,6 +378,10 @@ public class DriveCommands {
             new Transform2d(
                 Centimeters.of(-100), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
     System.out.println("prelineup pose:" + preLineup.toString());
+    //   return AutoBuilder.pathfindToPose(preLineup, constraints)
+    //       .andThen(AutoBuilder.pathfindToPose(pose, constraints)
+    //       .until(Math.abs(controller.getLeftX())>0.2 || Math.abs(controller.getLeftX())>0.2 ||
+    // Math.abs(controller.getLeftX())>0.2 || Math.abs(controller.getLeftX())>0.2));
     return AutoBuilder.pathfindToPose(preLineup, constraints)
         .andThen(AutoBuilder.pathfindToPose(pose, constraints));
   }

@@ -361,6 +361,19 @@ public class RobotContainer {
             () -> {
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
             }));
+
+    controller_two.povLeft().onTrue(
+              new InstantCommand(
+                  () -> {
+                    CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.LeftSubstation, false));
+                  }));
+    controller_two.povRight().onTrue(
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.RightSubstation
+              , false));
+            }));
+
   }
 
   /**
@@ -388,5 +401,25 @@ public class RobotContainer {
 
   public ElevatorSubsystem getElevatorSubsystem() {
     return elevatorSubsystem;
+  }
+
+  public void setDefaultTeleopCommand() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> controller.getLeftY(), // Changed to raw values
+              () -> controller.getLeftX(), // Changed to raw values
+              () -> -controller.getRightX())); // Changed to raw values
+    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> -controller.getLeftY(), // Changed to raw values
+              () -> -controller.getLeftX(), // Changed to raw values
+              () -> -controller.getRightX())); // Changed to raw values
+    }
+
   }
 }
