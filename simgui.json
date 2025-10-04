@@ -1,8 +1,14 @@
 {
   "NTProvider": {
     "types": {
+      "/AdvantageKit/RealOutputs/Alerts": "Alerts",
+      "/AdvantageKit/RealOutputs/PathPlanner": "Alerts",
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Scheduler": "Scheduler"
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/Auto Choices": "String Chooser",
+      "/SmartDashboard/PathPlanner": "Alerts",
+      "/SmartDashboard/Scheduler": "Scheduler",
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
     }
   },
   "NetworkTables Info": {

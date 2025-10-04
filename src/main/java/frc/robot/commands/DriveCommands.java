@@ -94,15 +94,7 @@ public class DriveCommands {
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
-          boolean isFlipped =
-              DriverStation.getAlliance().isPresent()
-                  && DriverStation.getAlliance().get() == Alliance.Red;
-          drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
-                  speeds,
-                  isFlipped
-                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                      : drive.getRotation()));
+          drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getRotation()));
         },
         drive);
   }
@@ -374,6 +366,7 @@ public class DriveCommands {
         pose.transformBy(
             new Transform2d(
                 Centimeters.of(-100), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
+    System.out.println("prelineup pose:" + preLineup.toString());
     return AutoBuilder.pathfindToPose(preLineup, constraints)
         .andThen(AutoBuilder.pathfindToPose(pose, constraints));
   }

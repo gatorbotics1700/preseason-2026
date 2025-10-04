@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.ReefSide;
-import frc.robot.commands.DriveTwoMeters;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.PassThroughCommand;
 import frc.robot.commands.ScoreCommands;
@@ -207,12 +206,22 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> controller.getLeftY(),
-            () -> controller.getLeftX(),
-            () -> -controller.getRightX()));
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> controller.getLeftY(), // Changed to raw values
+              () -> controller.getLeftX(), // Changed to raw values
+              () -> -controller.getRightX())); // Changed to raw values
+    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
+      drive.setDefaultCommand(
+          DriveCommands.joystickDrive(
+              drive,
+              () -> -controller.getLeftY(), // Changed to raw values
+              () -> -controller.getLeftX(), // Changed to raw values
+              () -> -controller.getRightX())); // Changed to raw values
+    }
 
     // Lock to 0° when A button is held
     controller
@@ -249,7 +258,14 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.x().onTrue(new DriveTwoMeters(drive));
+    // controller.x().onTrue(new DriveTwoMeters(drive));
+    controller
+        .x()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+                }));
 
     controller_two
         .a()
@@ -361,12 +377,8 @@ public class RobotContainer {
     }
   }
 
-  public void stopElevator() {
-    elevatorSubsystem.stop();
-  }
-
   public static Command MechStop() {
-    return new InstantCommand(elevatorSubsystem::stop)
+    return new ElevatorCommand(elevatorSubsystem, elevatorSubsystem.getCurrentInches())
         .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false));
   }
 
