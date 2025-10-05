@@ -321,7 +321,6 @@ public class DriveCommands {
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(1).get().toPose2d();
         case RightSubstation:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(2).get().toPose2d();
-        
       }
     } else {
       switch (side) {
@@ -348,7 +347,7 @@ public class DriveCommands {
 
   public static Command Lineup(ReefSide side, boolean isLeft) {
     PathConstraints constraints =
-        new PathConstraints(1, 1, Units.degreesToRadians(360), Units.degreesToRadians(360));
+        new PathConstraints(3, 3, Units.degreesToRadians(500), Units.degreesToRadians(500));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
@@ -378,10 +377,9 @@ public class DriveCommands {
             new Transform2d(
                 Centimeters.of(-100), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
     System.out.println("prelineup pose:" + preLineup.toString());
-    //   return AutoBuilder.pathfindToPose(preLineup, constraints)
-    //       .andThen(AutoBuilder.pathfindToPose(pose, constraints)
-    //       .until(Math.abs(controller.getLeftX())>0.2 || Math.abs(controller.getLeftX())>0.2 ||
-    // Math.abs(controller.getLeftX())>0.2 || Math.abs(controller.getLeftX())>0.2));
+    // return AutoBuilder.pathfindToPose(preLineup, constraints)
+    //     .andThen(AutoBuilder.pathfindToPose(pose, constraints))
+    //     .until(controller_two.leftTrigger());
     return AutoBuilder.pathfindToPose(preLineup, constraints)
         .andThen(AutoBuilder.pathfindToPose(pose, constraints));
   }

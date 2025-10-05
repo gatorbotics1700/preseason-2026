@@ -204,18 +204,24 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  public void configureButtonBindings() {
     // Default command, normal field-relative drive
+    Trigger driverControl =
+        new Trigger(
+            () ->
+                Math.abs(controller.getLeftY()) > 0.1
+                    || Math.abs(controller.getLeftX()) > 0.1
+                    || Math.abs(controller.getRightX()) > 0.1);
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      drive.setDefaultCommand(
+      driverControl.whileTrue(
           DriveCommands.joystickDrive(
               drive,
               () -> controller.getLeftY(), // Changed to raw values
               () -> controller.getLeftX(), // Changed to raw values
               () -> -controller.getRightX())); // Changed to raw values
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
-      drive.setDefaultCommand(
+      driverControl.whileTrue(
           DriveCommands.joystickDrive(
               drive,
               () -> -controller.getLeftY(), // Changed to raw values
@@ -362,18 +368,22 @@ public class RobotContainer {
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
             }));
 
-    controller_two.povLeft().onTrue(
-              new InstantCommand(
-                  () -> {
-                    CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.LeftSubstation, false));
-                  }));
-    controller_two.povRight().onTrue(
-        new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.RightSubstation
-              , false));
-            }));
-
+    controller_two
+        .leftBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(ReefSide.LeftSubstation, false));
+                }));
+    controller_two
+        .rightBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(ReefSide.RightSubstation, false));
+                }));
   }
 
   /**
@@ -401,25 +411,5 @@ public class RobotContainer {
 
   public ElevatorSubsystem getElevatorSubsystem() {
     return elevatorSubsystem;
-  }
-
-  public void setDefaultTeleopCommand() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      drive.setDefaultCommand(
-          DriveCommands.joystickDrive(
-              drive,
-              () -> controller.getLeftY(), // Changed to raw values
-              () -> controller.getLeftX(), // Changed to raw values
-              () -> -controller.getRightX())); // Changed to raw values
-    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
-      drive.setDefaultCommand(
-          DriveCommands.joystickDrive(
-              drive,
-              () -> -controller.getLeftY(), // Changed to raw values
-              () -> -controller.getLeftX(), // Changed to raw values
-              () -> -controller.getRightX())); // Changed to raw values
-    }
-
   }
 }
