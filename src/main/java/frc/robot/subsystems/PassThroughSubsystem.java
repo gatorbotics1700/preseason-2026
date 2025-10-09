@@ -35,6 +35,8 @@ public class PassThroughSubsystem extends SubsystemBase {
   public void periodic() {
     transmitter.set(true);
     SmartDashboard.putBoolean("beambreak", receiver.get());
+    SmartDashboard.putNumber(
+        "motor one stator current", motor1.getStatorCurrent().getValueAsDouble());
   }
 
   public void setVoltage(double voltage) {
@@ -49,8 +51,9 @@ public class PassThroughSubsystem extends SubsystemBase {
     return voltage;
   }
 
-  public boolean isBeamBroken() {
-    // System.out.println("BEAM BROKEN? " + !receiver.get());
-    return !receiver.get();
-  }
+  // public boolean isBeamBroken() {
+  //   // System.out.println("BEAM BROKEN? " + !receiver.get());
+  //   return !receiver.get();
+  //   // return motor1.getStatorCurrent().getValueAsDouble() > 30;
+  // }
 }

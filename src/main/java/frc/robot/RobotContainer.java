@@ -384,6 +384,11 @@ public class RobotContainer {
                   CommandScheduler.getInstance()
                       .schedule(DriveCommands.Lineup(ReefSide.RightSubstation, false));
                 }));
+    controller_two.rightTrigger().onTrue(new PassThroughCommand(passThroughSubsystem, 0, false));
+    controller_two
+        .leftTrigger()
+        .whileTrue(
+            new PassThroughCommand(passThroughSubsystem, -0.5 * Constants.OUT_IN_VOLTAGE, false));
   }
 
   /**

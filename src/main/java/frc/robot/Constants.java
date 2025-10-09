@@ -56,8 +56,8 @@ public final class Constants {
   public static final int PASS_THROUGH_MOTOR_2_CAN_ID = 36;
 
   // beambreak ports
-  public static final int RECEIVER_PORT = 7;
-  public static final int TRANSMITTER_PORT = 8;
+  public static final int RECEIVER_PORT = 4;
+  public static final int TRANSMITTER_PORT = 5;
 
   // in inches
   public static final double INTAKE_HEIGHT = 4;

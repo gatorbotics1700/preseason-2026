@@ -21,7 +21,11 @@ public class PassThroughCommand extends Command {
 
   @Override
   public void execute() {
-    passThroughSubsystem.setVoltage(voltage);
+    if (state == passThroughSubsystem.INTAKING) {
+      passThroughSubsystem.setVoltage(voltage * 0.5);
+    } else {
+      passThroughSubsystem.setVoltage(voltage);
+    }
     // System.out.println("VOLTAGE: " + voltage);
   }
 
@@ -32,14 +36,14 @@ public class PassThroughCommand extends Command {
     }
 
     if (state == passThroughSubsystem.INTAKING) {
-      if (passThroughSubsystem.isBeamBroken() == true) { // if coral is in beambreak
-        passThroughSubsystem.setVoltage(0);
-        return true;
-      }
+      // if (passThroughSubsystem.isBeamBroken() == true) { // if coral is in beambreak
+      //   passThroughSubsystem.setVoltage(0);
+      //   return true;
+      // }
     } else if (state == passThroughSubsystem.OUTTAKING) {
-      if (passThroughSubsystem.isBeamBroken() == false) { // if coral is out of beambreak
-        endTime = System.currentTimeMillis();
-      }
+      // if (passThroughSubsystem.isBeamBroken() == false) { // if coral is out of beambreak
+      //   endTime = System.currentTimeMillis();
+      // }
     }
     if (endTime != 0.0 && System.currentTimeMillis() - endTime >= 500) {
       passThroughSubsystem.setVoltage(0);
