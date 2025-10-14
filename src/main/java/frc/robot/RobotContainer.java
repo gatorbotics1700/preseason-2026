@@ -272,6 +272,15 @@ public class RobotContainer {
                 () -> {
                   CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
                 }));
+    controller_two
+        .y()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  System.out.println("current pose: " + drive.getPose());
+                  CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(ReefSide.Test, true));
+                }));
 
     controller_two
         .a()
@@ -287,9 +296,9 @@ public class RobotContainer {
             new ElevatorCommand(elevatorSubsystem, 0)
                 .alongWith(new PassThroughCommand(passThroughSubsystem, 0.0, false)));
 
-    controller_two
-        .y()
-        .onTrue(ScoreCommands.Intake(elevatorSubsystem, passThroughSubsystem)); // intaking
+    // controller_two
+    //     .y()
+    //     .onTrue(ScoreCommands.Intake(elevatorSubsystem, passThroughSubsystem)); // intaking
 
     controller_two.povDown().onTrue(new ElevatorCommand(elevatorSubsystem, 0));
 
