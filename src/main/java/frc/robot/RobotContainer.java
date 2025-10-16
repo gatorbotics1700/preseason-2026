@@ -263,6 +263,15 @@ public class RobotContainer {
                     },
                     drive)
                 .ignoringDisable(true));
+      
+    controller
+      .start()
+      .onTrue(Commands.runOnce(
+        () -> {
+          drive.setPose(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))));
+        },
+        drive
+      ));
 
     // controller.x().onTrue(new DriveTwoMeters(drive));
     controller
