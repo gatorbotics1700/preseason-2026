@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.generated.TunerConstants;
@@ -29,6 +30,7 @@ public class DistanceSensor extends SubsystemBase {
     StatusSignal<Distance> distance = CANrange1.getDistance();
 
     // Refresh and print these values
+    SmartDashboard.putNumber("distance sensor", distance.refresh().getValueAsDouble());
     System.out.println("Distance is " + distance.refresh().toString());
   }
 }
