@@ -14,7 +14,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.ReefSide;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.DistanceSensor;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -54,6 +54,7 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Vision vision;
+  private final DistanceSensor distanceSensor;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -105,6 +106,7 @@ public class RobotContainer {
                     VisionConstants.CAMERA_0_NAME,
                     drive::getRotation,
                     VisionConstants.ROBOT_TO_CAMERA_0));
+        this.distanceSensor = new DistanceSensor();
         break;
 
       case SIM:
@@ -124,6 +126,8 @@ public class RobotContainer {
                     VisionConstants.CAMERA_0_NAME,
                     VisionConstants.ROBOT_TO_CAMERA_0,
                     drive::getPose));
+        this.distanceSensor =
+            new DistanceSensor(); // TODO add a sim thing for the distance sensor???
         break;
 
       default:
@@ -137,6 +141,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 (pose) -> {});
         vision = new Vision(drive);
+        this.distanceSensor = new DistanceSensor();
         break;
     }
 
