@@ -217,16 +217,16 @@ public class RobotContainer {
       driverControl.whileTrue(
           DriveCommands.joystickDrive(
               drive,
-              () -> controller.getLeftY(), // Changed to raw values
-              () -> controller.getLeftX(), // Changed to raw values
-              () -> -controller.getRightX())); // Changed to raw values
+              () -> modifyJoystickAxis(controller.getLeftY(), false), // Changed to raw values
+              () -> modifyJoystickAxis(controller.getLeftX(), false), // Changed to raw values
+              () -> modifyJoystickAxis(-controller.getRightX(), false))); // Changed to raw values
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       driverControl.whileTrue(
           DriveCommands.joystickDrive(
               drive,
-              () -> -controller.getLeftY(), // Changed to raw values
-              () -> -controller.getLeftX(), // Changed to raw values
-              () -> -controller.getRightX())); // Changed to raw values
+              () -> modifyJoystickAxis(-controller.getLeftY(), false), // Changed to raw values
+              () -> modifyJoystickAxis(-controller.getLeftX(), false), // Changed to raw values
+              () -> modifyJoystickAxis(-controller.getRightX(), false))); // Changed to raw values
     }
 
     // Lock to 0° when A button is held
@@ -263,15 +263,15 @@ public class RobotContainer {
                     },
                     drive)
                 .ignoringDisable(true));
-      
+
     controller
-      .start()
-      .onTrue(Commands.runOnce(
-        () -> {
-          drive.setPose(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))));
-        },
-        drive
-      ));
+        .start()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))));
+                },
+                drive));
 
     // controller.x().onTrue(new DriveTwoMeters(drive));
     controller
@@ -434,5 +434,34 @@ public class RobotContainer {
 
   public ElevatorSubsystem getElevatorSubsystem() {
     return elevatorSubsystem;
+  }
+
+  private double deadband(double value, double deadband) {
+    // If controller reads very tiny value close to zero, we don't want to make the robot think it
+    // has to move
+    // Without deadband, robot will think it has to move, and then it will go crazy
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0) {
+        return (value - deadband) / (1.0 - deadband);
+      } else {
+        return (value + deadband) / (1.0 - deadband);
+      }
+    } else {
+      return 0.0; // Return 0 if absolute value is within desired margin of error
+    }
+  }
+
+  private double modifyJoystickAxis(double value, boolean isSlow) {
+    // Deadband
+    value = deadband(value, 0.05);
+
+    // Square the axis
+    value = Math.copySign(value * value, value);
+
+    if (isSlow) {
+      return 0.5 * value;
+    }
+
+    return value;
   }
 }
