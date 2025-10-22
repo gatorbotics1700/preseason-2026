@@ -265,11 +265,11 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller
-        .start()
+        .back()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  drive.setPose(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))));
+                  drive.setPose(new Pose2d(4, 2, new Rotation2d(Math.toRadians(0))));
                 },
                 drive));
 
@@ -317,12 +317,14 @@ public class RobotContainer {
     Q1LeftLineup.onTrue(
         new InstantCommand(
             () -> {
+              System.out.println("current pose: " + drive.getPose());
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
             }));
 
     Q1RightLineup.onTrue(
         new InstantCommand(
             () -> {
+              System.out.println("current pose: " + drive.getPose());
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
             }));
 
@@ -453,7 +455,7 @@ public class RobotContainer {
 
   private double modifyJoystickAxis(double value, boolean isSlow) {
     // Deadband
-    value = deadband(value, 0.05);
+    value = deadband(value, 0.025);
 
     // Square the axis
     value = Math.copySign(value * value, value);

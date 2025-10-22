@@ -344,7 +344,7 @@ public class DriveCommands {
         case RightSubstation:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(12).get().toPose2d();
         case Test:
-          return new Pose2d(2, 0, new Rotation2d(0));
+          new Pose2d(6, 2, new Rotation2d(0));
       }
     }
     return null;
@@ -367,10 +367,10 @@ public class DriveCommands {
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
     // if (isLeft) {
-    //   pose =
-    //       pose.transformBy(
-    //           new Transform2d(
-    //               Centimeters.of(50), Centimeters.of(-30), new Rotation2d(Degrees.of(180))));
+    pose =
+        pose.transformBy(
+            new Transform2d(
+                Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
     // } else {
     //   pose =
     //       pose.transformBy(
