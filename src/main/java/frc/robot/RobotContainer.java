@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -104,13 +105,23 @@ public class RobotContainer {
         "Q1 Left Lineup",
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q1, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q1, true));
+                          }
             }));
     NamedCommands.registerCommand(
         "Q1 Right Lineup",
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q1, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q1, false));
+                          }
             }));
 
     // Set up robot depending on mode
@@ -269,7 +280,10 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                   drive.setPose(new Pose2d(0, 0, new Rotation2d(Math.toRadians(0))));
+                          }
                 },
                 drive));
 
@@ -279,16 +293,27 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+                  if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                  CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q1, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q1, true));
+                          }
                 }));
     controller_two
         .y()
         .onTrue(
             new InstantCommand(
                 () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                   System.out.println("current pose: " + drive.getPose());
                   CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.Test, true));
+                      .schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Test, true));
+                          } else {
+                            CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Test, true));
+                          }
                 }));
 
     controller_two
@@ -317,73 +342,133 @@ public class RobotContainer {
     Q1LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q1, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q1, true));
+                          }
             }));
 
     Q1RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q1, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q1, false));
+                          }
             }));
 
     Q2LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q2, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q2, true));
+                          }
             }));
 
     Q2RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q2, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q2, false));
+                          }
             }));
 
     Q3LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q3, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q3, true));
+                          }
             }));
 
     Q3RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q3, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q3, false));
+                          }
             }));
 
     Q4LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q4, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q4, true));
+                          }
             }));
 
     Q4RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q4, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q4, false));
+                          }
             }));
 
     Q5LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q5, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q5, true));
+                          }
             }));
 
     Q5RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q5, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q5, false));
+                          }
             }));
 
     Q6LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, true));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q6, true));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q6, true));
+                          }
             }));
 
     Q6RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
+              if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.Q6, false));
+                          } else {
+                            CommandScheduler.getInstance().schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.Q6, false));
+                          }
             }));
 
     controller_two
@@ -391,16 +476,28 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                   CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.LeftSubstation, false));
+                      .schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.LeftSubstation, false));
+                          } else {
+                            CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.LeftSubstation, false));
+                          }
                 }));
     controller_two
         .rightBumper()
         .onTrue(
             new InstantCommand(
                 () -> {
+                  if (DriverStation.getAlliance().isPresent()
+                          && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                   CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.RightSubstation, false));
+                      .schedule(DriveCommands.Lineup(Alliance.Red, ReefSide.RightSubstation, false));
+                          } else {
+                            CommandScheduler.getInstance()
+                      .schedule(DriveCommands.Lineup(Alliance.Blue, ReefSide.RightSubstation, false));
+                          }
                 }));
     controller_two.rightTrigger().onTrue(new PassThroughCommand(passThroughSubsystem, 0, false));
     controller_two

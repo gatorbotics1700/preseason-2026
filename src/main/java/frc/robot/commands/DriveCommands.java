@@ -350,12 +350,11 @@ public class DriveCommands {
     return null;
   }
 
-  public static Command Lineup(ReefSide side, boolean isLeft) {
+  public static Command Lineup(Alliance alliance, ReefSide side, boolean isLeft) {
     PathConstraints constraints =
         new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
-    Alliance alliance = DriverStation.getAlliance().get();
     Pose2d pose = getLineupTagPose(alliance, side);
     System.out.println("desired pose: " + pose);
 
