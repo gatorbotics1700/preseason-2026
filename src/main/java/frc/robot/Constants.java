@@ -21,17 +21,10 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode simMode = Mode.SIM;
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+  public static int SHOOTER_MOTOR_TOP_LEFT_CAN_ID = 27;
+  public static int SHOOTER_MOTOR_TOP_RIGHT_CAN_ID = 28;
+  public static int CANIVORE_BUS_NAME = 2;
+  public static int CORAL_L4_SHOOTING_VOLTAGE = 10;
 
-  public static enum Mode {
-    /** Running on a real robot. */
-    REAL,
-
-    /** Running a physics simulator. */
-    SIM,
-
-    /** Replaying from a log file. */
-    REPLAY
-  }
+ 
 }
