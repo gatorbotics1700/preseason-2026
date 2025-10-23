@@ -438,6 +438,10 @@ public class RobotContainer {
     return elevatorSubsystem;
   }
 
+  public Drive getDriveSubsystem() {
+    return drive;
+  }
+
   private double deadband(double value, double deadband) {
     // If controller reads very tiny value close to zero, we don't want to make the robot think it
     // has to move
