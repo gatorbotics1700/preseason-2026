@@ -31,8 +31,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveCommands.ReefSide;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.LineupCommand;
+import frc.robot.commands.LineupCommand.ReefSide;
 import frc.robot.commands.PassThroughCommand;
 import frc.robot.commands.ScoreCommands;
 import frc.robot.generated.TunerConstants;
@@ -104,13 +105,13 @@ public class RobotContainer {
         "Q1 Left Lineup",
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, true));
             }));
     NamedCommands.registerCommand(
         "Q1 Right Lineup",
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, false));
             }));
 
     // Set up robot depending on mode
@@ -279,7 +280,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, true));
                 }));
     controller_two
         .y()
@@ -288,7 +289,7 @@ public class RobotContainer {
                 () -> {
                   System.out.println("current pose: " + drive.getPose());
                   CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.Test, true));
+                      .schedule(LineupCommand.Lineup(ReefSide.Test, true));
                 }));
 
     controller_two
@@ -318,74 +319,74 @@ public class RobotContainer {
         new InstantCommand(
             () -> {
               System.out.println("current pose: " + drive.getPose());
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, true));
             }));
 
     Q1RightLineup.onTrue(
         new InstantCommand(
             () -> {
               System.out.println("current pose: " + drive.getPose());
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, false));
             }));
 
     Q2LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, true));
             }));
 
     Q2RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, false));
             }));
 
     Q3LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q3, true));
             }));
 
     Q3RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q3, false));
             }));
 
     Q4LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q4, true));
             }));
 
     Q4RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q4, false));
             }));
 
     Q5LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q5, true));
             }));
 
     Q5RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q5, false));
             }));
 
     Q6LeftLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, true));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q6, true));
             }));
 
     Q6RightLineup.onTrue(
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q6, false));
             }));
 
     controller_two
@@ -394,7 +395,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.LeftSubstation, false));
+                      .schedule(LineupCommand.Lineup(ReefSide.LeftSubstation, false));
                 }));
     controller_two
         .rightBumper()
@@ -402,7 +403,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   CommandScheduler.getInstance()
-                      .schedule(DriveCommands.Lineup(ReefSide.RightSubstation, false));
+                      .schedule(LineupCommand.Lineup(ReefSide.RightSubstation, false));
                 }));
     controller_two.rightTrigger().onTrue(new PassThroughCommand(passThroughSubsystem, 0, false));
     controller_two
