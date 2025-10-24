@@ -265,7 +265,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller
+    controller_two
         .back()
         .onTrue(
             Commands.runOnce(
@@ -326,7 +326,7 @@ public class RobotContainer {
         new InstantCommand(
             () -> {
               System.out.println("current pose: " + drive.getPose());
-              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, false));
+              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, false));
             }));
 
     Q2LeftLineup.onTrue(

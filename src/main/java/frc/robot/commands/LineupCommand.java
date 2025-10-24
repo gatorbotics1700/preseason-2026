@@ -6,7 +6,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -50,7 +49,7 @@ public class LineupCommand {
         case RightSubstation:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(2).get().toPose2d();
         case Test:
-          return new Pose2d(2, 0, new Rotation2d(0));
+          return new Pose2d(6, 2, new Rotation2d(0));
       }
     } else {
       switch (side) {
@@ -94,11 +93,11 @@ public class LineupCommand {
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
     // if (isLeft) {
-    pose =
-        pose.transformBy(
-            new Transform2d(
-                Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
-    // } else {
+    // pose =
+    //     pose.transformBy(
+    //         new Transform2d(
+    //             Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
+    // // } else {
     //   pose =
     //       pose.transformBy(
     //           new Transform2d(
