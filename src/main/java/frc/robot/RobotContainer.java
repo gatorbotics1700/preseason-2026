@@ -49,7 +49,9 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -288,6 +290,9 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   System.out.println("current pose: " + drive.getPose());
+                  Logger.recordOutput("Robot/TargetPose", LineupCommand.getLineupTagPose(DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Test));
+                  Logger.recordOutput("Robot/LineupSide", "Test");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.Test, true));
                 }));
@@ -319,6 +324,10 @@ public class RobotContainer {
         new InstantCommand(
             () -> {
               System.out.println("current pose: " + drive.getPose());
+              // Log lineup target directly - much simpler!
+              Logger.recordOutput("Robot/TargetPose", LineupCommand.getLineupTagPose(DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
+              Logger.recordOutput("Robot/LineupSide", "Q1");
+              Logger.recordOutput("Robot/IsLeftSide", true);
               CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, true));
             }));
 
@@ -326,18 +335,28 @@ public class RobotContainer {
         new InstantCommand(
             () -> {
               System.out.println("current pose: " + drive.getPose());
+              // Log lineup target directly - much simpler!
+              Logger.recordOutput("Robot/TargetPose", LineupCommand.getLineupTagPose(DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
+              Logger.recordOutput("Robot/LineupSide", "Q1");
+              Logger.recordOutput("Robot/IsLeftSide", false);
               CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, false));
             }));
 
     Q2LeftLineup.onTrue(
         new InstantCommand(
             () -> {
+              Logger.recordOutput("Robot/TargetPose", LineupCommand.getLineupTagPose(DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
+              Logger.recordOutput("Robot/LineupSide", "Q2");
+              Logger.recordOutput("Robot/IsLeftSide", true);
               CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, true));
             }));
 
     Q2RightLineup.onTrue(
         new InstantCommand(
             () -> {
+              Logger.recordOutput("Robot/TargetPose", LineupCommand.getLineupTagPose(DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
+              Logger.recordOutput("Robot/LineupSide", "Q2");
+              Logger.recordOutput("Robot/IsLeftSide", false);
               CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, false));
             }));
 
@@ -470,5 +489,46 @@ public class RobotContainer {
     }
 
     return value;
+  }
+  
+  /**
+   * Periodic method to log button states and other robot information.
+   * Call this from Robot.teleopPeriodic() and Robot.autonomousPeriodic().
+   */
+  public void periodic() {
+    // Log button states directly - much simpler!
+    Logger.recordOutput("Buttons/Controller1/A", controller.a().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller1/B", controller.b().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller1/X", controller.x().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller1/Y", controller.y().getAsBoolean());
+    
+    Logger.recordOutput("Buttons/Controller2/A", controller_two.a().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller2/B", controller_two.b().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller2/X", controller_two.x().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller2/Y", controller_two.y().getAsBoolean());
+    
+    // Log button board states
+    for (int i = 1; i <= 6; i++) {
+      Logger.recordOutput("Buttons/ButtonBoard1A/Button" + i, buttonBoard1A.getRawButton(i));
+      Logger.recordOutput("Buttons/ButtonBoard1B/Button" + i, buttonBoard1B.getRawButton(i));
+    }
+    
+    // Log command scheduler status
+    Logger.recordOutput("Commands/SchedulerActive", true);
+    Logger.recordOutput("Commands/LogTime", System.currentTimeMillis());
+    
+    // Log command information with names
+    Command driveCmd = drive.getCurrentCommand();
+    Command elevatorCmd = elevatorSubsystem.getCurrentCommand();
+    Command passThroughCmd = passThroughSubsystem.getCurrentCommand();
+    
+    Logger.recordOutput("Commands/DriveCommand", driveCmd != null ? driveCmd.getName() : "None");
+    Logger.recordOutput("Commands/ElevatorCommand", elevatorCmd != null ? elevatorCmd.getName() : "None");
+    Logger.recordOutput("Commands/PassThroughCommand", passThroughCmd != null ? passThroughCmd.getName() : "None");
+    
+    // Log if commands are running
+    Logger.recordOutput("Commands/DriveCommandActive", driveCmd != null);
+    Logger.recordOutput("Commands/ElevatorCommandActive", elevatorCmd != null);
+    Logger.recordOutput("Commands/PassThroughCommandActive", passThroughCmd != null);
   }
 }

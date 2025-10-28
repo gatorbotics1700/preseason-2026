@@ -109,7 +109,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    mechStopCommand = robotContainer.getMechStopCommand();
+    mechStopCommand = RobotContainer.getMechStopCommand();
   }
 
   /** This function is called periodically during all modes. */
@@ -159,7 +159,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    robotContainer.periodic();
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -177,7 +179,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    robotContainer.periodic();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override

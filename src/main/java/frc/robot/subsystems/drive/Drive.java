@@ -360,6 +360,12 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     return poseEstimator.getEstimatedPosition();
   }
 
+  /** Logs the current robot pose to AdvantageScope. */
+  @AutoLogOutput(key = "Robot/CurrentPose")
+  public Pose2d getCurrentPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return getPose().getRotation();
@@ -405,6 +411,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     this.targetPose = targetPose;
   }
 
+  /** Logs the target pose from lineup commands to AdvantageScope. */
+  @AutoLogOutput(key = "Robot/TargetPose")
   public Pose2d getTargetPose() {
     return targetPose;
   }
