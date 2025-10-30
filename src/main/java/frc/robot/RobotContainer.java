@@ -217,19 +217,25 @@ public class RobotContainer {
                     || Math.abs(controller.getRightX()) > 0.1);
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
-      driverControl.whileTrue(
-          DriveCommands.joystickDrive(
-              drive,
-              () -> modifyJoystickAxis(controller.getLeftY(), false), // Changed to raw values
-              () -> modifyJoystickAxis(controller.getLeftX(), false), // Changed to raw values
-              () -> modifyJoystickAxis(-controller.getRightX(), false))); // Changed to raw values
+      driverControl
+          .whileTrue(
+              DriveCommands.joystickDrive(
+                  drive,
+                  () -> modifyJoystickAxis(controller.getLeftY(), false), // Changed to raw values
+                  () -> modifyJoystickAxis(controller.getLeftX(), false), // Changed to raw values
+                  () ->
+                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+          .onFalse(DriveCommands.stopDriveCommand(drive));
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
-      driverControl.whileTrue(
-          DriveCommands.joystickDrive(
-              drive,
-              () -> modifyJoystickAxis(-controller.getLeftY(), false), // Changed to raw values
-              () -> modifyJoystickAxis(-controller.getLeftX(), false), // Changed to raw values
-              () -> modifyJoystickAxis(-controller.getRightX(), false))); // Changed to raw values
+      driverControl
+          .whileTrue(
+              DriveCommands.joystickDrive(
+                  drive,
+                  () -> modifyJoystickAxis(-controller.getLeftY(), false), // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getLeftX(), false), // Changed to raw values
+                  () ->
+                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+          .onFalse(DriveCommands.stopDriveCommand(drive));
     }
 
     // Lock to 0° when A button is held

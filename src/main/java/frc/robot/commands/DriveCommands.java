@@ -151,6 +151,23 @@ public class DriveCommands {
         .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
   }
 
+  public static Command stopDriveCommand(Drive drive) {
+    return Commands.runOnce(
+            () -> {
+              boolean isFlipped =
+                  DriverStation.getAlliance().isPresent()
+                      && DriverStation.getAlliance().get() == Alliance.Red;
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                      new ChassisSpeeds(0, 0, 0),
+                      isFlipped
+                          ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                          : drive.getRotation()));
+            },
+            drive)
+        .withName("stopDriveCommand");
+  }
+
   /**
    * Measures the velocity feedforward constants for the drive motors.
    *
