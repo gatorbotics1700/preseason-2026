@@ -13,25 +13,17 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.RobotBase;
-
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
  * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode simMode = Mode.SIM;
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
-  public static enum Mode {
-    /** Running on a real robot. */
-    REAL,
-
-    /** Running a physics simulator. */
-    SIM,
-
-    /** Replaying from a log file. */
-    REPLAY
-  }
+  public static final int SHOOTER_MOTOR_TOP_LEFT_CAN_ID = 30;
+  public static final int SHOOTER_MOTOR_TOP_RIGHT_CAN_ID = 32;
+  public static final double CORAL_L4_SHOOTING_VOLTAGE = 8.4;
+  public static final double CORAL_TROUGH_SHOOTING_VOLTAGE = 4;
+  public static final String CANIVORE_BUS_NAME = "TRex";
+  public static final double VOLTAGE_BC_IM_ANGRY = -2;
 }
