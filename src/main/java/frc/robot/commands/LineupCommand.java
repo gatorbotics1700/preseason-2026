@@ -1,9 +1,13 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -90,17 +94,17 @@ public class LineupCommand {
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
-    // if (isLeft) {
-    // pose =
-    //     pose.transformBy(
-    //         new Transform2d(
-    //             Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
-    // // } else {
-    //   pose =
-    //       pose.transformBy(
-    //           new Transform2d(
-    //               Centimeters.of(50), Centimeters.of(30), new Rotation2d(Degrees.of(180))));
-    // }
+    if (isLeft) {
+      pose =
+          pose.transformBy(
+              new Transform2d(
+                  Centimeters.of(40), Centimeters.of(-30), new Rotation2d(Degrees.of(180))));
+    } else {
+      pose =
+          pose.transformBy(
+              new Transform2d(
+                  Centimeters.of(40), Centimeters.of(30), new Rotation2d(Degrees.of(180))));
+    }
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
     // Pose2d preLineup =
     //     pose.transformBy(
@@ -110,6 +114,5 @@ public class LineupCommand {
     // return AutoBuilder.pathfindToPose(preLineup, constraints)
     //     .andThen(AutoBuilder.pathfindToPose(pose, constraints));
     return AutoBuilder.pathfindToPose(pose, constraints);
-    // .andThen(AutoBuilder.pathfindToPose(pose, constraints));
   }
 }
