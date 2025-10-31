@@ -355,7 +355,7 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
                   Logger.recordOutput("Robot/LineupSide", "Q1");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, false));
+                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, false));
                 })
             .withName("Q1RightLineup"));
 

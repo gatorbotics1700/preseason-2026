@@ -98,21 +98,22 @@ public class LineupCommand {
       pose =
           pose.transformBy(
               new Transform2d(
-                  Centimeters.of(40), Centimeters.of(-30), new Rotation2d(Degrees.of(180))));
+                  Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
     } else {
       pose =
           pose.transformBy(
               new Transform2d(
-                  Centimeters.of(40), Centimeters.of(30), new Rotation2d(Degrees.of(180))));
+                  Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
     }
+    // original 40
+
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
-    // Pose2d preLineup =
-    //     pose.transformBy(
-    //         new Transform2d(
-    //             Centimeters.of(-100), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
-    // System.out.println("prelineup pose:" + preLineup.toString());
-    // return AutoBuilder.pathfindToPose(preLineup, constraints)
-    //     .andThen(AutoBuilder.pathfindToPose(pose, constraints));
-    return AutoBuilder.pathfindToPose(pose, constraints);
+    Pose2d preLineup =
+        pose.transformBy(
+            new Transform2d(Centimeters.of(-50), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
+    System.out.println("prelineup pose:" + preLineup.toString());
+    return AutoBuilder.pathfindToPose(preLineup, constraints)
+        .andThen(AutoBuilder.pathfindToPose(pose, constraints));
+    // return AutoBuilder.pathfindToPose(pose, constraints);
   }
 }
