@@ -11,7 +11,6 @@ import frc.robot.Constants;
 public class CoralShooterSubsystem extends SubsystemBase {
   public final TalonFX topMotorLeft;
   public final TalonFX topMotorRight;
-  private static double voltage;
   private final DigitalInput limitSwitch;
 
   public CoralShooterSubsystem() {
@@ -26,7 +25,6 @@ public class CoralShooterSubsystem extends SubsystemBase {
                 .withMotorOutput(
                     new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive)));
     limitSwitch = new DigitalInput(9);
-    voltage = Constants.CORAL_L4_SHOOTING_VOLTAGE;
   }
 
   public void setMotorVoltage(double voltage) {

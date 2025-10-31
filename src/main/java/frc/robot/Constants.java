@@ -22,8 +22,9 @@ public final class Constants {
 
   public static final int SHOOTER_MOTOR_TOP_LEFT_CAN_ID = 30;
   public static final int SHOOTER_MOTOR_TOP_RIGHT_CAN_ID = 32;
-  public static final double CORAL_L4_SHOOTING_VOLTAGE = 8.4;
-  public static final double CORAL_TROUGH_SHOOTING_VOLTAGE = 4;
+  public static final double CORAL_L4_SHOOTING_VOLTAGE = -6;
+  public static final double CORAL_TROUGH_SHOOTING_VOLTAGE = -4;
   public static final String CANIVORE_BUS_NAME = "TRex";
-  public static final double VOLTAGE_BC_IM_ANGRY = -2;
+  public static final double VOLTAGE_BC_IM_ANGRY = 2;
+  public static final double VOLTAGE_VOMIT = -1;
 }

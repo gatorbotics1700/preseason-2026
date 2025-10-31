@@ -13,6 +13,12 @@ public class CoralShooterCommand extends Command {
     this.coralShooterSubsystem = coralShooterSubsystem;
     this.voltage = voltage;
     addRequirements(coralShooterSubsystem);
+    System.out.println("NEW CORAL SHOOTER COMMAND");
+  }
+
+  @Override
+  public void initialize() {
+    startTime = System.currentTimeMillis();
   }
 
   @Override
@@ -39,20 +45,22 @@ public class CoralShooterCommand extends Command {
     double timePassed = System.currentTimeMillis() - startTime;
 
     if (voltage > 0) {
+      if (coralShooterSubsystem.getLimitSwitch()) {
+        System.out.println("Limit switch triggered -- ending intaking");
+        coralShooterSubsystem.setMotorVoltage(0);
+        return true;
+      }
       if (timePassed > 5000) {
         coralShooterSubsystem.setMotorVoltage(0);
         System.out.println("Finish intaking");
         return true;
       }
-    } else if (coralShooterSubsystem.getLimitSwitch()) {
-      System.out.println("Limit switch triggered -- ending intaking");
-      return true;
     } else if (voltage == 0) {
       System.out.println("MOTOR VOLTAGE: 0, STOPPING");
       coralShooterSubsystem.setMotorVoltage(0);
       System.out.println("pre intake move up done");
       return true;
-    } else if (voltage < -1.0) {
+    } else if (voltage < 0) {
       if (timePassed > 1500) {
         coralShooterSubsystem.setMotorVoltage(0);
         System.out.println("Finished shooting");
