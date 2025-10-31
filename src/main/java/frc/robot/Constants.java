@@ -68,6 +68,11 @@ public final class Constants {
   public static final int TUNER_PIGEON_ID;
 
   // Encoder Offsets (loaded from config)
+  // Easy to replace - just copy-paste new offsets here:
+  // TUNER_FRONT_LEFT_ENCODER_OFFSET = <value>;
+  // TUNER_FRONT_RIGHT_ENCODER_OFFSET = <value>;
+  // TUNER_BACK_LEFT_ENCODER_OFFSET = <value>;
+  // TUNER_BACK_RIGHT_ENCODER_OFFSET = <value>;
   public static final double TUNER_FRONT_LEFT_ENCODER_OFFSET;
   public static final double TUNER_FRONT_RIGHT_ENCODER_OFFSET;
   public static final double TUNER_BACK_LEFT_ENCODER_OFFSET;
@@ -98,8 +103,7 @@ public final class Constants {
   public static final double TUNER_BACK_RIGHT_Y_POS;
 
   static {
-    // Load configuration based on roboRIO serial number
-    RobotConfigLoader.loadConfig();
+    // Load configuration based on roboRIO serial number (auto-loads on first access)
     ROBOT_SERIAL_NUMBER = RobotConfigLoader.getSerialNumber();
 
     // Load Vision Constants
@@ -155,6 +159,11 @@ public final class Constants {
     TUNER_PIGEON_ID = RobotConfigLoader.getInt("tuner.pigeon_id");
 
     // Load Encoder Offsets
+    // To quickly update offsets, you can replace the RobotConfigLoader calls with direct values:
+    // TUNER_FRONT_LEFT_ENCODER_OFFSET = -4.87;
+    // TUNER_FRONT_RIGHT_ENCODER_OFFSET = -12.808;
+    // TUNER_BACK_LEFT_ENCODER_OFFSET = -8.863;
+    // TUNER_BACK_RIGHT_ENCODER_OFFSET = -10.491;
     TUNER_FRONT_LEFT_ENCODER_OFFSET =
         RobotConfigLoader.getDouble("tuner.front_left_encoder_offset");
     TUNER_FRONT_RIGHT_ENCODER_OFFSET =
