@@ -431,6 +431,7 @@ public class RobotContainer {
         new InstantCommand(
                 () -> {
                   CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q6, true));
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q6LeftLineup"));
 
@@ -438,6 +439,7 @@ public class RobotContainer {
         new InstantCommand(
                 () -> {
                   CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q6, false));
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q6RightLineup"));
 

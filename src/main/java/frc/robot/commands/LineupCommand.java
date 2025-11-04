@@ -98,12 +98,12 @@ public class LineupCommand {
       pose =
           pose.transformBy(
               new Transform2d(
-                  Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
+                  Centimeters.of(29.5), Centimeters.of(17), new Rotation2d(Degrees.of(180))));
     } else {
       pose =
           pose.transformBy(
               new Transform2d(
-                  Centimeters.of(40), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
+                  Centimeters.of(40), Centimeters.of(-10), new Rotation2d(Degrees.of(180))));
     }
     // original 40
 

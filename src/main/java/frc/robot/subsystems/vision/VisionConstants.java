@@ -37,13 +37,21 @@ public class VisionConstants {
   //           0.196,
   //           new Rotation3d(Math.toRadians(1), Math.toRadians(-19.5), Math.toRadians(-3)));
   // dory's sketchy limelight offsets
+  //   public static Transform3d ROBOT_TO_CAMERA_0 =
+  //       new Transform3d(
+  //           0.2192,
+  //           0.26287,
+  //           0.238,
+  //           new Rotation3d(Math.toRadians(0), Math.toRadians(-24), Math.toRadians(-22)));
   public static Transform3d ROBOT_TO_CAMERA_0 =
       new Transform3d(
-          0.2192,
-          0.26287,
-          0.238,
-          new Rotation3d(Math.toRadians(0), Math.toRadians(-24), Math.toRadians(-22)));
-  //   public static Transform3d ROBOT_TO_CAMERA_1 =
+          0.2159,
+          0.254,
+          0.1905,
+          new Rotation3d(Math.toRadians(-14.4), Math.toRadians(-40.4), Math.toRadians(-20)));
+  //  1.4 ----- -27.2 ------- -20
+  //
+  // public static Transform3d ROBOT_TO_CAMERA_1 =
   //       new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI));
 
   // Basic filtering thresholds
