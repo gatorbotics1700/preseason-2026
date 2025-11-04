@@ -34,6 +34,10 @@ public class DriveTwoMeters extends Command {
 
   // Maximum output speed (in meters per second) to prevent overshooting
   private static final double MAX_OUTPUT_SPEED = 6.0;
+  
+  // Set to true to stop when at setpoint (prevents overshoot)
+  // Set to false to allow overshoot for educational demonstration
+  private static final boolean STOP_AT_SETPOINT = false;
 
   private final PIDController pidController;
   private final double startX;
@@ -81,6 +85,14 @@ public class DriveTwoMeters extends Command {
     // Limit the output to prevent overshooting
     double outputSpeed = Math.max(-MAX_OUTPUT_SPEED, Math.min(MAX_OUTPUT_SPEED, pidOutput));
 
+    // Check if we're at setpoint - if enabled, stop moving (prevents overshoot)
+    // This pattern explicitly checks each axis and sets speed to 0 when at target
+    // Set STOP_AT_SETPOINT to false to see overshoot behavior with high Kp values
+    if (STOP_AT_SETPOINT && xAtSetpoint()) {
+      outputSpeed = 0.0;
+      System.out.println("At X setpoint - stopping");
+    }
+
     // Drive forward in the X direction (robot's current heading)
     // We use field-relative speeds to maintain the robot's orientation
     drivetrainSubsystem.runVelocity(
@@ -95,10 +107,21 @@ public class DriveTwoMeters extends Command {
     //                    ", Output: " + outputSpeed);
   }
 
+  /**
+   * Check if we're at the X setpoint (within tolerance).
+   * This uses the same pattern as checking each axis individually.
+   */
+  private boolean xAtSetpoint() {
+    double currentX = drivetrainSubsystem.getPose().getX();
+    double errorX = Math.abs(targetX - currentX); // Calculate error manually
+    return errorX <= DEADBAND;
+  }
+
   @Override
   public boolean isFinished() {
-    // Command finishes when PID controller is at setpoint (within tolerance)
-    boolean atTarget = pidController.atSetpoint();
+    // Command finishes when we're at setpoint (within tolerance)
+    // Using explicit check instead of PIDController.atSetpoint() for clarity
+    boolean atTarget = xAtSetpoint();
 
     if (atTarget) {
       System.out.println(
