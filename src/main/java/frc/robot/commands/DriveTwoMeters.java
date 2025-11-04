@@ -25,7 +25,7 @@ public class DriveTwoMeters extends Command {
   private final Drive drivetrainSubsystem;
 
   // Manually tuned PID constants
-  private static final double PID_KP = 2.0; // Proportional gain - controls response strength
+  private static final double PID_KP = 25.0; // Proportional gain - controls response strength
   private static final double PID_KI = 0.0; // Integral gain - handles steady-state error
   private static final double PID_KD = 0.0; // Derivative gain - reduces overshoot
 
@@ -33,7 +33,7 @@ public class DriveTwoMeters extends Command {
   private static final double DEADBAND = 0.05;
 
   // Maximum output speed (in meters per second) to prevent overshooting
-  private static final double MAX_OUTPUT_SPEED = 2.0;
+  private static final double MAX_OUTPUT_SPEED = 6.0;
 
   private final PIDController pidController;
   private final double startX;
