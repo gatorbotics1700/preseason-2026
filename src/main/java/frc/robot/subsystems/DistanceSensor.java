@@ -31,6 +31,6 @@ public class DistanceSensor extends SubsystemBase {
 
     // Refresh and print these values
     SmartDashboard.putNumber("distance sensor", distance.refresh().getValueAsDouble());
-    System.out.println("Distance is " + distance.refresh().toString());
+    System.out.println("Distance is " + distance.refresh().getValueAsDouble());
   }
 }
