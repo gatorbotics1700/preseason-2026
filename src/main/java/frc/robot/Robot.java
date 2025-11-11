@@ -107,11 +107,6 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
-  @Override
-  public void robotInit() {
-    mechStopCommand = RobotContainer.getMechStopCommand();
-  }
-
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
@@ -133,17 +128,13 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    robotContainer.getElevatorSubsystem().setBrakeMode();
     CommandScheduler.getInstance().cancelAll();
-    robotContainer.getElevatorSubsystem().setSetPoint(0);
   }
 
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
     mechStopCommand.schedule();
-    robotContainer.getElevatorSubsystem().setSetPoint(0);
-    // robotContainer.stopElevator();
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */

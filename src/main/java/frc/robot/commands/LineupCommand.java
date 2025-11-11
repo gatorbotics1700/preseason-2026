@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
 import frc.robot.subsystems.vision.VisionConstants;
 
 public class LineupCommand {
@@ -29,6 +30,12 @@ public class LineupCommand {
     LeftSubstation,
     RightSubstation,
     Test
+  }
+
+  public static enum YOffset{
+    Left,
+    Right,
+    Center
   }
 
   public static Pose2d getLineupTagPose(Alliance alliance, ReefSide side) {
@@ -78,42 +85,41 @@ public class LineupCommand {
     return null;
   }
 
-  public static Command Lineup(ReefSide side, boolean isLeft) {
+  public static Command Lineup(ReefSide side, YOffset yOffset) {
     PathConstraints constraints =
         new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
-    Pose2d pose = getLineupTagPose(alliance, side);
-    System.out.println("desired pose: " + pose);
+    Pose2d desiredPose = getLineupTagPose(alliance, side);
 
     // should never happen, but just in case we don't find a pose for a reef side
-    if (pose == null) {
+    if (desiredPose == null) {
       System.out.println("No pose found for " + side);
       return Commands.none();
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
-    if (isLeft) {
-      pose =
-          pose.transformBy(
+    if (yOffset==YOffset.Left) {
+      desiredPose =
+          desiredPose.transformBy(
               new Transform2d(
-                  Centimeters.of(29.5), Centimeters.of(17), new Rotation2d(Degrees.of(180))));
-    } else {
-      pose =
-          pose.transformBy(
+                  Constants.CENTER_TO_BUMPER_OFFSET, Constants.CENTER_TO_POLE_OFFSET, new Rotation2d(Degrees.of(180))));
+    } else if(yOffset==YOffset.Right){
+      //Center to pole offset is negative because from april tag perspective, the right pole is in the negative y direction
+      desiredPose =
+          desiredPose.transformBy(
               new Transform2d(
-                  Centimeters.of(40), Centimeters.of(-10), new Rotation2d(Degrees.of(180))));
+                  Constants.CENTER_TO_BUMPER_OFFSET, Constants.CENTER_TO_POLE_OFFSET.times(-1), new Rotation2d(Degrees.of(180))));
     }
-    // original 40
+    // TODO: original 40
 
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
     Pose2d preLineup =
-        pose.transformBy(
-            new Transform2d(Centimeters.of(-50), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
-    System.out.println("prelineup pose:" + preLineup.toString());
+        desiredPose.transformBy(
+            new Transform2d(Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1), Centimeters.of(0), new Rotation2d(Degrees.of(0))));
+    System.out.println("prelineup pose:" + preLineup.toString());//TODO: get rid of this eventually
     return AutoBuilder.pathfindToPose(preLineup, constraints)
-        .andThen(AutoBuilder.pathfindToPose(pose, constraints));
-    // return AutoBuilder.pathfindToPose(pose, constraints);
+        .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
   }
 }

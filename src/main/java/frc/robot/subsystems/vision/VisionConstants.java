@@ -25,34 +25,14 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   public static final String CAMERA_0_NAME = "limelight";
-  public static final String CAMERA_1_NAME = "camera_1";
 
   // Robot to camera transforms
-  // (Not used by Limelight, configure in web UI instead)
-  // manta's limelight offsets
-  //   public static Transform3d ROBOT_TO_CAMERA_0 =
-  //       new Transform3d(
-  //           0.3394,
-  //           0.009,
-  //           0.196,
-  //           new Rotation3d(Math.toRadians(1), Math.toRadians(-19.5), Math.toRadians(-3)));
-  // dory's sketchy limelight offsets
-  //   public static Transform3d ROBOT_TO_CAMERA_0 =
-  //       new Transform3d(
-  //           0.2192,
-  //           0.26287,
-  //           0.238,
-  //           new Rotation3d(Math.toRadians(0), Math.toRadians(-24), Math.toRadians(-22)));
-  public static Transform3d ROBOT_TO_CAMERA_0 =
+public static Transform3d ROBOT_TO_CAMERA_0 =
       new Transform3d(
           0.2159,
           0.254,
           0.1905,
           new Rotation3d(Math.toRadians(0), Math.toRadians(-24.4), Math.toRadians(-24)));
-  //  1.4 ----- -27.2 ------- -20
-  //
-  // public static Transform3d ROBOT_TO_CAMERA_1 =
-  //       new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI));
 
   // Basic filtering thresholds
   public static double MAX_AMBIGUITY = 0.3;
@@ -68,7 +48,6 @@ public class VisionConstants {
   public static double[] CAMERA_STD_DEV_FACTORS =
       new double[] {
         1.0, // Camera 0
-        1.0 // Camera 1
       };
 
   // Multipliers to apply for MegaTag 2 observations

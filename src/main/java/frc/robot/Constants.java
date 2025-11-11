@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Centimeters;
+
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -37,33 +40,8 @@ public final class Constants {
 
   public static final int KRAKEN_TICKS_PER_REV = 2048;
 
-  // elevator mechanisms
-  public static final int ELEVATOR_CAN_ID = 17;
-  public static final double ELEVATOR_SPROCKET_TEETH = 16; // inches
-  public static final double ELEVATOR_GEAR_RATIO = 9.0;
-  public static final double ELEVATOR_INCHES_PER_SPROCKET_TOOTH = 0.25;
-  public static final double ELEVATOR_TICKS_PER_INCH =
-      KRAKEN_TICKS_PER_REV
-          * ELEVATOR_GEAR_RATIO
-          / ELEVATOR_SPROCKET_TEETH
-          / ELEVATOR_INCHES_PER_SPROCKET_TOOTH;
-  public static final double ELEVATOR_INCHES_PER_TICK = 1 / ELEVATOR_TICKS_PER_INCH;
-  public static final int TOP_LIMIT_SWITCH_PORT = 6;
-  public static final int BOTTOM_LIMIT_SWITCH_PORT = 9;
-
-  // pass through mechanism
-  public static final int PASS_THROUGH_MOTOR_1_CAN_ID = 35;
-  public static final int PASS_THROUGH_MOTOR_2_CAN_ID = 36;
-
-  // beambreak ports
-  public static final int RECEIVER_PORT = 4;
-  public static final int TRANSMITTER_PORT = 5;
-
-  // in inches
-  public static final double INTAKE_HEIGHT = 4;
-  public static final double L1_HEIGHT = 0.0; // TODO: set
-  public static final double L2_HEIGHT = 14.5;
-
-  public static final double OUT_IN_VOLTAGE = 3.75;
-  public static final double SHOOT_VOLTAGE = -5;
+  public static final Distance CENTER_TO_BUMPER_OFFSET = Centimeters.of(40);
+  //left and right offsets for the poles on the reef
+  public static final Distance CENTER_TO_POLE_OFFSET = Centimeters.of(16.5);
+  public static final Distance ROBOT_RADIUS_WITH_BUMPERS = Centimeters.of(57);
 }
