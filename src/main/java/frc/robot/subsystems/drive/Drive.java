@@ -46,7 +46,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -166,7 +165,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
         PP_CONFIG,
-        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        () ->
+            false, // Disable alliance flipping - tag poses are already in correct coordinate system
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
@@ -360,6 +360,12 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     return poseEstimator.getEstimatedPosition();
   }
 
+  /** Logs the current robot pose to AdvantageScope. */
+  @AutoLogOutput(key = "Robot/CurrentPose")
+  public Pose2d getCurrentPose() {
+    return poseEstimator.getEstimatedPosition();
+  }
+
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return getPose().getRotation();
@@ -405,16 +411,9 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     this.targetPose = targetPose;
   }
 
+  /** Logs the target pose from lineup commands to AdvantageScope. */
+  @AutoLogOutput(key = "Robot/TargetPose")
   public Pose2d getTargetPose() {
     return targetPose;
-  }
-
-  public void addVisionMeasurement(
-      Pose2d visionRobotPoseMeters,
-      double timestampSeconds,
-      Matrix<N3, N1> visionMeasurementStdDevs) {
-    poseEstimator.addVisionMeasurement(
-        visionRobotPoseMeters, timestampSeconds, visionMeasurementStdDevs);
-    System.out.println(visionRobotPoseMeters.toString());
   }
 }
