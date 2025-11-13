@@ -81,4 +81,3 @@ The system will throw a runtime exception if:
 - The serial number is not recognized
 - The configuration file cannot be loaded
 - Required configuration values are missing
-

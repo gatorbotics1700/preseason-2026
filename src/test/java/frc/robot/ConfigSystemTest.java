@@ -67,4 +67,3 @@ public class ConfigSystemTest {
     assertTrue(Constants.TUNER_WHEEL_RADIUS > 0, "Wheel radius should be positive");
   }
 }
-
