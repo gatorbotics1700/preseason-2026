@@ -23,38 +23,66 @@ import java.io.IOException;
 import java.util.Properties;
 
 /** Simple config loader that reads properties files based on roboRIO serial number. */
-public class RobotConfigLoader {
-  private static final String shenandoahSerialNumber = "03223852";
-  private static final String huangHeSerialNumber = "032D20FA";
-  private static Properties config = null;
+public final class RobotConfigLoader {
+  private static final String SHENANDOAH_SERIAL = "03223852";
+  private static final String HUANG_HE_SERIAL = "032D20FA";
+  private static final String DEFAULT_SIM_SERIAL = "SIMULATION";
+  private static final String DEFAULT_CONFIG_FILE = "config_robot1.properties";
+  private static final String SERIAL_PROPERTY_KEY = "robot.serial";
+  private static final String SERIAL_ENV_KEY = "ROBOT_SERIAL";
+  private static final String CONFIG_PROPERTY_KEY = "robot.config";
+  private static final String CONFIG_ENV_KEY = "ROBOT_CONFIG";
 
-  static Properties load() {
+  private static Properties config;
+  private static String serialOverride;
+  private static String configOverride;
+  private static String resolvedSerial;
+
+  private RobotConfigLoader() {}
+
+  public static synchronized void setSerialNumberOverride(String overrideSerial) {
+    serialOverride = normalize(overrideSerial);
+    resolvedSerial = null;
+    config = null;
+  }
+
+  public static synchronized void setConfigFileOverride(String overrideFile) {
+    configOverride = normalize(overrideFile);
+    config = null;
+  }
+
+  public static synchronized void clearCache() {
+    config = null;
+    resolvedSerial = null;
+  }
+
+  static synchronized Properties load() {
     if (config != null) {
       return config;
     }
 
-    String serialNumber = RobotController.getSerialNumber();
-    System.out.println("serialNumber: " + serialNumber);
-    String fileName =
-        switch (serialNumber) {
-          case shenandoahSerialNumber -> "config_robot1.properties";
-          case huangHeSerialNumber -> "config_robot2.properties";
-          default -> throw new RuntimeException("Unknown roboRIO serial: " + serialNumber);
-        };
+    String serial = getSerialNumber();
+    String configFile = resolveConfigFile(serial);
 
     config = new Properties();
-    try {
-      config.load(new FileInputStream(Filesystem.getDeployDirectory().getPath() + "/" + fileName));
-      System.out.println("Loaded config: " + fileName + " (Serial: " + serialNumber + ")");
+    try (FileInputStream stream =
+        new FileInputStream(Filesystem.getDeployDirectory().getPath() + "/" + configFile)) {
+      config.load(stream);
+      System.out.println(
+          "RobotConfigLoader: Loaded config '" + configFile + "' (Serial: " + serial + ")");
     } catch (IOException e) {
-      throw new RuntimeException("Failed to load config: " + fileName, e);
+      throw new RuntimeException("RobotConfigLoader: Failed to load config: " + configFile, e);
     }
 
     return config;
   }
 
   public static String getString(String key) {
-    return load().getProperty(key);
+    String value = load().getProperty(key);
+    if (value == null) {
+      throw new IllegalArgumentException("Missing config key: " + key);
+    }
+    return value;
   }
 
   public static double getDouble(String key) {
@@ -65,8 +93,83 @@ public class RobotConfigLoader {
     return Integer.parseInt(getString(key));
   }
 
-  public static String getSerialNumber() {
-    return RobotController.getSerialNumber();
+  public static synchronized String getSerialNumber() {
+    if (resolvedSerial == null) {
+      resolvedSerial = computeSerialNumber();
+    }
+    return resolvedSerial;
+  }
+
+  private static String computeSerialNumber() {
+    String fromOverride = normalize(serialOverride);
+    if (fromOverride != null) {
+      return fromOverride;
+    }
+
+    String fromProperty = normalize(System.getProperty(SERIAL_PROPERTY_KEY));
+    if (fromProperty != null) {
+      return fromProperty;
+    }
+
+    String fromEnv = normalize(System.getenv(SERIAL_ENV_KEY));
+    if (fromEnv != null) {
+      return fromEnv;
+    }
+
+    try {
+      String serial = normalize(RobotController.getSerialNumber());
+      if (serial != null) {
+        return serial;
+      }
+    } catch (UnsatisfiedLinkError | NoClassDefFoundError e) {
+      // Desktop unit tests (no HAL loaded)
+    } catch (Throwable t) {
+      System.out.println(
+          "RobotConfigLoader: Unable to read roboRIO serial (" + t.getMessage() + ")");
+    }
+
+    return DEFAULT_SIM_SERIAL;
+  }
+
+  private static String resolveConfigFile(String serial) {
+    String fromOverride = normalize(configOverride);
+    if (fromOverride != null) {
+      return fromOverride;
+    }
+
+    String fromProperty = normalize(System.getProperty(CONFIG_PROPERTY_KEY));
+    if (fromProperty != null) {
+      return fromProperty;
+    }
+
+    String fromEnv = normalize(System.getenv(CONFIG_ENV_KEY));
+    if (fromEnv != null) {
+      return fromEnv;
+    }
+
+    return switch (serial) {
+      case SHENANDOAH_SERIAL -> "config_robot1.properties";
+      case HUANG_HE_SERIAL -> "config_robot2.properties";
+      default -> {
+        System.out.println(
+            "RobotConfigLoader: Unknown serial '"
+                + serial
+                + "', falling back to '"
+                + DEFAULT_CONFIG_FILE
+                + "'. Set -D"
+                + CONFIG_PROPERTY_KEY
+                + "=<file> or call setConfigFileOverride() to pick a specific config.");
+        yield DEFAULT_CONFIG_FILE;
+      }
+    };
+  }
+
+  private static String normalize(String text) {
+    if (text == null) {
+      return null;
+    }
+    String trimmed = text.trim();
+    return trimmed.isEmpty() ? null : trimmed;
   }
 
   public static Transform3d createRobotToCamera0Transform() {
