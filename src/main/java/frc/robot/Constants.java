@@ -110,7 +110,7 @@ public final class Constants {
     LIMELIGHT_CAMERA_0_NAME = RobotConfigLoader.getString("limelight.camera0.name");
     LIMELIGHT_CAMERA_1_NAME = RobotConfigLoader.getString("limelight.camera1.name");
     LIMELIGHT_ROBOT_TO_CAMERA0_X = RobotConfigLoader.getDouble("limelight.robot_to_camera0.x");
-   LIMELIGHT_ROBOT_TO_CAMERA0_Y = RobotConfigLoader.getDouble("limelight.robot_to_camera0.y");
+    LIMELIGHT_ROBOT_TO_CAMERA0_Y = RobotConfigLoader.getDouble("limelight.robot_to_camera0.y");
     LIMELIGHT_ROBOT_TO_CAMERA0_Z = RobotConfigLoader.getDouble("limelight.robot_to_camera0.z");
     LIMELIGHT_ROBOT_TO_CAMERA0_ROLL =
         RobotConfigLoader.getDouble("limelight.robot_to_camera0.roll");
