@@ -64,6 +64,7 @@ public final class Constants {
   public static final double TUNER_SPEED_AT_12_VOLTS;
   public static final double TUNER_DRIVE_GEAR_RATIO;
   public static final double TUNER_STEER_GEAR_RATIO;
+  public static final double TUNER_COUPLE_RATIO;
   public static final double TUNER_WHEEL_RADIUS;
   public static final int TUNER_PIGEON_ID;
 
@@ -153,6 +154,7 @@ public final class Constants {
     TUNER_SLIP_CURRENT = RobotConfigLoader.getDouble("tuner.slip_current");
     TUNER_STATOR_CURRENT_LIMIT = RobotConfigLoader.getDouble("tuner.stator_current_limit");
     TUNER_SPEED_AT_12_VOLTS = RobotConfigLoader.getDouble("tuner.speed_at_12_volts");
+    TUNER_COUPLE_RATIO = RobotConfigLoader.getDouble("tuner.couple_ratio");
     TUNER_DRIVE_GEAR_RATIO = RobotConfigLoader.getDouble("tuner.drive_gear_ratio");
     TUNER_STEER_GEAR_RATIO = RobotConfigLoader.getDouble("tuner.steer_gear_ratio");
     TUNER_WHEEL_RADIUS = RobotConfigLoader.getDouble("tuner.wheel_radius");

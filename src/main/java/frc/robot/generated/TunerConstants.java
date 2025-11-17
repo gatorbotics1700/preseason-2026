@@ -87,7 +87,7 @@ public class TunerConstants {
 
   private static final double kDriveGearRatio = 6.746031746031747;
   private static final double kSteerGearRatio = 21.428571428571427;
-  private static final Distance kWheelRadius = Centimeters.of(5);
+  private static final Distance kWheelRadius = Inches.of(2);
 
   private static final boolean kInvertLeftSide = false;
   private static final boolean kInvertRightSide = true;
@@ -133,11 +133,11 @@ public class TunerConstants {
               .withSteerFrictionVoltage(kSteerFrictionVoltage)
               .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
-  // dory offsets
-  private static final Angle kFrontLeftEncoderOffset = Radians.of(-4.87);
-  private static final Angle kFrontRightEncoderOffset = Radians.of(-12.808); // Radians.of(-8.863);
-  private static final Angle kBackLeftEncoderOffset = Radians.of(-8.863); // Radians.of(-10.491);
-  private static final Angle kBackRightEncoderOffset = Radians.of(-10.491); // Radians.of(-12.808);
+  // hulk offsets
+  private static final Angle kFrontLeftEncoderOffset = Rotations.of(-4.87);
+  private static final Angle kFrontRightEncoderOffset = Rotations.of(-12.808); // Radians.of(-8.863);
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(-8.863); // Radians.of(-10.491);
+  private static final Angle kBackRightEncoderOffset = Rotations.of(-10.491); // Radians.of(-12.808);
 
   // Front Left
   private static final int kFrontLeftDriveMotorId = 21;
