@@ -134,10 +134,10 @@ public class TunerConstants {
               .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
   // hulk offsets
-  private static final Angle kFrontLeftEncoderOffset = Rotations.of(-4.87);
-  private static final Angle kFrontRightEncoderOffset = Rotations.of(-12.808); // Radians.of(-8.863);
-  private static final Angle kBackLeftEncoderOffset = Rotations.of(-8.863); // Radians.of(-10.491);
-  private static final Angle kBackRightEncoderOffset = Rotations.of(-10.491); // Radians.of(-12.808);
+  private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.178955078125);
+  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.211181640625);
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(0.16650390625);
+  private static final Angle kBackRightEncoderOffset = Rotations.of(-0.107177734375);
 
   // Front Left
   private static final int kFrontLeftDriveMotorId = 21;
