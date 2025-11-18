@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants;
+import frc.robot.subsystems.vision.VisionConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -148,7 +149,7 @@ public final class RobotConfigLoader {
     }
 
     return switch (serial) {
-      case SHENANDOAH_SERIAL -> "config_robot1.properties";
+      case SHENANDOAH_SERIAL -> "config_hulk.properties";
       case HUANG_HE_SERIAL -> "config_robot2.properties";
       default -> {
         System.out.println(
@@ -174,13 +175,13 @@ public final class RobotConfigLoader {
 
   public static Transform3d createRobotToCamera0Transform() {
     return new Transform3d(
-        Constants.LIMELIGHT_ROBOT_TO_CAMERA0_X,
-        Constants.LIMELIGHT_ROBOT_TO_CAMERA0_Y,
-        Constants.LIMELIGHT_ROBOT_TO_CAMERA0_Z,
+        VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_X,
+        VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_Y,
+        VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_Z,
         new Rotation3d(
-            Math.toRadians(Constants.LIMELIGHT_ROBOT_TO_CAMERA0_ROLL),
-            Math.toRadians(Constants.LIMELIGHT_ROBOT_TO_CAMERA0_PITCH),
-            Math.toRadians(Constants.LIMELIGHT_ROBOT_TO_CAMERA0_YAW)));
+            Math.toRadians(VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_ROLL),
+            Math.toRadians(VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_PITCH),
+            Math.toRadians(VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_YAW)));
   }
 
   /** Creates array of camera std dev factors from config values. */
