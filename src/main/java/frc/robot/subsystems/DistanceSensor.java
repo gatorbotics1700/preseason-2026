@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,7 +26,7 @@ public class DistanceSensor extends SubsystemBase {
     CANrange1.getConfigurator().apply(configs);
   }
 
-  public double getDistance(){
+  public double getDistance() {
     return CANrange1.getDistance().refresh().getValueAsDouble();
   }
 
@@ -45,5 +44,4 @@ public class DistanceSensor extends SubsystemBase {
     //   stop();
     // }
   }
-
 }
