@@ -9,7 +9,7 @@ public class TurretCommand extends Command {
   private final double degreesToTurn;
   private double setPoint;
   private PIDController pidController;
-  private static final double kP = 0.2;
+  private static final double kP = 0.001; // 0.2;
   private static final double kI = 0;
   private static final double kD = 0;
 

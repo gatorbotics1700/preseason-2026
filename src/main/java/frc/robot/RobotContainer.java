@@ -30,7 +30,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveCommands.ReefSide;
+import frc.robot.commands.TurretCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -54,8 +56,11 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
 
+  private final TurretSubsystem turretSubsystem;
+
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController controller2 = new CommandXboxController(3);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser; // we chillin :D
@@ -63,8 +68,8 @@ public class RobotContainer {
   private final GenericHID buttonBoard1A = new GenericHID(1);
   private final GenericHID buttonBoard1B = new GenericHID(2);
 
-  private final GenericHID buttonBoard2A = new GenericHID(3);
-  private final GenericHID buttonBoard2B = new GenericHID(4);
+  // private final GenericHID buttonBoard2A = new GenericHID(3);
+  // private final GenericHID buttonBoard2B = new GenericHID(4);
 
   private final Trigger Q1LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(1));
   private final Trigger Q1RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(2));
@@ -139,6 +144,7 @@ public class RobotContainer {
         break;
     }
 
+    turretSubsystem = new TurretSubsystem();
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -286,6 +292,16 @@ public class RobotContainer {
             () -> {
               CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
             }));
+
+    // new Trigger(controller2::getAButtonPressed).onTrue(new TurretCommand(turretSubsystem, 30));
+
+    controller2.a().whileTrue(new TurretCommand(turretSubsystem, 90));
+
+    controller2.b().whileTrue(new TurretCommand(turretSubsystem, -90));
+
+    controller2.x().whileTrue(new TurretCommand(turretSubsystem, 180));
+
+    controller2.y().whileTrue(new TurretCommand(turretSubsystem, -180));
   }
 
   /**
