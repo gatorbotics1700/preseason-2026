@@ -27,12 +27,14 @@ public class VisionConstants {
   public static final String CAMERA_0_NAME = "limelight";
 
   // Robot to camera transforms
-public static Transform3d ROBOT_TO_CAMERA_0 =
+  public static Transform3d ROBOT_TO_CAMERA_0 =
       new Transform3d(
-          0.2159,
-          0.254,
-          0.1905,
-          new Rotation3d(Math.toRadians(0), Math.toRadians(-24.4), Math.toRadians(-24)));
+          0.24, // 0.2159,
+          0.263,
+          0.193,
+          new Rotation3d(Math.toRadians(1), Math.toRadians(23.3), Math.toRadians(-24)));
+
+  // its -24.4 in the middle and -24 on the right thx
 
   // Basic filtering thresholds
   public static double MAX_AMBIGUITY = 0.3;

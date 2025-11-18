@@ -17,10 +17,8 @@ package frc.robot;
 // import frc.robot.commands.TeleopDriveCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -97,13 +95,15 @@ public class RobotContainer {
         "Q1 Left Lineup",
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
+              CommandScheduler.getInstance()
+                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
             }));
     NamedCommands.registerCommand(
         "Q1 Right Lineup",
         new InstantCommand(
             () -> {
-              CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
+              CommandScheduler.getInstance()
+                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
             }));
 
     // Set up robot depending on mode
@@ -146,7 +146,7 @@ public class RobotContainer {
                     drive::getPose));
         break;
 
-      default: //TODO: should the default be real as a safety for matches? to be discussed
+      default: // TODO: should the default be real as a safety for matches? to be discussed
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
@@ -261,7 +261,6 @@ public class RobotContainer {
                 },
                 drive));
 
-
     controller_two
         .y()
         .onTrue(
@@ -278,8 +277,7 @@ public class RobotContainer {
                       .schedule(LineupCommand.Lineup(ReefSide.Test, YOffset.Center));
                 }));
 
-
-     Q1LeftLineup.onTrue(
+    Q1LeftLineup.onTrue(
         new InstantCommand(
                 () -> {
                   System.out.println("current pose: " + drive.getPose());
@@ -290,7 +288,9 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
                   Logger.recordOutput("Robot/LineupSide", "Q1");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Center));
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q1LeftLineup"));
 
@@ -304,7 +304,9 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
                   Logger.recordOutput("Robot/LineupSide", "Q1");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Center));
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q1RightLineup"));
 
@@ -317,7 +319,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
                   Logger.recordOutput("Robot/LineupSide", "Q2");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Left));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Left));
                 })
             .withName("Q2LeftLineup"));
 
@@ -330,7 +333,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
                   Logger.recordOutput("Robot/LineupSide", "Q2");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Right));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Right));
                 })
             .withName("Q2RightLineup"));
 
@@ -343,7 +347,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q3));
                   Logger.recordOutput("Robot/LineupSide", "Q3");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Left));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Left));
                 })
             .withName("Q3LeftLineup"));
 
@@ -356,7 +361,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q3));
                   Logger.recordOutput("Robot/LineupSide", "Q3");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Right));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Right));
                 })
             .withName("Q3RightLineup"));
 
@@ -369,7 +375,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q4));
                   Logger.recordOutput("Robot/LineupSide", "Q4");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Left));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Left));
                 })
             .withName("Q4LeftLineup"));
 
@@ -382,7 +389,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q4));
                   Logger.recordOutput("Robot/LineupSide", "Q4");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Right));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Right));
                 })
             .withName("Q4RightLineup"));
 
@@ -395,7 +403,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q5));
                   Logger.recordOutput("Robot/LineupSide", "Q5");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Left));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Left));
                 })
             .withName("Q5LeftLineup"));
 
@@ -408,7 +417,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q5));
                   Logger.recordOutput("Robot/LineupSide", "Q5");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Right));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Right));
                 })
             .withName("Q5RightLineup"));
 
@@ -421,7 +431,8 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q6));
                   Logger.recordOutput("Robot/LineupSide", "Q6");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Left));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Center));
                 })
             .withName("Q6LeftLineup"));
 
@@ -434,7 +445,9 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q6));
                   Logger.recordOutput("Robot/LineupSide", "Q6");
                   Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Right));
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Center));
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q6RightLineup"));
 
@@ -446,11 +459,13 @@ public class RobotContainer {
                   Logger.recordOutput(
                       "Robot/TargetPose",
                       LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.LeftSubstation));
+                          DriverStation.getAlliance().orElse(Alliance.Blue),
+                          ReefSide.LeftSubstation));
                   Logger.recordOutput("Robot/LineupSide", "LeftSubstation");
                   Logger.recordOutput("Robot/IsLeftSide", false);
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.LeftSubstation, YOffset.Center));
+                  System.out.println("current pose: " + drive.getPose());
                 }));
     controller_two
         .rightBumper()
@@ -460,7 +475,8 @@ public class RobotContainer {
                   Logger.recordOutput(
                       "Robot/TargetPose",
                       LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.RightSubstation));
+                          DriverStation.getAlliance().orElse(Alliance.Blue),
+                          ReefSide.RightSubstation));
                   Logger.recordOutput("Robot/LineupSide", "RightSubstation");
                   Logger.recordOutput("Robot/IsLeftSide", false);
                   CommandScheduler.getInstance()
@@ -481,7 +497,6 @@ public class RobotContainer {
       return Commands.none();
     }
   }
-
 
   public Drive getDriveSubsystem() {
     return drive;
