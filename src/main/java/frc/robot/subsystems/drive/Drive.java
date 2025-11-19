@@ -57,6 +57,8 @@ import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
+
+import org.dyn4j.geometry.Rotation;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
@@ -135,6 +137,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
   private Pose2d targetPose = new Pose2d();
+
+  private Rotation2d desiredAngle = null;
 
   public Drive(
       GyroIO gyroIO,
@@ -409,6 +413,17 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   public void setTargetPose(Pose2d targetPose) {
     this.targetPose = targetPose;
+  }
+
+  public void setDesiredAngle(Rotation2d desiredAngle) {
+    if (this.desiredAngle == null || this.desiredAngle != desiredAngle) {
+      System.out.println("setting desired angle to: " + desiredAngle);
+      this.desiredAngle = desiredAngle;
+    } else {
+      System.out.println("setting desired angle back to null");
+      this.desiredAngle = null;
+    }
+    
   }
 
   /** Logs the target pose from lineup commands to AdvantageScope. */

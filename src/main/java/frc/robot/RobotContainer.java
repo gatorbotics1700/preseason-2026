@@ -252,6 +252,26 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    controller
+      .x()
+      .onTrue(
+        Commands.runOnce(
+          () -> {
+            drive.setDesiredAngle(new Rotation2d(Math.toRadians(120)));
+          }, 
+          drive)
+      );
+    
+    controller
+      .y()
+      .onTrue(
+        Commands.runOnce(
+          () -> {
+            drive.setDesiredAngle(new Rotation2d(Math.toRadians(-120)));
+          }, 
+          drive)
+      );
+
     controller_two
         .back()
         .onTrue(
