@@ -32,7 +32,7 @@ public class VisionConstants {
           0.24, // 0.2159,
           0.263,
           0.193,
-          new Rotation3d(Math.toRadians(1), Math.toRadians(23.3), Math.toRadians(-24)));
+          new Rotation3d(Math.toRadians(1), Math.toRadians(23.3), Math.toRadians(-21)));
 
   // its -24.4 in the middle and -24 on the right thx
 

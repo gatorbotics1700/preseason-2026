@@ -87,7 +87,7 @@ public class LineupCommand {
 
   public static Command Lineup(ReefSide side, YOffset yOffset) {
     PathConstraints constraints =
-        new PathConstraints(1, 1, Units.degreesToRadians(180), Units.degreesToRadians(180));
+        new PathConstraints(0.5, 0.5, Units.degreesToRadians(540), Units.degreesToRadians(720));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
@@ -127,16 +127,24 @@ public class LineupCommand {
     // TODO: original 40
 
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
-    Pose2d preLineup =
-        desiredPose.transformBy(
-            new Transform2d(
-                Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
-                Centimeters.of(0),
-                new Rotation2d(Degrees.of(0))));
-    System.out.println(
-        "prelineup pose:" + preLineup.toString()); // TODO: get rid of this eventually
+    // Pose2d preLineup =
+    //     desiredPose.transformBy(
+    //         new Transform2d(
+    //             Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
+    //             Centimeters.of(0),
+    //             new Rotation2d(Degrees.of(0))));
+    // System.out.println(
+    //     "prelineup pose:" + preLineup.toString()); // TODO: get rid of this eventually
     System.out.println("desired pose: " + desiredPose.toString());
-    return AutoBuilder.pathfindToPose(preLineup, constraints)
-        .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
+    // return AutoBuilder.pathfindToPose(preLineup, constraints)
+    //     .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
+    return AutoBuilder.pathfindToPose(desiredPose, constraints);
+    //     return AutoBuilder.pathfindToPose(desiredPose, constraints)
+    //             .andThen(new InstantCommand(
+    //               () ->{
+    //                 System.out.println("current pose: " + currentPose.toString());
+    //               }
+    //         ));
+    //   }
   }
 }
