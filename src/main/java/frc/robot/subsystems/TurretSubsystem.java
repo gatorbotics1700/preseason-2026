@@ -41,6 +41,6 @@ public class TurretSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return (motor.getPosition().getValueAsDouble() * 360 / Constants.TURRET_GEAR_RATIO) % 360;
+    return motor.getPosition().getValueAsDouble() * 360 / Constants.TURRET_GEAR_RATIO;
   }
 }

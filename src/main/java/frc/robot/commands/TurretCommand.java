@@ -9,7 +9,7 @@ public class TurretCommand extends Command {
   private final double degreesToTurn;
   private double setPoint;
   private PIDController pidController;
-  private static final double kP = 0.2;
+  private static final double kP = 0.004;
   private static final double kI = 0;
   private static final double kD = 0;
 
@@ -23,13 +23,18 @@ public class TurretCommand extends Command {
 
   @Override
   public void initialize() {
-    setPoint = turretSubsystem.getPosition() + degreesToTurn; // TODO: do this
+    System.out.println("INITIALIZING");
+    setPoint = turretSubsystem.getPosition() + degreesToTurn;
+    System.out.println("STARTING POSITION:" + turretSubsystem.getPosition());
+    System.out.println("SET POINT =" + setPoint);
   }
 
   @Override
   public void execute() {
     if (Math.abs(turretSubsystem.getPosition() - setPoint) > 2) {
       double output = pidController.calculate(turretSubsystem.getPosition() - setPoint);
+      System.out.println("OUTPUT VOLTAGE:" + output);
+      System.out.println("CURRENT POSITION:" + turretSubsystem.getPosition());
       turretSubsystem.setSpeed(output);
     } else {
       turretSubsystem.setMotorVoltage(0);
@@ -39,6 +44,7 @@ public class TurretCommand extends Command {
   @Override
   public boolean isFinished() {
     if (Math.abs(turretSubsystem.getPosition() - setPoint) < 2) {
+      System.out.println("IS FINISHED STOPPING");
       turretSubsystem.setMotorVoltage(0);
       return true;
     }

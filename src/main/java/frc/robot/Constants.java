@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-  public static final int TURRET_MOTOR_CAN_ID = 63; // TODO: change canid later
-  public static final int TURRET_GEAR_RATIO = 42;
+  public static final int TURRET_MOTOR_CAN_ID = 36;
+  public static final double TURRET_GEAR_RATIO = 59;
 
   public static enum Mode {
     /** Running on a real robot. */
