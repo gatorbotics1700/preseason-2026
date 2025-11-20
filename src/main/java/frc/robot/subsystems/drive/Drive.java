@@ -57,8 +57,6 @@ import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
-
-import org.dyn4j.geometry.Rotation;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
@@ -423,7 +421,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
       System.out.println("setting desired angle back to null");
       this.desiredAngle = null;
     }
-    
   }
 
   /** Logs the target pose from lineup commands to AdvantageScope. */
