@@ -87,7 +87,7 @@ public class LineupCommand {
 
   public static Command Lineup(ReefSide side, YOffset yOffset) {
     PathConstraints constraints =
-        new PathConstraints(0.5, 0.5, Units.degreesToRadians(540), Units.degreesToRadians(720));
+        new PathConstraints(1, 1, Units.degreesToRadians(700), Units.degreesToRadians(1000));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
@@ -100,12 +100,13 @@ public class LineupCommand {
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
+    System.out.println("Desired Pose: " + desiredPose);
     if (yOffset == YOffset.Left) {
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
                   Constants.CENTER_TO_BUMPER_OFFSET,
-                  Constants.CENTER_TO_POLE_OFFSET,
+                  Constants.CENTER_TO_POLE_OFFSET.times(-1),
                   new Rotation2d(Degrees.of(180))));
     } else if (yOffset == YOffset.Right) {
       // Center to pole offset is negative because from april tag perspective, the right pole is in
@@ -114,7 +115,7 @@ public class LineupCommand {
           desiredPose.transformBy(
               new Transform2d(
                   Constants.CENTER_TO_BUMPER_OFFSET,
-                  Constants.CENTER_TO_POLE_OFFSET.times(-1),
+                  Constants.CENTER_TO_POLE_OFFSET,
                   new Rotation2d(Degrees.of(180))));
     } else if (yOffset == YOffset.Center) {
       desiredPose =
@@ -125,18 +126,17 @@ public class LineupCommand {
                   new Rotation2d(Degrees.of(180))));
     }
     // TODO: original 40
-
+    System.out.println("Desired Pose: " + desiredPose);
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
-    // Pose2d preLineup =
-    //     desiredPose.transformBy(
-    //         new Transform2d(
-    //             Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
-    //             Centimeters.of(0),
-    //             new Rotation2d(Degrees.of(0))));
-    // System.out.println(
-    //     "prelineup pose:" + preLineup.toString()); // TODO: get rid of this eventually
-    System.out.println("desired pose: " + desiredPose.toString());
-    // return AutoBuilder.pathfindToPose(preLineup, constraints)
+    Pose2d preLineup =
+        desiredPose.transformBy(
+            new Transform2d(
+                Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
+                Centimeters.of(0),
+                new Rotation2d(Degrees.of(0))));
+    System.out.println(
+        "prelineup pose:" + preLineup.toString()); // TODO: get rid of this eventually
+    // return AutoBuilder.pathfindToPose(preLineup, constraints, 1)
     //     .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
     return AutoBuilder.pathfindToPose(desiredPose, constraints);
     //     return AutoBuilder.pathfindToPose(desiredPose, constraints)
