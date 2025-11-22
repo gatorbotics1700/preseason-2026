@@ -100,8 +100,10 @@ public class LineupCommand {
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
-    System.out.println("Desired Pose: " + desiredPose);
+    //left and right poles of the reef are from the perspective of looking from the outside of the reef
     if (yOffset == YOffset.Left) {
+      // Center to pole offset is negative because from april tag perspective, the left pole is in
+      // the negative y direction
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
@@ -109,8 +111,6 @@ public class LineupCommand {
                   Constants.CENTER_TO_POLE_OFFSET.times(-1),
                   new Rotation2d(Degrees.of(180))));
     } else if (yOffset == YOffset.Right) {
-      // Center to pole offset is negative because from april tag perspective, the right pole is in
-      // the negative y direction
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
@@ -125,8 +125,6 @@ public class LineupCommand {
                   Centimeters.of(0),
                   new Rotation2d(Degrees.of(180))));
     }
-    // TODO: original 40
-    System.out.println("Desired Pose: " + desiredPose);
     // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
     Pose2d preLineup =
         desiredPose.transformBy(
@@ -134,17 +132,9 @@ public class LineupCommand {
                 Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
                 Centimeters.of(0),
                 new Rotation2d(Degrees.of(0))));
-    System.out.println(
-        "prelineup pose:" + preLineup.toString()); // TODO: get rid of this eventually
+    //TODO: do we need prelineup?
     // return AutoBuilder.pathfindToPose(preLineup, constraints, 1)
     //     .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
     return AutoBuilder.pathfindToPose(desiredPose, constraints);
-    //     return AutoBuilder.pathfindToPose(desiredPose, constraints)
-    //             .andThen(new InstantCommand(
-    //               () ->{
-    //                 System.out.println("current pose: " + currentPose.toString());
-    //               }
-    //         ));
-    //   }
   }
 }

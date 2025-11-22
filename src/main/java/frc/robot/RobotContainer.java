@@ -432,7 +432,7 @@ public class RobotContainer {
                   Logger.recordOutput("Robot/LineupSide", "Q6");
                   Logger.recordOutput("Robot/IsLeftSide", true);
                   CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Center));
+                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Left));
                 })
             .withName("Q6LeftLineup"));
 
@@ -446,7 +446,7 @@ public class RobotContainer {
                   Logger.recordOutput("Robot/LineupSide", "Q6");
                   Logger.recordOutput("Robot/IsLeftSide", false);
                   CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Center));
+                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Right));
                   System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q6RightLineup"));
