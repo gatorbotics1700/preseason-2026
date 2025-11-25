@@ -20,82 +20,30 @@ public class LineupCommand {
 
   public LineupCommand() {}
 
-  public static enum ReefSide {
-    Q1,
-    Q2,
-    Q3,
-    Q4,
-    Q5,
-    Q6,
-    LeftSubstation,
-    RightSubstation,
-    Test
-  }
-
+  //looking at this piece of code could possibly come in handy
   public static enum YOffset {
     Left,
     Right,
     Center
   }
 
-  public static Pose2d getLineupTagPose(Alliance alliance, ReefSide side) {
-    if (alliance == Alliance.Red) {
-      switch (side) {
-        case Q1:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(10).get().toPose2d();
-        case Q2:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(9).get().toPose2d();
-        case Q3:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(8).get().toPose2d();
-        case Q4:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(7).get().toPose2d();
-        case Q5:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(6).get().toPose2d();
-        case Q6:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(11).get().toPose2d();
-        case LeftSubstation:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(1).get().toPose2d();
-        case RightSubstation:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(2).get().toPose2d();
-        case Test:
-          return new Pose2d(6, 2, new Rotation2d(0));
-      }
-    } else {
-      switch (side) {
-        case Q1:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(21).get().toPose2d();
-        case Q2:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(22).get().toPose2d();
-        case Q3:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(17).get().toPose2d();
-        case Q4:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(18).get().toPose2d();
-        case Q5:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(19).get().toPose2d();
-        case Q6:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(20).get().toPose2d();
-        case LeftSubstation:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(13).get().toPose2d();
-        case RightSubstation:
-          return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(12).get().toPose2d();
-        case Test:
-          new Pose2d(6, 2, new Rotation2d(0));
-      }
-    }
-    return null;
-  }
+  //TODO: write a method called getLineupTagPose that returns a Pose2d of position of the april tag we are lining up to, depending on the alliance and the side of the reef(Q1-Q6)
+  //you can get the pose of an april tag with a specific id by saying VisionConstants.APRIL_TAG_LAYOUT.getTagPose(INSERT ID NUMBER HERE).get().toPose2d()
 
-  public static Command Lineup(ReefSide side, YOffset yOffset) {
+  
+  //returns a command that drives the robot to a position on the field, based off the side of the reef we want to line up to and the current alliance
+  //TODO: add a parameter to Lineup() that helps the method determine which side of the reef you are trying to line up to
+  public static Command Lineup(YOffset yOffset) {
     PathConstraints constraints =
         new PathConstraints(1, 1, Units.degreesToRadians(700), Units.degreesToRadians(1000));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
-    Pose2d desiredPose = getLineupTagPose(alliance, side);
+    //TODO: create a variable called desiredPose that gets the pose of the april tag we want to be lining up to
 
     // should never happen, but just in case we don't find a pose for a reef side
     if (desiredPose == null) {
-      System.out.println("No pose found for " + side);
+      System.out.println("No pose found");
       return Commands.none();
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
@@ -107,34 +55,29 @@ public class LineupCommand {
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
-                  Constants.CENTER_TO_BUMPER_OFFSET,
+                  Centimeters.of(0),
                   Constants.CENTER_TO_POLE_OFFSET.times(-1),
                   new Rotation2d(Degrees.of(180))));
     } else if (yOffset == YOffset.Right) {
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
-                  Constants.CENTER_TO_BUMPER_OFFSET,
+                  Centimeters.of(0),
                   Constants.CENTER_TO_POLE_OFFSET,
                   new Rotation2d(Degrees.of(180))));
     } else if (yOffset == YOffset.Center) {
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
-                  Constants.CENTER_TO_BUMPER_OFFSET,
+                  Centimeters.of(0),
                   Centimeters.of(0),
                   new Rotation2d(Degrees.of(180))));
     }
-    // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
-    Pose2d preLineup =
-        desiredPose.transformBy(
-            new Transform2d(
-                Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
-                Centimeters.of(0),
-                new Rotation2d(Degrees.of(0))));
-    //TODO: do we need prelineup?
-    // return AutoBuilder.pathfindToPose(preLineup, constraints, 1)
-    //     .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
+    
+    //TODO: transform the x component of desiredPose by the distance between the center of the robot and the edge of its bumpers
+    //look at the block of code above to see how to perform transformations
+
+    //AutoBuilder is automatically making a command that drives to the pose that you give it
     return AutoBuilder.pathfindToPose(desiredPose, constraints);
   }
 }
