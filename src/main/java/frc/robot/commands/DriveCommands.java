@@ -13,8 +13,6 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -149,6 +147,64 @@ public class DriveCommands {
 
         // Reset PID controller when command starts
         .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+  }
+
+  /**
+   * Field relative drive command that automatically uses joystickDriveAtAngle when a desired angle
+   * is set, otherwise uses regular joystickDrive.
+   */
+  public static Command joystickDriveWithAutoRotation(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier omegaSupplier) {
+    // Create PID controller for automatic rotation control (only used when desiredAngle is set)
+    ProfiledPIDController angleController =
+        new ProfiledPIDController(
+            ANGLE_KP,
+            0.0,
+            ANGLE_KD,
+            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
+    angleController.enableContinuousInput(-Math.PI, Math.PI);
+
+    return Commands.run(
+            () -> {
+              // Get linear velocity
+              Translation2d linearVelocity =
+                  getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+              // Check if desired angle is set (must check continuously, not just once)
+              Rotation2d desiredAngle = drive.getDesiredAngle();
+              double omega;
+
+              if (desiredAngle != null) {
+                // Use PID controller to automatically rotate to desired angle
+                omega =
+                    angleController.calculate(
+                        drive.getRotation().getRadians(), desiredAngle.getRadians());
+              } else {
+                // Use joystick input for rotation
+                // Apply rotation deadband
+                omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+
+                // Square rotation value for more precise control
+                omega = Math.copySign(omega * omega, omega);
+
+                // Scale by max angular speed
+                omega = omega * drive.getMaxAngularSpeedRadPerSec();
+              }
+
+              // Convert to field relative speeds & send command
+              ChassisSpeeds speeds =
+                  new ChassisSpeeds(
+                      linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                      omega);
+              drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getRotation()));
+            },
+            drive)
+        .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()))
+        .withName("JoystickDriveWithAutoRotation");
   }
 
   public static Command stopDriveCommand(Drive drive) {

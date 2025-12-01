@@ -191,6 +191,7 @@ public class RobotContainer {
    */
   public void configureButtonBindings() {
     // Default command, normal field-relative drive
+    // Uses joystickDriveAtAngle when desiredAngle is set, otherwise uses joystickDrive
     Trigger driverControl =
         new Trigger(
             () ->
@@ -201,22 +202,20 @@ public class RobotContainer {
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
       driverControl
           .whileTrue(
-              DriveCommands.joystickDrive(
+              DriveCommands.joystickDriveWithAutoRotation(
                   drive,
-                  () -> modifyJoystickAxis(controller.getLeftY(), false), // Changed to raw values
-                  () -> modifyJoystickAxis(controller.getLeftX(), false), // Changed to raw values
-                  () ->
-                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+                  () -> modifyJoystickAxis(controller.getLeftY()),
+                  () -> modifyJoystickAxis(controller.getLeftX()),
+                  () -> modifyJoystickAxis(-controller.getRightX())))
           .onFalse(DriveCommands.stopDriveCommand(drive));
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       driverControl
           .whileTrue(
-              DriveCommands.joystickDrive(
+              DriveCommands.joystickDriveWithAutoRotation(
                   drive,
-                  () -> modifyJoystickAxis(-controller.getLeftY(), false), // Changed to raw values
-                  () -> modifyJoystickAxis(-controller.getLeftX(), false), // Changed to raw values
-                  () ->
-                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getLeftY()),
+                  () -> modifyJoystickAxis(-controller.getLeftX()),
+                  () -> modifyJoystickAxis(-controller.getRightX())))
           .onFalse(DriveCommands.stopDriveCommand(drive));
     }
 
@@ -278,6 +277,14 @@ public class RobotContainer {
                   drive.setPose(new Pose2d(4, 2, new Rotation2d(Math.toRadians(0))));
                 },
                 drive));
+
+    controller
+        .rightBumper()
+        .onTrue(Commands.runOnce(
+                  () -> {
+                    drive.setSlowDrive();
+                  }, 
+                  drive));
 
     controller_two
         .y()
@@ -535,14 +542,14 @@ public class RobotContainer {
     }
   }
 
-  private double modifyJoystickAxis(double value, boolean isSlow) {
+  private double modifyJoystickAxis(double value) {
     // Deadband
     value = deadband(value, 0.025);
 
     // Square the axis
     value = Math.copySign(value * value, value);
 
-    if (isSlow) {
+    if (drive.getSlowDrive()) {
       return 0.5 * value;
     }
 

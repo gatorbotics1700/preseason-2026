@@ -137,6 +137,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   private Pose2d targetPose = new Pose2d();
 
   private Rotation2d desiredAngle = null;
+  private boolean slowDrive;
 
   public Drive(
       GyroIO gyroIO,
@@ -191,6 +192,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    slowDrive = false;
   }
 
   @Override
@@ -421,6 +424,19 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
       System.out.println("setting desired angle back to null");
       this.desiredAngle = null;
     }
+  }
+
+  /** Returns the desired angle, or null if no angle is set. */
+  public Rotation2d getDesiredAngle() {
+    return desiredAngle;
+  }
+
+  public void setSlowDrive() {
+    slowDrive = !slowDrive;
+  }
+
+  public boolean getSlowDrive() {
+    return slowDrive;
   }
 
   /** Logs the target pose from lineup commands to AdvantageScope. */
