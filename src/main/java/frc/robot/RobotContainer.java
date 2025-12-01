@@ -280,11 +280,12 @@ public class RobotContainer {
 
     controller
         .rightBumper()
-        .onTrue(Commands.runOnce(
-                  () -> {
-                    drive.setSlowDrive();
-                  }, 
-                  drive));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drive.setSlowDrive();
+                },
+                drive));
 
     controller_two
         .y()
