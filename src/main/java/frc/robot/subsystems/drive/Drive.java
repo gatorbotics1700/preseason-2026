@@ -251,6 +251,10 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
+    Logger.recordOutput(
+        "Robot/Desired Angle (Degrees)",
+        desiredAngle != null ? Math.toDegrees(desiredAngle.getRadians()) : Double.NaN);
+
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
   }
@@ -417,18 +421,33 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   }
 
   public void setDesiredAngle(Rotation2d desiredAngle) {
-    if (this.desiredAngle == null || this.desiredAngle != desiredAngle) {
+    if (this.desiredAngle == null) {
       System.out.println("setting desired angle to: " + desiredAngle);
       this.desiredAngle = desiredAngle;
     } else {
-      System.out.println("setting desired angle back to null");
-      this.desiredAngle = null;
+      double angleDifference = Math.abs(this.desiredAngle.minus(desiredAngle).getRadians());
+
+      if (angleDifference > Math.PI) {
+        angleDifference = 2 * Math.PI - angleDifference;
+      }
+
+      if (angleDifference < 0.01) {
+        System.out.println("setting desired angle back to null");
+        this.desiredAngle = null;
+      } else {
+        System.out.println("setting desired angle to: " + desiredAngle);
+        this.desiredAngle = desiredAngle;
+      }
     }
   }
 
   /** Returns the desired angle, or null if no angle is set. */
   public Rotation2d getDesiredAngle() {
     return desiredAngle;
+  }
+
+  public Double getDesiredAngleDegrees() {
+    return desiredAngle != null ? Math.toDegrees(desiredAngle.getRadians()) : null;
   }
 
   public void setSlowDrive() {
