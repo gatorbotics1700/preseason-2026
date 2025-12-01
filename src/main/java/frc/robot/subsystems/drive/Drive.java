@@ -135,6 +135,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
   private Pose2d targetPose = new Pose2d();
+  private boolean slowDrive;
 
   public Drive(
       GyroIO gyroIO,
@@ -189,6 +190,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+    
+    slowDrive = false;
   }
 
   @Override
@@ -409,6 +412,14 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   public void setTargetPose(Pose2d targetPose) {
     this.targetPose = targetPose;
+  }
+
+  public void setSlowDrive(){
+    slowDrive = !slowDrive;
+  }
+
+  public boolean getSlowDrive(){
+    return slowDrive;
   }
 
   /** Logs the target pose from lineup commands to AdvantageScope. */

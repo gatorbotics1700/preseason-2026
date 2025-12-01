@@ -203,20 +203,20 @@ public class RobotContainer {
           .whileTrue(
               DriveCommands.joystickDrive(
                   drive,
-                  () -> modifyJoystickAxis(controller.getLeftY(), false), // Changed to raw values
-                  () -> modifyJoystickAxis(controller.getLeftX(), false), // Changed to raw values
+                  () -> modifyJoystickAxis(controller.getLeftY()), // Changed to raw values
+                  () -> modifyJoystickAxis(controller.getLeftX()), // Changed to raw values
                   () ->
-                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+                      modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
           .onFalse(DriveCommands.stopDriveCommand(drive));
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       driverControl
           .whileTrue(
               DriveCommands.joystickDrive(
                   drive,
-                  () -> modifyJoystickAxis(-controller.getLeftY(), false), // Changed to raw values
-                  () -> modifyJoystickAxis(-controller.getLeftX(), false), // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getLeftY()), // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getLeftX()), // Changed to raw values
                   () ->
-                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+                      modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
           .onFalse(DriveCommands.stopDriveCommand(drive));
     }
 
@@ -517,14 +517,14 @@ public class RobotContainer {
     }
   }
 
-  private double modifyJoystickAxis(double value, boolean isSlow) {
+  private double modifyJoystickAxis(double value) {
     // Deadband
     value = deadband(value, 0.025);
 
     // Square the axis
     value = Math.copySign(value * value, value);
 
-    if (isSlow) {
+    if (drive.getSlowDrive()) {
       return 0.5 * value;
     }
 
