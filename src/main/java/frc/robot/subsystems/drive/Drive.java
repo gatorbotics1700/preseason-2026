@@ -163,8 +163,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
-        new PPHolonomicDriveController(
-            new PIDConstants(10.0, 0.5, 0), new PIDConstants(15.0, 0.5, 0)),
+        new PPHolonomicDriveController(new PIDConstants(15.0, 0, 0), new PIDConstants(15.0, 0, 0)),
         PP_CONFIG,
         () ->
             false, // Disable alliance flipping - tag poses are already in correct coordinate system
@@ -190,7 +189,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-    
+
     slowDrive = false;
   }
 
@@ -414,11 +413,11 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     this.targetPose = targetPose;
   }
 
-  public void setSlowDrive(){
+  public void setSlowDrive() {
     slowDrive = !slowDrive;
   }
 
-  public boolean getSlowDrive(){
+  public boolean getSlowDrive() {
     return slowDrive;
   }
 

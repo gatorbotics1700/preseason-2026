@@ -100,7 +100,8 @@ public class LineupCommand {
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
-    //left and right poles of the reef are from the perspective of looking from the outside of the reef
+    // left and right poles of the reef are from the perspective of looking from the outside of the
+    // reef
     if (yOffset == YOffset.Left) {
       // Center to pole offset is negative because from april tag perspective, the left pole is in
       // the negative y direction
@@ -132,7 +133,7 @@ public class LineupCommand {
                 Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
                 Centimeters.of(0),
                 new Rotation2d(Degrees.of(0))));
-    //TODO: do we need prelineup?
+    // TODO: do we need prelineup?
     // return AutoBuilder.pathfindToPose(preLineup, constraints, 1)
     //     .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
     return AutoBuilder.pathfindToPose(desiredPose, constraints);

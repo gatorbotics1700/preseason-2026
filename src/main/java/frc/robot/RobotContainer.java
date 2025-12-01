@@ -205,8 +205,7 @@ public class RobotContainer {
                   drive,
                   () -> modifyJoystickAxis(controller.getLeftY()), // Changed to raw values
                   () -> modifyJoystickAxis(controller.getLeftX()), // Changed to raw values
-                  () ->
-                      modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
           .onFalse(DriveCommands.stopDriveCommand(drive));
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       driverControl
@@ -215,8 +214,7 @@ public class RobotContainer {
                   drive,
                   () -> modifyJoystickAxis(-controller.getLeftY()), // Changed to raw values
                   () -> modifyJoystickAxis(-controller.getLeftX()), // Changed to raw values
-                  () ->
-                      modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
           .onFalse(DriveCommands.stopDriveCommand(drive));
     }
 
