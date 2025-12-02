@@ -13,8 +13,6 @@
 
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;

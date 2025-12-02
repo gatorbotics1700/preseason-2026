@@ -79,7 +79,7 @@ public class LineupCommand {
         case RightSubstation:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(12).get().toPose2d();
         case Test:
-          new Pose2d(6, 2, new Rotation2d(0));
+          return new Pose2d(6, 2, new Rotation2d(0));
       }
     }
     return null;
