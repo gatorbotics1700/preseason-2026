@@ -27,6 +27,7 @@ import java.util.Properties;
 public final class RobotConfigLoader {
   private static final String SHENANDOAH_SERIAL = "03223852";
   private static final String HUANG_HE_SERIAL = "032D20FA";
+  private static final String MISSISSIPPI_SERIAL = "032D2198";
   private static final String DEFAULT_SIM_SERIAL = "SIMULATION";
   private static final String DEFAULT_CONFIG_FILE = "config_robot1.properties";
   private static final String SERIAL_PROPERTY_KEY = "robot.serial";
@@ -94,6 +95,10 @@ public final class RobotConfigLoader {
     return Integer.parseInt(getString(key));
   }
 
+  public static Boolean getBoolean(String key) {
+    return Boolean.parseBoolean(getString(key));
+  }
+
   public static synchronized String getSerialNumber() {
     if (resolvedSerial == null) {
       resolvedSerial = computeSerialNumber();
@@ -150,6 +155,7 @@ public final class RobotConfigLoader {
 
     return switch (serial) {
       case SHENANDOAH_SERIAL -> "config_hulk.properties";
+      case MISSISSIPPI_SERIAL -> "config_sting.properties";
       case HUANG_HE_SERIAL -> "config_robot2.properties";
       default -> {
         System.out.println(
