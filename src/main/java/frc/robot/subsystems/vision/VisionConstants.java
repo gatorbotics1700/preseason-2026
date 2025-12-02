@@ -15,8 +15,8 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import frc.robot.util.RobotConfigLoader;
 
 public class VisionConstants {
   // AprilTag layout
@@ -26,24 +26,33 @@ public class VisionConstants {
   // Camera names, must match names configured on coprocessor
   public static final String CAMERA_0_NAME = "limelight";
 
-  // Robot to camera transforms
-  public static Transform3d ROBOT_TO_CAMERA_0 =
-      new Transform3d(
-          0.24, // 0.2159,
-          0.263,
-          0.193,
-          new Rotation3d(Math.toRadians(1), Math.toRadians(23.3), Math.toRadians(-21)));
+  public static final String LIMELIGHT_CAMERA_0_NAME =
+      RobotConfigLoader.getString("limelight.camera0.name");
+  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_X =
+      RobotConfigLoader.getDouble("limelight.robot_to_camera0.x");
+  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_Y =
+      RobotConfigLoader.getDouble("limelight.robot_to_camera0.y");
+  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_Z =
+      RobotConfigLoader.getDouble("limelight.robot_to_camera0.z");
+  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_ROLL =
+      RobotConfigLoader.getDouble("limelight.robot_to_camera0.roll");
+  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_PITCH =
+      RobotConfigLoader.getDouble("limelight.robot_to_camera0.pitch");
+  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_YAW =
+      RobotConfigLoader.getDouble("limelight.robot_to_camera0.yaw");
 
-  // its -24.4 in the middle and -24 on the right thx
+  public static Transform3d ROBOT_TO_CAMERA_0 = RobotConfigLoader.createRobotToCamera0Transform();
 
   // Basic filtering thresholds
-  public static double MAX_AMBIGUITY = 0.3;
-  public static double MAX_Z_ERROR = 0.75;
+  public static double MAX_AMBIGUITY = RobotConfigLoader.getDouble("limelight.max_ambiguity");
+  public static double MAX_Z_ERROR = RobotConfigLoader.getDouble("limelight.max_z_error");
 
   // Standard deviation baselines, for 1 meter distance and 1 tag
   // (Adjusted automatically based on distance and # of tags)
-  public static double LINEAR_STD_DEV_BASELINE = 0.02; // Meters
-  public static double ANGULAR_STD_DEV_BASELINE = 0.06; // Radians
+  public static double LINEAR_STD_DEV_BASELINE =
+      RobotConfigLoader.getDouble("limelight.linear_std_dev_baseline"); // Meters
+  public static double ANGULAR_STD_DEV_BASELINE =
+      RobotConfigLoader.getDouble("limelight.angular_std_dev_baseline"); // Radians
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
@@ -53,7 +62,9 @@ public class VisionConstants {
       };
 
   // Multipliers to apply for MegaTag 2 observations
-  public static double LINEAR_STD_DEV_MEGATGAG_2_FACTOR = 0.5; // More stable than full 3D solve
+  public static double LINEAR_STD_DEV_MEGATGAG_2_FACTOR =
+      RobotConfigLoader.getDouble(
+          "limelight.linear_std_dev_megatag2_factor"); // More stable than full 3D solve
   public static double ANGULAR_STD_DEV_MEGATAG_2_FACTOR =
-      Double.POSITIVE_INFINITY; // No rotation data available
+      RobotConfigLoader.getDouble("limelight.angular_std_dev_megatag2_factor");
 }
