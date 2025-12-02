@@ -143,7 +143,7 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(
                     VisionConstants.CAMERA_0_NAME,
                     VisionConstants.ROBOT_TO_CAMERA_0,
-                    drive::getCurrentPose));
+                    drive::getPose));
         break;
 
       default: // TODO: should the default be real as a safety for matches? to be discussed
@@ -238,12 +238,12 @@ public class RobotContainer {
                           && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                         drive.setPose(
                             new Pose2d(
-                                drive.getCurrentPose().getTranslation(),
+                                drive.getPose().getTranslation(),
                                 new Rotation2d(Math.toRadians(0))));
                       } else {
                         drive.setPose(
                             new Pose2d(
-                                drive.getCurrentPose().getTranslation(),
+                                drive.getPose().getTranslation(),
                                 new Rotation2d(Math.toRadians(0))));
                       }
                     },
@@ -264,7 +264,7 @@ public class RobotContainer {
         .onTrue(
             new InstantCommand(
                 () -> {
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                   Logger.recordOutput(
                       "Robot/TargetPose",
                       LineupCommand.getLineupTagPose(
@@ -278,7 +278,7 @@ public class RobotContainer {
     Q1LeftLineup.onTrue(
         new InstantCommand(
                 () -> {
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                   // Log lineup target directly - much simpler!
                   Logger.recordOutput(
                       "Robot/TargetPose",
@@ -288,14 +288,14 @@ public class RobotContainer {
                   Logger.recordOutput("Robot/IsLeftSide", true);
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q1LeftLineup"));
 
     Q1RightLineup.onTrue(
         new InstantCommand(
                 () -> {
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                   Logger.recordOutput(
                       "Robot/TargetPose",
                       LineupCommand.getLineupTagPose(
@@ -304,7 +304,7 @@ public class RobotContainer {
                   Logger.recordOutput("Robot/IsLeftSide", false);
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q1RightLineup"));
 
@@ -445,7 +445,7 @@ public class RobotContainer {
                   Logger.recordOutput("Robot/IsLeftSide", false);
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Right));
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                 })
             .withName("Q6RightLineup"));
 
@@ -463,7 +463,7 @@ public class RobotContainer {
                   Logger.recordOutput("Robot/IsLeftSide", false);
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.LeftSubstation, YOffset.Center));
-                  System.out.println("current pose: " + drive.getCurrentPose());
+                  System.out.println("current pose: " + drive.getPose());
                 }));
     controller_two
         .rightBumper()

@@ -3,15 +3,6 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Blue leave low 25.path
-        "x": 7.605,
-        "y": 1.0
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 9.086680327868851,
-        "y": 1.0100922131147536
-========
         "x": 9.974,
         "y": 7.5
       },
@@ -19,28 +10,18 @@
       "nextControl": {
         "x": 10.305774113667718,
         "y": 7.5
->>>>>>>> visionbase:src/main/deploy/pathplanner/paths/Red High Leave.path
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Blue leave low 25.path
-        "x": 5.605,
-        "y": 1.0
-      },
-      "prevControl": {
-        "x": 5.205,
-        "y": 1.0
-========
         "x": 11.974,
         "y": 7.5
       },
       "prevControl": {
-        "x": 11.709719727372624,
+        "x": 11.7097,
         "y": 7.5
->>>>>>>> visionbase:src/main/deploy/pathplanner/paths/Red High Leave.path
       },
       "nextControl": null,
       "isLocked": false,
@@ -64,11 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Blue leave low 25.path
-  "folder": "Blue Leave",
-========
   "folder": "Leave Paths",
->>>>>>>> visionbase:src/main/deploy/pathplanner/paths/Red High Leave.path
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

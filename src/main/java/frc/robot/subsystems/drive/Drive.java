@@ -159,7 +159,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getCurrentPose,
+        this::getPose,
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
@@ -358,13 +358,13 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
-  public Pose2d getCurrentPose() {
+  public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
   }
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
-    return getCurrentPose().getRotation();
+    return getPose().getRotation();
   }
 
   /** Resets the current odometry pose. */
