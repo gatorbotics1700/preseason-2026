@@ -159,7 +159,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configure(
-        this::getPose,
+        this::getCurrentPose,
         this::setPose,
         this::getChassisSpeeds,
         this::runVelocity,
@@ -358,19 +358,13 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   /** Returns the current odometry pose. */
   @AutoLogOutput(key = "Odometry/Robot")
-  public Pose2d getPose() {
-    return poseEstimator.getEstimatedPosition();
-  }
-
-  /** Logs the current robot pose to AdvantageScope. */
-  @AutoLogOutput(key = "Robot/CurrentPose")
   public Pose2d getCurrentPose() {
     return poseEstimator.getEstimatedPosition();
   }
 
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
-    return getPose().getRotation();
+    return getCurrentPose().getRotation();
   }
 
   /** Resets the current odometry pose. */
@@ -409,16 +403,16 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     };
   }
 
-  public void setTargetPose(Pose2d targetPose) {
-    this.targetPose = targetPose;
-  }
-
   public void setSlowDrive() {
     slowDrive = !slowDrive;
   }
 
   public boolean getSlowDrive() {
     return slowDrive;
+  }
+
+  public void setTargetPose(Pose2d targetPose) {
+    this.targetPose = targetPose;
   }
 
   /** Logs the target pose from lineup commands to AdvantageScope. */

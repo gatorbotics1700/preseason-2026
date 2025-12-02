@@ -126,16 +126,7 @@ public class LineupCommand {
                   Centimeters.of(0),
                   new Rotation2d(Degrees.of(180))));
     }
-    // create a pose 1 meter behind the robot as a pre-lineup where we rotate to face the reef
-    Pose2d preLineup =
-        desiredPose.transformBy(
-            new Transform2d(
-                Constants.ROBOT_RADIUS_WITH_BUMPERS.times(-1),
-                Centimeters.of(0),
-                new Rotation2d(Degrees.of(0))));
-    // TODO: do we need prelineup?
-    // return AutoBuilder.pathfindToPose(preLineup, constraints, 1)
-    //     .andThen(AutoBuilder.pathfindToPose(desiredPose, constraints));
+
     return AutoBuilder.pathfindToPose(desiredPose, constraints);
   }
 }
