@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Centimeters;
+
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.util.RobotConfigLoader;
 
@@ -209,4 +212,11 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final int KRAKEN_TICKS_PER_REV = 2048;
+
+  public static final Distance CENTER_TO_BUMPER_OFFSET = Centimeters.of(40);
+  // left and right offsets for the poles on the reef
+  public static final Distance CENTER_TO_POLE_OFFSET = Centimeters.of(16.5);
+  public static final Distance ROBOT_RADIUS_WITH_BUMPERS = Centimeters.of(57);
 }

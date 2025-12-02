@@ -13,12 +13,15 @@
 
 package frc.robot;
 
+// import frc.robot.commands.AutoDriveCommand;
+// import frc.robot.commands.TeleopDriveCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,9 +30,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveCommands.ReefSide;
+import frc.robot.commands.LineupCommand;
+import frc.robot.commands.LineupCommand.ReefSide;
+import frc.robot.commands.LineupCommand.YOffset;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -41,6 +45,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -54,18 +59,17 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
 
-  // Controller
+  // Controllers
   private final CommandXboxController controller = new CommandXboxController(0);
-
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser; // we chillin :D
+  private final CommandXboxController controller_two = new CommandXboxController(3);
 
   private final GenericHID buttonBoard1A = new GenericHID(1);
   private final GenericHID buttonBoard1B = new GenericHID(2);
 
-  private final GenericHID buttonBoard2A = new GenericHID(3);
-  private final GenericHID buttonBoard2B = new GenericHID(4);
+  // Dashboard inputs
+  private final LoggedDashboardChooser<Command> autoChooser;
 
+  // Button Bindings
   private final Trigger Q1LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(1));
   private final Trigger Q1RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(2));
 
@@ -86,6 +90,24 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // Named Commands
+
+    NamedCommands.registerCommand(
+        "Q1 Left Lineup",
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance()
+                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
+            }));
+    NamedCommands.registerCommand(
+        "Q1 Right Lineup",
+        new InstantCommand(
+            () -> {
+              CommandScheduler.getInstance()
+                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
+            }));
+
+    // Set up robot depending on mode
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -97,7 +119,7 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight),
                 (pose) -> {});
-        this.vision =
+        vision =
             new Vision(
                 drive,
                 new VisionIOLimelight(
@@ -122,10 +144,10 @@ public class RobotContainer {
                 new VisionIOPhotonVisionSim(
                     VisionConstants.CAMERA_0_NAME,
                     VisionConstants.ROBOT_TO_CAMERA_0,
-                    drive::getPose));
+                    drive::getCurrentPose));
         break;
 
-      default:
+      default: // TODO: should the default be real as a safety for matches? to be discussed
         // Replayed robot, disable IO implementations
         drive =
             new Drive(
@@ -143,20 +165,20 @@ public class RobotContainer {
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
-    autoChooser.addOption(
-        "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-    autoChooser.addOption(
-        "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Forward)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Quasistatic Reverse)",
-        drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    autoChooser.addOption(
-        "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Forward)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Quasistatic Reverse)",
+    //     drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    // autoChooser.addOption(
+    //     "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -168,14 +190,34 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
+  public void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> controller.getLeftY(),
-            () -> controller.getLeftX(),
-            () -> -controller.getRightX()));
+    Trigger driverControl =
+        new Trigger(
+            () ->
+                Math.abs(controller.getLeftY()) > 0.1
+                    || Math.abs(controller.getLeftX()) > 0.1
+                    || Math.abs(controller.getRightX()) > 0.1);
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+      driverControl
+          .whileTrue(
+              DriveCommands.joystickDrive(
+                  drive,
+                  () -> modifyJoystickAxis(controller.getLeftY()), // Changed to raw values
+                  () -> modifyJoystickAxis(controller.getLeftX()), // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
+          .onFalse(DriveCommands.stopDriveCommand(drive));
+    } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
+      driverControl
+          .whileTrue(
+              DriveCommands.joystickDrive(
+                  drive,
+                  () -> modifyJoystickAxis(-controller.getLeftY()), // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getLeftX()), // Changed to raw values
+                  () -> modifyJoystickAxis(-controller.getRightX()))) // Changed to raw values
+          .onFalse(DriveCommands.stopDriveCommand(drive));
+    }
 
     // Lock to 0° when A button is held
     controller
@@ -187,9 +229,6 @@ public class RobotContainer {
                 () -> -controller.getLeftX(),
                 () -> new Rotation2d()));
 
-    // Switch to X pattern when X button is pressed
-    // controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
     // Reset gyro to 0° when B button is pressed
     controller
         .b()
@@ -200,92 +239,248 @@ public class RobotContainer {
                           && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
                         drive.setPose(
                             new Pose2d(
-                                drive.getPose().getTranslation(),
-                                new Rotation2d(Math.toRadians(180))));
+                                drive.getCurrentPose().getTranslation(),
+                                new Rotation2d(Math.toRadians(0))));
                       } else {
                         drive.setPose(
                             new Pose2d(
-                                drive.getPose().getTranslation(),
+                                drive.getCurrentPose().getTranslation(),
                                 new Rotation2d(Math.toRadians(0))));
                       }
                     },
                     drive)
                 .ignoringDisable(true));
 
-    PathConstraints constraints =
-        new PathConstraints(1, 2.0, Units.degreesToRadians(180), Units.degreesToRadians(360));
+    controller_two
+        .back()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(new Pose2d(4, 2, new Rotation2d(Math.toRadians(0))));
+                },
+                drive));
+
+    controller_two
+        .y()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Test));
+                  Logger.recordOutput("Robot/LineupSide", "Test");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Test, YOffset.Center));
+                }));
 
     Q1LeftLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, true));
-            }));
+                () -> {
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                  // Log lineup target directly - much simpler!
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
+                  Logger.recordOutput("Robot/LineupSide", "Q1");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                })
+            .withName("Q1LeftLineup"));
 
     Q1RightLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q1, false));
-            }));
+                () -> {
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
+                  Logger.recordOutput("Robot/LineupSide", "Q1");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                })
+            .withName("Q1RightLineup"));
 
     Q2LeftLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, true));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
+                  Logger.recordOutput("Robot/LineupSide", "Q2");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Left));
+                })
+            .withName("Q2LeftLineup"));
 
     Q2RightLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q2, false));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
+                  Logger.recordOutput("Robot/LineupSide", "Q2");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Right));
+                })
+            .withName("Q2RightLineup"));
 
     Q3LeftLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, true));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q3));
+                  Logger.recordOutput("Robot/LineupSide", "Q3");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Left));
+                })
+            .withName("Q3LeftLineup"));
 
     Q3RightLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q3, false));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q3));
+                  Logger.recordOutput("Robot/LineupSide", "Q3");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Right));
+                })
+            .withName("Q3RightLineup"));
 
     Q4LeftLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, true));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q4));
+                  Logger.recordOutput("Robot/LineupSide", "Q4");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Left));
+                })
+            .withName("Q4LeftLineup"));
 
     Q4RightLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q4, false));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q4));
+                  Logger.recordOutput("Robot/LineupSide", "Q4");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Right));
+                })
+            .withName("Q4RightLineup"));
 
     Q5LeftLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, true));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q5));
+                  Logger.recordOutput("Robot/LineupSide", "Q5");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Left));
+                })
+            .withName("Q5LeftLineup"));
 
     Q5RightLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q5, false));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q5));
+                  Logger.recordOutput("Robot/LineupSide", "Q5");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Right));
+                })
+            .withName("Q5RightLineup"));
 
     Q6LeftLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, true));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q6));
+                  Logger.recordOutput("Robot/LineupSide", "Q6");
+                  Logger.recordOutput("Robot/IsLeftSide", true);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Left));
+                })
+            .withName("Q6LeftLineup"));
 
     Q6RightLineup.onTrue(
         new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance().schedule(DriveCommands.Lineup(ReefSide.Q6, false));
-            }));
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q6));
+                  Logger.recordOutput("Robot/LineupSide", "Q6");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Right));
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                })
+            .withName("Q6RightLineup"));
+
+    controller_two
+        .leftBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue),
+                          ReefSide.LeftSubstation));
+                  Logger.recordOutput("Robot/LineupSide", "LeftSubstation");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.LeftSubstation, YOffset.Center));
+                  System.out.println("current pose: " + drive.getCurrentPose());
+                }));
+    controller_two
+        .rightBumper()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  Logger.recordOutput(
+                      "Robot/TargetPose",
+                      LineupCommand.getLineupTagPose(
+                          DriverStation.getAlliance().orElse(Alliance.Blue),
+                          ReefSide.RightSubstation));
+                  Logger.recordOutput("Robot/LineupSide", "RightSubstation");
+                  Logger.recordOutput("Robot/IsLeftSide", false);
+                  CommandScheduler.getInstance()
+                      .schedule(LineupCommand.Lineup(ReefSide.RightSubstation, YOffset.Center));
+                }));
   }
 
   /**
@@ -298,7 +493,75 @@ public class RobotContainer {
       return autoChooser.get();
     } catch (Exception ioe) {
       System.out.println("bad io error");
+      return Commands.none();
     }
-    return Commands.none();
+  }
+
+  public Drive getDriveSubsystem() {
+    return drive;
+  }
+
+  private double deadband(double value, double deadband) {
+    // If controller reads very tiny value close to zero, we don't want to make the robot think it
+    // has to move
+    // Without deadband, robot will think it has to move, and then it will go crazy
+    if (Math.abs(value) > deadband) {
+      if (value > 0.0) {
+        return (value - deadband) / (1.0 - deadband);
+      } else {
+        return (value + deadband) / (1.0 - deadband);
+      }
+    } else {
+      return 0.0; // Return 0 if absolute value is within desired margin of error
+    }
+  }
+
+  private double modifyJoystickAxis(double value) {
+    // Deadband
+    value = deadband(value, 0.025);
+
+    // Square the axis
+    value = Math.copySign(value * value, value);
+
+    if (drive.getSlowDrive()) {
+      return 0.5 * value;
+    }
+
+    return value;
+  }
+
+  /**
+   * Periodic method to log button states and other robot information. Call this from
+   * Robot.teleopPeriodic() and Robot.autonomousPeriodic().
+   */
+  public void periodic() {
+    // Log button states directly - much simpler!
+    Logger.recordOutput("Buttons/Controller1/A", controller.a().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller1/B", controller.b().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller1/X", controller.x().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller1/Y", controller.y().getAsBoolean());
+
+    Logger.recordOutput("Buttons/Controller2/A", controller_two.a().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller2/B", controller_two.b().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller2/X", controller_two.x().getAsBoolean());
+    Logger.recordOutput("Buttons/Controller2/Y", controller_two.y().getAsBoolean());
+
+    // Log button board states
+    for (int i = 1; i <= 6; i++) {
+      Logger.recordOutput("Buttons/ButtonBoard1A/Button" + i, buttonBoard1A.getRawButton(i));
+      Logger.recordOutput("Buttons/ButtonBoard1B/Button" + i, buttonBoard1B.getRawButton(i));
+    }
+
+    // Log command scheduler status
+    Logger.recordOutput("Commands/SchedulerActive", true);
+    Logger.recordOutput("Commands/LogTime", System.currentTimeMillis());
+
+    // Log command information with names
+    Command driveCmd = drive.getCurrentCommand();
+
+    Logger.recordOutput("Commands/DriveCommand", driveCmd != null ? driveCmd.getName() : "None");
+
+    // Log if commands are running
+    Logger.recordOutput("Commands/DriveCommandActive", driveCmd != null);
   }
 }

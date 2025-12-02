@@ -1,18 +1,12 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.78,
+  "robotLength": 0.78,
   "holonomicMode": true,
   "pathFolders": [
-    "Blue Leave",
-    "Red Leave"
+    "Leave Paths"
   ],
   "autoFolders": [
-    "Blue 1 Piece L4 Autos",
-    "Blue 2 Piece L4 Autos",
-    "Blue Leave",
-    "Red 1 Piece L4 Autos",
-    "Red 2 Piece L4 Autos",
-    "Red Leave"
+    "Leave Autos"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

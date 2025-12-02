@@ -16,12 +16,15 @@ package frc.robot;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.vision.VisionConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+// PLEASE NOTE THIS IS NOT THE FIRST LOGGER OPTION VS CODE SUGGESTS IMPORTING
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -35,6 +38,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
+  private Command mechStopCommand;
 
   public Robot() {
     // Record metadata
@@ -58,8 +62,9 @@ public class Robot extends LoggedRobot {
     // Set up data receivers & replay source
     switch (Constants.currentMode) {
       case REAL:
-        // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
+        // Running on a real robot, log to a USB stick ("/U/logs") or to RoboRio
+        // ("/home/lvuser/logs")
+        Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
@@ -99,6 +104,8 @@ public class Robot extends LoggedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
+    SmartDashboard.putData(robotContainer.getDriveSubsystem());
+    SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
   /** This function is called periodically during all modes. */
@@ -121,7 +128,11 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    System.out.println(
+        "TAG 10 POSE " + VisionConstants.APRIL_TAG_LAYOUT.getTagPose(10).get().toPose2d());
+    CommandScheduler.getInstance().cancelAll();
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -140,23 +151,27 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    robotContainer.periodic();
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
+    CommandScheduler.getInstance().cancelAll();
+
+    // This makes sure that the autonomous stops running when teleop starts
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    // container.stopElevator();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    robotContainer.periodic();
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
