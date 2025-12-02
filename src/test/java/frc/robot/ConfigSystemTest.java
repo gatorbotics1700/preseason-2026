@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class ConfigSystemTest {
 
   private static final String TEST_SERIAL = "03223852";
-  private static final String TEST_CONFIG_FILE = "config_robot1.properties";
+  private static final String TEST_CONFIG_FILE = "config_sting.properties";
 
   @BeforeAll
   public static void configureRobotConfigLoader() {
