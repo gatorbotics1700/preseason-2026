@@ -257,7 +257,6 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   drive.setDesiredAngle(new Rotation2d(Math.toRadians(120)));
-                  System.out.println("SET ANGLE");
                 },
                 drive));
 

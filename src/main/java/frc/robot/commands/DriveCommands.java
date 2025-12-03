@@ -167,6 +167,8 @@ public class DriveCommands {
             new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY, ANGLE_MAX_ACCELERATION));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
+    Rotation2d[] lastDesiredAngle = {null};
+
     return Commands.run(
             () -> {
               // Get linear velocity
@@ -178,11 +180,33 @@ public class DriveCommands {
               double omega;
 
               if (desiredAngle != null) {
+                Rotation2d previousAngle = lastDesiredAngle[0];
+                boolean angleChanged = false;
+
+                if (previousAngle == null) {
+                  System.out.println("previous angle being set");
+                  angleChanged = true;
+                } else {
+                  double angleDifference = Math.abs(previousAngle.minus(desiredAngle).getRadians());
+                  if (angleDifference > Math.PI) {
+                    angleDifference = 2 * Math.PI - angleDifference;
+                  }
+                  angleChanged = angleDifference > 0.001;
+                }
+
+                if (angleChanged) {
+                  System.out.println("angle changed");
+                  angleController.reset(drive.getRotation().getRadians(), 0.0);
+                  lastDesiredAngle[0] = desiredAngle;
+                }
+
                 // Use PID controller to automatically rotate to desired angle
                 omega =
                     angleController.calculate(
                         drive.getRotation().getRadians(), desiredAngle.getRadians());
               } else {
+                lastDesiredAngle[0] = null;
+
                 // Use joystick input for rotation
                 // Apply rotation deadband
                 omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
@@ -203,7 +227,11 @@ public class DriveCommands {
               drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, drive.getRotation()));
             },
             drive)
-        .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()))
+        .beforeStarting(
+            () -> {
+              angleController.reset(drive.getRotation().getRadians(), 0.0);
+              lastDesiredAngle[0] = null;
+            })
         .withName("JoystickDriveWithAutoRotation");
   }
 
