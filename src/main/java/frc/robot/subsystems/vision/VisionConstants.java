@@ -24,8 +24,7 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static final String LIMELIGHT_0_NAME =
-      RobotConfigLoader.getString("limelight.camera0.name");
+  public static final String LIMELIGHT_0_NAME = RobotConfigLoader.getString("limelight.0.name");
 
   public static final double ROBOT_TO_LIMELIGHT_0_X_METERS =
       RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.x_meters");

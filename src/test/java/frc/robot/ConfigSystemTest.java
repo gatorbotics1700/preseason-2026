@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test class to verify the configuration system works correctly. This test verifies that the
- * Constants class loads configuration values properly.
+ * configuration values are loaded properly from the properties file.
  */
 public class ConfigSystemTest {
 
@@ -32,51 +32,66 @@ public class ConfigSystemTest {
     assertNotNull(VisionConstants.LIMELIGHT_0_NAME, "Limelight camera 0 name should be loaded");
 
     // Test that tuner constants are loaded
-    assertTrue(Constants.TUNER_STEER_KP > 0, "Steer KP should be positive");
-    assertTrue(Constants.TUNER_DRIVE_KP >= 0, "Drive KP should be non-negative");
-    assertTrue(Constants.TUNER_PIGEON_ID > 0, "Pigeon ID should be positive");
+    assertTrue(RobotConfigLoader.getDouble("tuner.steer_kp") > 0, "Steer KP should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.drive_kp") >= 0, "Drive KP should be non-negative");
+    assertTrue(RobotConfigLoader.getInt("tuner.pigeon_id") > 0, "Pigeon ID should be positive");
 
     // Test that motor IDs are loaded
     assertTrue(
-        Constants.TUNER_FRONT_LEFT_DRIVE_MOTOR_ID > 0,
+        RobotConfigLoader.getInt("tuner.front_left_drive_motor_id") > 0,
         "Front left drive motor ID should be positive");
     assertTrue(
-        Constants.TUNER_FRONT_LEFT_STEER_MOTOR_ID > 0,
+        RobotConfigLoader.getInt("tuner.front_left_steer_motor_id") > 0,
         "Front left steer motor ID should be positive");
     assertTrue(
-        Constants.TUNER_FRONT_LEFT_ENCODER_ID > 0, "Front left encoder ID should be positive");
+        RobotConfigLoader.getInt("tuner.front_left_encoder_id") > 0,
+        "Front left encoder ID should be positive");
 
     // Test that module positions are loaded
     assertNotEquals(
-        0.0, Constants.TUNER_FRONT_LEFT_X_POS, "Front left X position should not be zero");
+        0.0,
+        RobotConfigLoader.getDouble("tuner.front_left_pos.x_inches"),
+        "Front left X position should not be zero");
     assertNotEquals(
-        0.0, Constants.TUNER_FRONT_LEFT_Y_POS, "Front left Y position should not be zero");
+        0.0,
+        RobotConfigLoader.getDouble("tuner.front_left_pos.y_inches"),
+        "Front left Y position should not be zero");
   }
 
   @Test
   public void testVisionConstants() {
     // Test that vision constants have reasonable values
     assertTrue(
-        Constants.LIMELIGHT_MAX_AMBIGUITY > 0 && Constants.LIMELIGHT_MAX_AMBIGUITY < 1,
+        VisionConstants.MAX_AMBIGUITY > 0 && VisionConstants.MAX_AMBIGUITY < 1,
         "Max ambiguity should be between 0 and 1");
-    assertTrue(Constants.LIMELIGHT_MAX_Z_ERROR > 0, "Max Z error should be positive");
+    assertTrue(VisionConstants.MAX_Z_ERROR > 0, "Max Z error should be positive");
     assertTrue(
-        Constants.LIMELIGHT_LINEAR_STD_DEV_BASELINE > 0,
-        "Linear std dev baseline should be positive");
+        VisionConstants.LINEAR_STD_DEV_BASELINE > 0, "Linear std dev baseline should be positive");
     assertTrue(
-        Constants.LIMELIGHT_ANGULAR_STD_DEV_BASELINE > 0,
+        VisionConstants.ANGULAR_STD_DEV_BASELINE > 0,
         "Angular std dev baseline should be positive");
   }
 
   @Test
   public void testTunerConstants() {
     // Test that tuner constants have reasonable values
-    assertTrue(Constants.TUNER_SLIP_CURRENT > 0, "Slip current should be positive");
-    assertTrue(Constants.TUNER_STATOR_CURRENT_LIMIT > 0, "Stator current limit should be
-positive");
-    assertTrue(Constants.TUNER_SPEED_AT_12_VOLTS > 0, "Speed at 12 volts should be positive");
-    assertTrue(Constants.TUNER_DRIVE_GEAR_RATIO > 0, "Drive gear ratio should be positive");
-    assertTrue(Constants.TUNER_STEER_GEAR_RATIO > 0, "Steer gear ratio should be positive");
-    assertTrue(Constants.TUNER_WHEEL_RADIUS > 0, "Wheel radius should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.slip_current_amps") > 0,
+        "Slip current should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.stator_current_limit_amps") > 0,
+        "Stator current limit should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.speed_at_12_volts_meters_per_sec") > 0,
+        "Speed at 12 volts should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.drive_gear_ratio") > 0,
+        "Drive gear ratio should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.steer_gear_ratio") > 0,
+        "Steer gear ratio should be positive");
+    assertTrue(
+        RobotConfigLoader.getDouble("tuner.wheel_radius") > 0, "Wheel radius should be positive");
   }
 }
