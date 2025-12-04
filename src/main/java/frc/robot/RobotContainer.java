@@ -259,7 +259,7 @@ public class RobotContainer {
                 },
                 drive));
 
-    Q1LeftLineup.onTrue(
+    Q1LeftLineup.onTrue( // TODO: add a log for recording error
         new InstantCommand(
                 () -> {
                   // Log lineup target directly - much simpler!
@@ -269,7 +269,6 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
                   Logger.recordOutput("Robot/LineupSide", "Q1");
                   Logger.recordOutput("Robot/IsLeftSide", true);
-                  // TODO: add a log for recording error
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
                 })

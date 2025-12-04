@@ -95,7 +95,7 @@ public class LineupCommand {
 
     // should never happen, but just in case we don't find a pose for a reef side
     if (desiredPose == null) {
-      System.out.println(
+      System.err.println(
           "***************** ERROR: No pose found for " + side + "*****************");
       return Commands.none();
     }

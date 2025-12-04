@@ -116,7 +116,7 @@ public final class RobotConfigLoader {
     } catch (UnsatisfiedLinkError | NoClassDefFoundError e) {
       // Desktop unit tests (no HAL loaded)
     } catch (Throwable t) {
-      System.out.println(
+      System.err.println(
           "RobotConfigLoader: Unable to read roboRIO serial (" + t.getMessage() + ")");
     }
 
@@ -143,7 +143,7 @@ public final class RobotConfigLoader {
       case SHENANDOAH_SERIAL -> "config_hulk.properties";
       case MISSISSIPPI_SERIAL -> "config_sting.properties";
       default -> {
-        System.out.println(
+        System.err.println(
             "RobotConfigLoader: Unknown serial '"
                 + serial
                 + "', falling back to '"
