@@ -61,7 +61,7 @@ public class TunerConstants {
   // The stator current at which the wheels start to slip;
   // This needs to be tuned to your individual robot
   private static final Current kSlipCurrent =
-      Amps.of(RobotConfigLoader.getDouble("tuner.slip_current"));
+      Amps.of(RobotConfigLoader.getDouble("tuner.slip_current_amps"));
 
   // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
@@ -74,7 +74,7 @@ public class TunerConstants {
                   // low
                   // stator current limit to help avoid brownouts without impacting performance.
                   .withStatorCurrentLimit(
-                      Amps.of(RobotConfigLoader.getDouble("tuner.stator_current_limit")))
+                      Amps.of(RobotConfigLoader.getDouble("tuner.stator_current_limit_amps")))
                   .withStatorCurrentLimitEnable(true));
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
@@ -88,7 +88,7 @@ public class TunerConstants {
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
   public static final LinearVelocity kSpeedAt12Volts =
-      MetersPerSecond.of(RobotConfigLoader.getDouble("tuner.speed_at_12_volts"));
+      MetersPerSecond.of(RobotConfigLoader.getDouble("tuner.speed_at_12_volts_meters_per_sec"));
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
@@ -99,7 +99,7 @@ public class TunerConstants {
   private static final double kSteerGearRatio =
       RobotConfigLoader.getDouble("tuner.steer_gear_ratio");
   private static final Distance kWheelRadius =
-      Inches.of(RobotConfigLoader.getDouble("tuner.wheel_radius"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.wheel_radius_inches"));
 
   private static final boolean kInvertLeftSide = false;
   private static final boolean kInvertRightSide = true;
@@ -153,16 +153,16 @@ public class TunerConstants {
   private static final int kFrontLeftEncoderId =
       RobotConfigLoader.getInt("tuner.front_left_encoder_id");
   private static final Angle kFrontLeftEncoderOffset =
-      Rotations.of(RobotConfigLoader.getDouble("tuner.front_left_encoder_offset"));
+      Rotations.of(RobotConfigLoader.getDouble("tuner.front_left_encoder_offset_rotations"));
   private static final boolean kFrontLeftSteerMotorInverted =
       RobotConfigLoader.getBoolean("tuner.front_left_steer_motor_inverted");
   private static final boolean kFrontLeftEncoderInverted =
       RobotConfigLoader.getBoolean("tuner.front_left_steer_encoder_inverted");
 
   private static final Distance kFrontLeftXPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.front_left_x_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.front_left_pos.x_inches"));
   private static final Distance kFrontLeftYPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.front_left_y_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.front_left_pos.y_inches"));
 
   // Front Right
   private static final int kFrontRightDriveMotorId =
@@ -172,16 +172,16 @@ public class TunerConstants {
   private static final int kFrontRightEncoderId =
       RobotConfigLoader.getInt("tuner.front_right_encoder_id");
   private static final Angle kFrontRightEncoderOffset =
-      Rotations.of(RobotConfigLoader.getDouble("tuner.front_right_encoder_offset"));
+      Rotations.of(RobotConfigLoader.getDouble("tuner.front_right_encoder_offset_rotations"));
   private static final boolean kFrontRightSteerMotorInverted =
       RobotConfigLoader.getBoolean("tuner.front_right_steer_motor_inverted");
   private static final boolean kFrontRightEncoderInverted =
       RobotConfigLoader.getBoolean("tuner.front_right_steer_encoder_inverted");
 
   private static final Distance kFrontRightXPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.front_right_x_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.front_right_pos.x_inches"));
   private static final Distance kFrontRightYPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.front_right_y_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.front_right_pos.y_inches"));
 
   // Back Left
   private static final int kBackLeftDriveMotorId =
@@ -191,16 +191,16 @@ public class TunerConstants {
   private static final int kBackLeftEncoderId =
       RobotConfigLoader.getInt("tuner.back_left_encoder_id");
   private static final Angle kBackLeftEncoderOffset =
-      Rotations.of(RobotConfigLoader.getDouble("tuner.back_left_encoder_offset"));
+      Rotations.of(RobotConfigLoader.getDouble("tuner.back_left_encoder_offset_rotations"));
   private static final boolean kBackLeftSteerMotorInverted =
       RobotConfigLoader.getBoolean("tuner.back_left_steer_motor_inverted");
   private static final boolean kBackLeftEncoderInverted =
       RobotConfigLoader.getBoolean("tuner.back_left_steer_encoder_inverted");
 
   private static final Distance kBackLeftXPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.back_left_x_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.back_left_pos.y_inches"));
   private static final Distance kBackLeftYPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.back_left_y_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.back_left_pos.y_inches"));
 
   // Back Right
   private static final int kBackRightDriveMotorId =
@@ -210,16 +210,16 @@ public class TunerConstants {
   private static final int kBackRightEncoderId =
       RobotConfigLoader.getInt("tuner.back_right_encoder_id");
   private static final Angle kBackRightEncoderOffset =
-      Rotations.of(RobotConfigLoader.getDouble("tuner.back_right_encoder_offset"));
+      Rotations.of(RobotConfigLoader.getDouble("tuner.back_right_encoder_offset_rotations"));
   private static final boolean kBackRightSteerMotorInverted =
       RobotConfigLoader.getBoolean("tuner.back_right_steer_motor_inverted");
   private static final boolean kBackRightEncoderInverted =
       RobotConfigLoader.getBoolean("tuner.back_right_steer_encoder_inverted");
 
   private static final Distance kBackRightXPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.back_right_x_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.back_right_pos.y_inches"));
   private static final Distance kBackRightYPos =
-      Inches.of(RobotConfigLoader.getDouble("tuner.back_right_y_pos"));
+      Inches.of(RobotConfigLoader.getDouble("tuner.back_right_pos.y_inches"));
 
   public static final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>

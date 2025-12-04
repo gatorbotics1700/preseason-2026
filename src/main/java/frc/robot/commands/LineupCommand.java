@@ -29,7 +29,7 @@ public class LineupCommand {
     Q6,
     LeftSubstation,
     RightSubstation,
-    Test
+    Test // give the robot a hardcoded pose to go to
   }
 
   public static enum YOffset {
@@ -57,7 +57,7 @@ public class LineupCommand {
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(1).get().toPose2d();
         case RightSubstation:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(2).get().toPose2d();
-        case Test:
+        case Test: // this test pose can be edited
           return new Pose2d(6, 2, new Rotation2d(0));
       }
     } else {
@@ -78,7 +78,7 @@ public class LineupCommand {
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(13).get().toPose2d();
         case RightSubstation:
           return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(12).get().toPose2d();
-        case Test:
+        case Test: // this test pose can be edited
           return new Pose2d(6, 2, new Rotation2d(0));
       }
     }
@@ -95,7 +95,8 @@ public class LineupCommand {
 
     // should never happen, but just in case we don't find a pose for a reef side
     if (desiredPose == null) {
-      System.out.println("No pose found for " + side);
+      System.out.println(
+          "***************** ERROR: No pose found for " + side + "*****************");
       return Commands.none();
     }
     // figure out our desired final lineup spot by transforming out from the tag, and

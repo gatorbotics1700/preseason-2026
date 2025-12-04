@@ -1,23 +1,9 @@
-// Copyright 2021-2025 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot.util;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.Constants;
 import frc.robot.subsystems.vision.VisionConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -180,19 +166,18 @@ public final class RobotConfigLoader {
 
   public static Transform3d createRobotToCamera0Transform() {
     return new Transform3d(
-        VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_X,
-        VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_Y,
-        VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_Z,
+        VisionConstants.ROBOT_TO_LIMELIGHT_0_X_METERS,
+        VisionConstants.ROBOT_TO_LIMELIGHT_0_Y_METERS,
+        VisionConstants.ROBOT_TO_LIMELIGHT_0_Z_METERS,
         new Rotation3d(
-            Math.toRadians(VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_ROLL),
-            Math.toRadians(VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_PITCH),
-            Math.toRadians(VisionConstants.LIMELIGHT_ROBOT_TO_CAMERA0_YAW)));
+            Math.toRadians(VisionConstants.ROBOT_TO_LIMELIGHT_0_ROLL_DEGREES),
+            Math.toRadians(VisionConstants.ROBOT_TO_LIMELIGHT_0_PITCH_DEGREES),
+            Math.toRadians(VisionConstants.ROBOT_TO_LIMELIGHT_0_YAW_DEGREES)));
   }
 
   /** Creates array of camera std dev factors from config values. */
-  public static double[] createCameraStdDevFactors() {
-    return new double[] {
-      Constants.LIMELIGHT_CAMERA0_STD_DEV_FACTOR, Constants.LIMELIGHT_CAMERA1_STD_DEV_FACTOR
-    };
+  public static double[]
+      createCameraStdDevFactors() { // can add more constants if we have more cameras
+    return new double[] {VisionConstants.LIMELIGHT_CAMERA0_STD_DEV_FACTOR};
   }
 }

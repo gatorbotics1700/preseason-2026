@@ -122,9 +122,9 @@ public class RobotContainer {
             new Vision(
                 drive,
                 new VisionIOLimelight(
-                    VisionConstants.CAMERA_0_NAME,
+                    VisionConstants.LIMELIGHT_0_NAME,
                     drive::getRotation,
-                    VisionConstants.ROBOT_TO_CAMERA_0));
+                    VisionConstants.ROBOT_TO_LIMELIGHT_0));
         break;
 
       case SIM:
@@ -141,8 +141,8 @@ public class RobotContainer {
             new Vision(
                 drive,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.CAMERA_0_NAME,
-                    VisionConstants.ROBOT_TO_CAMERA_0,
+                    VisionConstants.LIMELIGHT_0_NAME,
+                    VisionConstants.ROBOT_TO_LIMELIGHT_0,
                     drive::getPose));
         break;
 
@@ -269,6 +269,7 @@ public class RobotContainer {
                           DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
                   Logger.recordOutput("Robot/LineupSide", "Q1");
                   Logger.recordOutput("Robot/IsLeftSide", true);
+                  // TODO: add a log for recording error
                   CommandScheduler.getInstance()
                       .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
                 })

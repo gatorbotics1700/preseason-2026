@@ -24,24 +24,24 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static final String CAMERA_0_NAME = "limelight";
-
-  public static final String LIMELIGHT_CAMERA_0_NAME =
+  public static final String LIMELIGHT_0_NAME =
       RobotConfigLoader.getString("limelight.camera0.name");
-  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_X =
-      RobotConfigLoader.getDouble("limelight.robot_to_camera0.x");
-  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_Y =
-      RobotConfigLoader.getDouble("limelight.robot_to_camera0.y");
-  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_Z =
-      RobotConfigLoader.getDouble("limelight.robot_to_camera0.z");
-  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_ROLL =
-      RobotConfigLoader.getDouble("limelight.robot_to_camera0.roll");
-  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_PITCH =
-      RobotConfigLoader.getDouble("limelight.robot_to_camera0.pitch");
-  public static final double LIMELIGHT_ROBOT_TO_CAMERA0_YAW =
-      RobotConfigLoader.getDouble("limelight.robot_to_camera0.yaw");
 
-  public static Transform3d ROBOT_TO_CAMERA_0 = RobotConfigLoader.createRobotToCamera0Transform();
+  public static final double ROBOT_TO_LIMELIGHT_0_X_METERS =
+      RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.x_meters");
+  public static final double ROBOT_TO_LIMELIGHT_0_Y_METERS =
+      RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.y_meters");
+  public static final double ROBOT_TO_LIMELIGHT_0_Z_METERS =
+      RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.z_meters");
+  public static final double ROBOT_TO_LIMELIGHT_0_ROLL_DEGREES =
+      RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.roll_degrees");
+  public static final double ROBOT_TO_LIMELIGHT_0_PITCH_DEGREES =
+      RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.pitch_degrees");
+  public static final double ROBOT_TO_LIMELIGHT_0_YAW_DEGREES =
+      RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.yaw_degrees");
+
+  public static Transform3d ROBOT_TO_LIMELIGHT_0 =
+      RobotConfigLoader.createRobotToCamera0Transform();
 
   // Basic filtering thresholds
   public static double MAX_AMBIGUITY = RobotConfigLoader.getDouble("limelight.max_ambiguity");
@@ -56,10 +56,11 @@ public class VisionConstants {
 
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
-  public static double[] CAMERA_STD_DEV_FACTORS =
-      new double[] {
-        1.0, // Camera 0
-      };
+
+  public static double LIMELIGHT_CAMERA0_STD_DEV_FACTOR =
+      RobotConfigLoader.getDouble("limelight.camera0_std_dev_factor");
+
+  public static double[] CAMERA_STD_DEV_FACTORS = RobotConfigLoader.createCameraStdDevFactors();
 
   // Multipliers to apply for MegaTag 2 observations
   public static double LINEAR_STD_DEV_MEGATGAG_2_FACTOR =

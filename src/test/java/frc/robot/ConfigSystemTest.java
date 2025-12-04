@@ -2,6 +2,7 @@ package frc.robot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.RobotConfigLoader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,7 @@ public class ConfigSystemTest {
     assertNotNull(Constants.ROBOT_SERIAL_NUMBER, "Robot serial number should be loaded");
 
     // Test that limelight constants are loaded
-    assertNotNull(Constants.LIMELIGHT_CAMERA_0_NAME, "Limelight camera 0 name should be loaded");
-    assertNotNull(Constants.LIMELIGHT_CAMERA_1_NAME, "Limelight camera 1 name should be loaded");
+    assertNotNull(VisionConstants.LIMELIGHT_0_NAME, "Limelight camera 0 name should be loaded");
 
     // Test that tuner constants are loaded
     assertTrue(Constants.TUNER_STEER_KP > 0, "Steer KP should be positive");
@@ -72,7 +72,8 @@ public class ConfigSystemTest {
   public void testTunerConstants() {
     // Test that tuner constants have reasonable values
     assertTrue(Constants.TUNER_SLIP_CURRENT > 0, "Slip current should be positive");
-    assertTrue(Constants.TUNER_STATOR_CURRENT_LIMIT > 0, "Stator current limit should be positive");
+    assertTrue(Constants.TUNER_STATOR_CURRENT_LIMIT > 0, "Stator current limit should be
+positive");
     assertTrue(Constants.TUNER_SPEED_AT_12_VOLTS > 0, "Speed at 12 volts should be positive");
     assertTrue(Constants.TUNER_DRIVE_GEAR_RATIO > 0, "Drive gear ratio should be positive");
     assertTrue(Constants.TUNER_STEER_GEAR_RATIO > 0, "Steer gear ratio should be positive");
