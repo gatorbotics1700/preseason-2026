@@ -256,7 +256,9 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     Rotation2d currentDesiredAngle = getDesiredAngle();
     Logger.recordOutput(
         "Robot/Desired Angle (Degrees)",
-        currentDesiredAngle != null ? Math.toDegrees(currentDesiredAngle.getRadians()) : Double.NaN);
+        currentDesiredAngle != null
+            ? Math.toDegrees(currentDesiredAngle.getRadians())
+            : Double.NaN);
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
@@ -426,7 +428,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   public void setDesiredAngle(Rotation2d desiredAngle) {
     // Clear supplier when setting a static angle
     this.desiredAngleSupplier = null;
-    
+
     if (this.desiredAngle == null) {
       System.out.println("setting desired angle to: " + desiredAngle);
       this.desiredAngle = desiredAngle;
@@ -468,7 +470,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   }
 
   public Double getDesiredAngleDegrees() {
-    return desiredAngle != null ? Math.toDegrees(desiredAngle.getRadians()) : null;
+    Rotation2d angle = getDesiredAngle();
+    return angle != null ? Math.toDegrees(angle.getRadians()) : null;
   }
 
   public void setSlowDrive() {
