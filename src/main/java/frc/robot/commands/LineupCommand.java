@@ -94,7 +94,9 @@ public class LineupCommand {
     desiredPose =
         desiredPose.transformBy(
             new Transform2d(
-                Constants.CENTER_TO_BUMPER_EDGE, Centimeters.of(0), new Rotation2d(Degrees.of(0))));
+                Constants.CENTER_TO_BUMPER_EDGE.times(-1),
+                Centimeters.of(0),
+                new Rotation2d(Degrees.of(0))));
 
     // TODO: transform the x component of desiredPose by the distance between the center of the
     // robot and the edge of its bumpers
