@@ -40,8 +40,10 @@ public final class Constants {
 
   public static final int KRAKEN_TICKS_PER_REV = 2048;
 
-  //TODO: create a constant representing the distance between the center of the robot to the edge of the bumper, which is 40 centimeters
+  // TODO: create a constant representing the distance between the center of the robot to the edge
+  // of the bumper, which is 40 centimeters
   // left and right offsets for the poles on the reef
+  public static final Distance CENTER_TO_BUMPER_EDGE = Centimeters.of(40);
   public static final Distance CENTER_TO_POLE_OFFSET = Centimeters.of(16.5);
   public static final Distance ROBOT_RADIUS_WITH_BUMPERS = Centimeters.of(57);
 }

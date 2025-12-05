@@ -20,27 +20,45 @@ public class LineupCommand {
 
   public LineupCommand() {}
 
-  //looking at this piece of code could possibly come in handy
+  // looking at this piece of code could possibly come in handy
   public static enum YOffset {
     Left,
     Right,
     Center
   }
 
-  //TODO: write a method called getLineupTagPose that returns a Pose2d of position of the april tag we are lining up to, depending on the alliance and the side of the reef(Q1-Q6)
-  //you can get the pose of an april tag with a specific id by saying VisionConstants.APRIL_TAG_LAYOUT.getTagPose(INSERT ID NUMBER HERE).get().toPose2d()
+  // TODO: write a method called getLineupTagPose that returns a Pose2d of position of the april tag
+  // we are lining up to, depending on the alliance and the side of the reef(Q1-Q6)
+  // you can get the pose of an april tag with a specific id by saying
+  // VisionConstants.APRIL_TAG_LAYOUT.getTagPose(INSERT ID NUMBER HERE).get().toPose2d()
+  public static Pose2d getLineupTagPose(Alliance alliance, int sideOfReef) {
 
-  
-  //returns a command that drives the robot to a position on the field, based off the side of the reef we want to line up to and the current alliance
-  //TODO: add a parameter to Lineup() that helps the method determine which side of the reef you are trying to line up to
-  public static Command Lineup(YOffset yOffset) {
+    for (int i = 0; i < 6; i++) {
+      if (alliance == Alliance.Blue && sideOfReef == i + 1) {
+        return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(17 + i).get().toPose2d();
+      }
+    }
+    for (int i = 0; i < 6; i++) {
+      if (alliance == Alliance.Red && sideOfReef == i + 1) {
+        return VisionConstants.APRIL_TAG_LAYOUT.getTagPose(11 - i).get().toPose2d();
+      }
+    }
+    return new Pose2d();
+  }
+
+  // returns a command that drives the robot to a position on the field, based off the side of the
+  // reef we want to line up to and the current alliance
+  // TODO: add a parameter to Lineup() that helps the method determine which side of the reef you
+  // are trying to line up to
+  public static Command Lineup(YOffset yOffset, int sideOfReef) {
     PathConstraints constraints =
         new PathConstraints(1, 1, Units.degreesToRadians(700), Units.degreesToRadians(1000));
     // it's safe to get the alliance here, because we're calling this every
     // time a button is pressed
     Alliance alliance = DriverStation.getAlliance().get();
-    //TODO: create a variable called desiredPose that gets the pose of the april tag we want to be lining up to
-
+    // TODO: create a variable called desiredPose that gets the pose of the april tag we want to be
+    // lining up to
+    Pose2d desiredPose = getLineupTagPose(alliance, sideOfReef);
     // should never happen, but just in case we don't find a pose for a reef side
     if (desiredPose == null) {
       System.out.println("No pose found");
@@ -48,7 +66,8 @@ public class LineupCommand {
     }
     // figure out our desired final lineup spot by transforming out from the tag, and
     // rotating 180 (we want to face the reef)
-    //left and right poles of the reef are from the perspective of looking from the outside of the reef
+    // left and right poles of the reef are from the perspective of looking from the outside of the
+    // reef
     if (yOffset == YOffset.Left) {
       // Center to pole offset is negative because from april tag perspective, the left pole is in
       // the negative y direction
@@ -69,15 +88,19 @@ public class LineupCommand {
       desiredPose =
           desiredPose.transformBy(
               new Transform2d(
-                  Centimeters.of(0),
-                  Centimeters.of(0),
-                  new Rotation2d(Degrees.of(180))));
+                  Centimeters.of(0), Centimeters.of(0), new Rotation2d(Degrees.of(180))));
     }
-    
-    //TODO: transform the x component of desiredPose by the distance between the center of the robot and the edge of its bumpers
-    //look at the block of code above to see how to perform transformations
 
-    //AutoBuilder is automatically making a command that drives to the pose that you give it
+    desiredPose =
+        desiredPose.transformBy(
+            new Transform2d(
+                Constants.CENTER_TO_BUMPER_EDGE, Centimeters.of(0), new Rotation2d(Degrees.of(0))));
+
+    // TODO: transform the x component of desiredPose by the distance between the center of the
+    // robot and the edge of its bumpers
+    // look at the block of code above to see how to perform transformations
+
+    // AutoBuilder is automatically making a command that drives to the pose that you give it
     return AutoBuilder.pathfindToPose(desiredPose, constraints);
   }
 }

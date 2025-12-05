@@ -16,11 +16,9 @@ package frc.robot;
 // import frc.robot.commands.AutoDriveCommand;
 // import frc.robot.commands.TeleopDriveCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.LineupCommand;
-import frc.robot.commands.LineupCommand.ReefSide;
 import frc.robot.commands.LineupCommand.YOffset;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -91,20 +88,20 @@ public class RobotContainer {
   public RobotContainer() {
     // Named Commands
 
-    NamedCommands.registerCommand(
-        "Q1 Left Lineup",
-        new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance()
-                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
-            }));
-    NamedCommands.registerCommand(
-        "Q1 Right Lineup",
-        new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance()
-                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
-            }));
+    // NamedCommands.registerCommand(
+    //     "Q1 Left Lineup",
+    //     new InstantCommand(
+    //         () -> {
+    //           CommandScheduler.getInstance()
+    //               .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
+    //         }));
+    // NamedCommands.registerCommand(
+    //     "Q1 Right Lineup",
+    //     new InstantCommand(
+    //         () -> {
+    //           CommandScheduler.getInstance()
+    //               .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
+    //         }));
 
     // Set up robot depending on mode
     switch (Constants.currentMode) {
@@ -261,15 +258,16 @@ public class RobotContainer {
                 },
                 drive));
 
-
-    
-     Q1LeftLineup.onTrue(
-        new InstantCommand(
+    controller
+        .x()
+        .onTrue(
+            new InstantCommand(
                 () -> {
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(YOffset.Left));
+                  CommandScheduler.getInstance().schedule(LineupCommand.Lineup(YOffset.Left, 1));
                 }));
-    //TODO: bind 11 other buttons like the one above(there are six sides of the reef, the robot can line up to either the left or right of each side)
+
+    // TODO: bind 11 other buttons like the one above(there are six sides of the reef, the robot can
+    // line up to either the left or right of each side)
   }
 
   /**
