@@ -181,26 +181,20 @@ public class DriveCommands {
 
               if (desiredAngle != null) {
                 Rotation2d previousAngle = lastDesiredAngle[0];
-                boolean angleChanged = false;
 
+                // Only reset the controller when switching from no angle to an angle
+                // For continuous angle updates, let calculate() handle the changing goal
                 if (previousAngle == null) {
+                  // First time setting an angle - reset the controller
                   System.out.println("previous angle being set");
-                  angleChanged = true;
-                } else {
-                  double angleDifference = Math.abs(previousAngle.minus(desiredAngle).getRadians());
-                  if (angleDifference > Math.PI) {
-                    angleDifference = 2 * Math.PI - angleDifference;
-                  }
-                  angleChanged = angleDifference > 0.001;
+                  angleController.reset(drive.getRotation().getRadians(), 0.0);
                 }
 
-                if (angleChanged) {
-                  System.out.println("angle changed");
-                  angleController.reset(drive.getRotation().getRadians(), 0.0);
-                  lastDesiredAngle[0] = desiredAngle;
-                }
+                // Update last desired angle to track changes
+                lastDesiredAngle[0] = desiredAngle;
 
                 // Use PID controller to automatically rotate to desired angle
+                // calculate() will handle the changing goal automatically each cycle
                 omega =
                     angleController.calculate(
                         drive.getRotation().getRadians(), desiredAngle.getRadians());
