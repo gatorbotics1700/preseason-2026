@@ -1,10 +1,7 @@
 package frc.robot.util;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.subsystems.vision.VisionConstants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -15,6 +12,7 @@ public final class RobotConfigLoader {
   private static final String HUANG_HE_SERIAL = "032D20FA";
   private static final String MISSISSIPPI_SERIAL = "032D2198";
   private static final String DEFAULT_SIM_SERIAL = "SIMULATION";
+
   private static final String DEFAULT_CONFIG_FILE = "config_sting.properties";
   private static final String SERIAL_PROPERTY_KEY = "robot.serial";
   private static final String SERIAL_ENV_KEY = "ROBOT_SERIAL";
@@ -111,6 +109,7 @@ public final class RobotConfigLoader {
     try {
       String serial = normalize(RobotController.getSerialNumber());
       if (serial != null) {
+        System.out.println("Read roboRIO serial number " + serial);
         return serial;
       }
     } catch (UnsatisfiedLinkError | NoClassDefFoundError e) {
@@ -162,22 +161,5 @@ public final class RobotConfigLoader {
     }
     String trimmed = text.trim();
     return trimmed.isEmpty() ? null : trimmed;
-  }
-
-  public static Transform3d createRobotToCamera0Transform() {
-    return new Transform3d(
-        VisionConstants.ROBOT_TO_LIMELIGHT_0_X_METERS,
-        VisionConstants.ROBOT_TO_LIMELIGHT_0_Y_METERS,
-        VisionConstants.ROBOT_TO_LIMELIGHT_0_Z_METERS,
-        new Rotation3d(
-            Math.toRadians(VisionConstants.ROBOT_TO_LIMELIGHT_0_ROLL_DEGREES),
-            Math.toRadians(VisionConstants.ROBOT_TO_LIMELIGHT_0_PITCH_DEGREES),
-            Math.toRadians(VisionConstants.ROBOT_TO_LIMELIGHT_0_YAW_DEGREES)));
-  }
-
-  /** Creates array of camera std dev factors from config values. */
-  public static double[]
-      createCameraStdDevFactors() { // can add more constants if we have more cameras
-    return new double[] {VisionConstants.LIMELIGHT_CAMERA0_STD_DEV_FACTOR};
   }
 }

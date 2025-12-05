@@ -15,6 +15,7 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import frc.robot.util.RobotConfigLoader;
 
@@ -39,8 +40,7 @@ public class VisionConstants {
   public static final double ROBOT_TO_LIMELIGHT_0_YAW_DEGREES =
       RobotConfigLoader.getDouble("limelight.robot_to_limelight_0.yaw_degrees");
 
-  public static Transform3d ROBOT_TO_LIMELIGHT_0 =
-      RobotConfigLoader.createRobotToCamera0Transform();
+  public static Transform3d ROBOT_TO_LIMELIGHT_0 = createRobotToCamera0Transform();
 
   // Basic filtering thresholds
   public static double MAX_AMBIGUITY = RobotConfigLoader.getDouble("limelight.max_ambiguity");
@@ -56,10 +56,10 @@ public class VisionConstants {
   // Standard deviation multipliers for each camera
   // (Adjust to trust some cameras more than others)
 
-  public static double LIMELIGHT_CAMERA0_STD_DEV_FACTOR =
+  public static double LIMELIGHT_0_STD_DEV_FACTOR =
       RobotConfigLoader.getDouble("limelight.camera0_std_dev_factor");
 
-  public static double[] CAMERA_STD_DEV_FACTORS = RobotConfigLoader.createCameraStdDevFactors();
+  public static double[] CAMERA_STD_DEV_FACTORS = createCameraStdDevFactors();
 
   // Multipliers to apply for MegaTag 2 observations
   public static double LINEAR_STD_DEV_MEGATGAG_2_FACTOR =
@@ -67,4 +67,21 @@ public class VisionConstants {
           "limelight.linear_std_dev_megatag2_factor"); // More stable than full 3D solve
   public static double ANGULAR_STD_DEV_MEGATAG_2_FACTOR =
       RobotConfigLoader.getDouble("limelight.angular_std_dev_megatag2_factor");
+
+  public static Transform3d createRobotToCamera0Transform() {
+    return new Transform3d(
+        ROBOT_TO_LIMELIGHT_0_X_METERS,
+        ROBOT_TO_LIMELIGHT_0_Y_METERS,
+        ROBOT_TO_LIMELIGHT_0_Z_METERS,
+        new Rotation3d(
+            Math.toRadians(ROBOT_TO_LIMELIGHT_0_ROLL_DEGREES),
+            Math.toRadians(ROBOT_TO_LIMELIGHT_0_PITCH_DEGREES),
+            Math.toRadians(ROBOT_TO_LIMELIGHT_0_YAW_DEGREES)));
+  }
+
+  /** Creates array of camera std dev factors from config values. */
+  public static double[]
+      createCameraStdDevFactors() { // can add more constants if we have more cameras
+    return new double[] {LIMELIGHT_0_STD_DEV_FACTOR};
+  }
 }

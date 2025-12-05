@@ -259,7 +259,7 @@ public class RobotContainer {
                 },
                 drive));
 
-    Q1LeftLineup.onTrue( // TODO: add a log for recording error
+    Q1LeftLineup.onTrue(
         new InstantCommand(
                 () -> {
                   // Log lineup target directly - much simpler!
