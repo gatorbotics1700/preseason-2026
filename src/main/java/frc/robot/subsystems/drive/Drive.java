@@ -57,6 +57,7 @@ import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
@@ -137,6 +138,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   private Pose2d targetPose = new Pose2d();
 
   private Rotation2d desiredAngle = null;
+  private Supplier<Rotation2d> desiredAngleSupplier = null;
   private boolean slowDrive;
 
   public Drive(
@@ -251,9 +253,10 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
 
+    Rotation2d currentDesiredAngle = getDesiredAngle();
     Logger.recordOutput(
         "Robot/Desired Angle (Degrees)",
-        desiredAngle != null ? Math.toDegrees(desiredAngle.getRadians()) : Double.NaN);
+        currentDesiredAngle != null ? Math.toDegrees(currentDesiredAngle.getRadians()) : Double.NaN);
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
@@ -421,6 +424,9 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   }
 
   public void setDesiredAngle(Rotation2d desiredAngle) {
+    // Clear supplier when setting a static angle
+    this.desiredAngleSupplier = null;
+    
     if (this.desiredAngle == null) {
       System.out.println("setting desired angle to: " + desiredAngle);
       this.desiredAngle = desiredAngle;
@@ -441,8 +447,23 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     }
   }
 
+  /**
+   * Sets a supplier for the desired angle. This allows the desired angle to be calculated
+   * dynamically each cycle. The supplier will be called each time getDesiredAngle() is called.
+   */
+  public void setDesiredAngleSupplier(Supplier<Rotation2d> desiredAngleSupplier) {
+    this.desiredAngleSupplier = desiredAngleSupplier;
+    // Clear static angle when setting a supplier
+    this.desiredAngle = null;
+  }
+
   /** Returns the desired angle, or null if no angle is set. */
   public Rotation2d getDesiredAngle() {
+    // If a supplier is set, use it to get the current desired angle
+    if (desiredAngleSupplier != null) {
+      return desiredAngleSupplier.get();
+    }
+    // Otherwise, return the static stored angle
     return desiredAngle;
   }
 
