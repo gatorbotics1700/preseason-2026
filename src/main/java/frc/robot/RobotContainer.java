@@ -13,26 +13,17 @@
 
 package frc.robot;
 
-// import frc.robot.commands.AutoDriveCommand;
-// import frc.robot.commands.TeleopDriveCommand;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.LineupCommand;
-import frc.robot.commands.LineupCommand.ReefSide;
-import frc.robot.commands.LineupCommand.YOffset;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -68,44 +59,8 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  // Button Bindings
-  private final Trigger Q1LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(1));
-  private final Trigger Q1RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(2));
-
-  private final Trigger Q2LeftLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(2));
-  private final Trigger Q2RightLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(1));
-
-  private final Trigger Q3LeftLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(4));
-  private final Trigger Q3RightLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(3));
-
-  private final Trigger Q4LeftLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(6));
-  private final Trigger Q4RightLineup = new Trigger(() -> buttonBoard1B.getRawButtonPressed(5));
-
-  private final Trigger Q5LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(5));
-  private final Trigger Q5RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(6));
-
-  private final Trigger Q6LeftLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(3));
-  private final Trigger Q6RightLineup = new Trigger(() -> buttonBoard1A.getRawButtonPressed(4));
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Named Commands
-
-    NamedCommands.registerCommand(
-        "Q1 Left Lineup",
-        new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance()
-                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
-            }));
-    NamedCommands.registerCommand(
-        "Q1 Right Lineup",
-        new InstantCommand(
-            () -> {
-              CommandScheduler.getInstance()
-                  .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
-            }));
-
     // Set up robot depending on mode
     switch (Constants.currentMode) {
       case REAL:
@@ -258,206 +213,6 @@ public class RobotContainer {
                   drive.setPose(new Pose2d(4, 2, new Rotation2d(Math.toRadians(0))));
                 },
                 drive));
-
-    Q1LeftLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  // Log lineup target directly - much simpler!
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
-                  Logger.recordOutput("Robot/LineupSide", "Q1");
-                  Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Left));
-                })
-            .withName("Q1LeftLineup"));
-
-    Q1RightLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q1));
-                  Logger.recordOutput("Robot/LineupSide", "Q1");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q1, YOffset.Right));
-                })
-            .withName("Q1RightLineup"));
-
-    Q2LeftLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
-                  Logger.recordOutput("Robot/LineupSide", "Q2");
-                  Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Left));
-                })
-            .withName("Q2LeftLineup"));
-
-    Q2RightLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q2));
-                  Logger.recordOutput("Robot/LineupSide", "Q2");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q2, YOffset.Right));
-                })
-            .withName("Q2RightLineup"));
-
-    Q3LeftLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q3));
-                  Logger.recordOutput("Robot/LineupSide", "Q3");
-                  Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Left));
-                })
-            .withName("Q3LeftLineup"));
-
-    Q3RightLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q3));
-                  Logger.recordOutput("Robot/LineupSide", "Q3");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q3, YOffset.Right));
-                })
-            .withName("Q3RightLineup"));
-
-    Q4LeftLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q4));
-                  Logger.recordOutput("Robot/LineupSide", "Q4");
-                  Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Left));
-                })
-            .withName("Q4LeftLineup"));
-
-    Q4RightLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q4));
-                  Logger.recordOutput("Robot/LineupSide", "Q4");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q4, YOffset.Right));
-                })
-            .withName("Q4RightLineup"));
-
-    Q5LeftLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q5));
-                  Logger.recordOutput("Robot/LineupSide", "Q5");
-                  Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Left));
-                })
-            .withName("Q5LeftLineup"));
-
-    Q5RightLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q5));
-                  Logger.recordOutput("Robot/LineupSide", "Q5");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q5, YOffset.Right));
-                })
-            .withName("Q5RightLineup"));
-
-    Q6LeftLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q6));
-                  Logger.recordOutput("Robot/LineupSide", "Q6");
-                  Logger.recordOutput("Robot/IsLeftSide", true);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Left));
-                })
-            .withName("Q6LeftLineup"));
-
-    Q6RightLineup.onTrue(
-        new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue), ReefSide.Q6));
-                  Logger.recordOutput("Robot/LineupSide", "Q6");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.Q6, YOffset.Right));
-                })
-            .withName("Q6RightLineup"));
-
-    controller_two
-        .leftBumper()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue),
-                          ReefSide.LeftSubstation));
-                  Logger.recordOutput("Robot/LineupSide", "LeftSubstation");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.LeftSubstation, YOffset.Center));
-                }));
-    controller_two
-        .rightBumper()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  Logger.recordOutput(
-                      "Robot/TargetPose",
-                      LineupCommand.getLineupTagPose(
-                          DriverStation.getAlliance().orElse(Alliance.Blue),
-                          ReefSide.RightSubstation));
-                  Logger.recordOutput("Robot/LineupSide", "RightSubstation");
-                  Logger.recordOutput("Robot/IsLeftSide", false);
-                  CommandScheduler.getInstance()
-                      .schedule(LineupCommand.Lineup(ReefSide.RightSubstation, YOffset.Center));
-                }));
   }
 
   /**
