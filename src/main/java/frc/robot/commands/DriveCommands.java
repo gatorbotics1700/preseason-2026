@@ -194,7 +194,8 @@ public class DriveCommands {
                   if (angleDifference > Math.PI) {
                     angleDifference = 2 * Math.PI - angleDifference;
                   }
-                  // For dynamic angles (supplier), always reset each cycle since goal changes continuously
+                  // For dynamic angles (supplier), always reset each cycle since goal changes
+                  // continuously
                   // For static angles, only reset if goal changed significantly
                   if (isDynamic || angleDifference > 1e-6) {
                     goalChanged = true;
