@@ -252,6 +252,8 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    controller.a().onTrue((DriveCommands.feedforwardCharacterization(drive)));
+
     controller_two
         .back()
         .onTrue(
