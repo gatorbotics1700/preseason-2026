@@ -180,21 +180,37 @@ public class DriveCommands {
               double omega;
 
               if (desiredAngle != null) {
+                boolean isDynamic = drive.isDesiredAngleDynamic();
                 Rotation2d previousAngle = lastDesiredAngle[0];
+                boolean goalChanged = false;
 
-                // Only reset the controller when switching from no angle to an angle
-                // For continuous angle updates, let calculate() handle the changing goal
                 if (previousAngle == null) {
                   // First time setting an angle - reset the controller
                   System.out.println("previous angle being set");
-                  angleController.reset(drive.getRotation().getRadians(), 0.0);
+                  goalChanged = true;
+                } else {
+                  // Check if the goal has changed
+                  double angleDifference = Math.abs(previousAngle.minus(desiredAngle).getRadians());
+                  if (angleDifference > Math.PI) {
+                    angleDifference = 2 * Math.PI - angleDifference;
+                  }
+                  // For dynamic angles (supplier), always reset each cycle since goal changes continuously
+                  // For static angles, only reset if goal changed significantly
+                  if (isDynamic || angleDifference > 1e-6) {
+                    goalChanged = true;
+                  }
                 }
 
-                // Update last desired angle to track changes
-                lastDesiredAngle[0] = desiredAngle;
+                // If goal changed, reset the controller to update its internal state
+                // This is necessary because ProfiledPIDController maintains internal goal state
+                if (goalChanged) {
+                  // Reset with current position and zero velocity
+                  // For dynamic angles, this happens every cycle to track the changing goal
+                  angleController.reset(drive.getRotation().getRadians(), 0.0);
+                  lastDesiredAngle[0] = desiredAngle;
+                }
 
                 // Use PID controller to automatically rotate to desired angle
-                // calculate() will handle the changing goal automatically each cycle
                 omega =
                     angleController.calculate(
                         drive.getRotation().getRadians(), desiredAngle.getRadians());

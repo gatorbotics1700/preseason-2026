@@ -459,6 +459,11 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     this.desiredAngle = null;
   }
 
+  /** Returns true if a supplier is being used for the desired angle (dynamic angle). */
+  public boolean isDesiredAngleDynamic() {
+    return desiredAngleSupplier != null;
+  }
+
   /** Returns the desired angle, or null if no angle is set. */
   public Rotation2d getDesiredAngle() {
     // If a supplier is set, use it to get the current desired angle
