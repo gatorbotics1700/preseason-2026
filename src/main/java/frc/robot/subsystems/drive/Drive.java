@@ -139,6 +139,7 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   private Rotation2d desiredAngle = null;
   private Supplier<Rotation2d> desiredAngleSupplier = null;
+  private Translation2d targetPoint = null;
   private boolean slowDrive;
 
   public Drive(
@@ -492,4 +493,34 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   public Pose2d getTargetPose() {
     return targetPose;
   }
+
+  public Rotation2d angleToPoint(double deltaX, double deltaY) {
+    return new Rotation2d(Math.atan2(deltaY, deltaX));
+  }
+
+  public void facePoint(Translation2d target) {
+    this.targetPoint = target;
+    desiredAngleSupplier = 
+      () -> {
+        if (targetPoint == null){
+          return null;
+        }
+        Pose2d currentPose = getPose();
+        double deltaX = targetPoint.getX() - currentPose.getX();
+        double deltaY = targetPoint.getY() - currentPose.getY();
+        return angleToPoint(deltaX, deltaY);
+      };
+
+    desiredAngle = null;
+  }
+
+  public void clearTargetPoint(){
+    targetPoint = null;
+    desiredAngleSupplier = null;
+  }
+
+  public Translation2d getTargetPoint() {
+    return targetPoint;
+  }
+
 }
