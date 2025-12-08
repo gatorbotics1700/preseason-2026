@@ -257,8 +257,7 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   drive.setDesiredAngle(new Rotation2d(Math.toRadians(120)));
-                },
-                drive));
+                }));
 
     controller
         .y()
@@ -266,8 +265,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   drive.setDesiredAngle(new Rotation2d(Math.toRadians(-120)));
-                },
-                drive));
+                }));
 
     controller_two
         .back()

@@ -177,6 +177,7 @@ public class DriveCommands {
 
               // Check if desired angle is set (must check continuously, not just once)
               Rotation2d desiredAngle = drive.getDesiredAngle();
+              System.out.println("got desired angle: " + drive.getDesiredAngle());
               double omega;
 
               if (desiredAngle != null) {
