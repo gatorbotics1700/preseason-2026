@@ -206,7 +206,8 @@ public class RobotContainer {
                   () -> modifyJoystickAxis(controller.getLeftY(), false), // Changed to raw values
                   () -> modifyJoystickAxis(controller.getLeftX(), false), // Changed to raw values
                   () ->
-                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+                      modifyJoystickAxis(
+                          -0.75 * controller.getRightX(), false))) // Changed to raw values
           .onFalse(DriveCommands.stopDriveCommand(drive));
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       driverControl
@@ -216,7 +217,8 @@ public class RobotContainer {
                   () -> modifyJoystickAxis(-controller.getLeftY(), false), // Changed to raw values
                   () -> modifyJoystickAxis(-controller.getLeftX(), false), // Changed to raw values
                   () ->
-                      modifyJoystickAxis(-controller.getRightX(), false))) // Changed to raw values
+                      modifyJoystickAxis(
+                          -0.75 * controller.getRightX(), false))) // Changed to raw values
           .onFalse(DriveCommands.stopDriveCommand(drive));
     }
 
@@ -524,7 +526,7 @@ public class RobotContainer {
     value = deadband(value, 0.025);
 
     // Square the axis
-    value = Math.copySign(value * value, value);
+    value = Math.copySign(0.75 * Math.pow(value, 2), value);
 
     if (isSlow) {
       return 0.5 * value;
