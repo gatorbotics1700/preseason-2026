@@ -35,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   private static final double DEADBAND = 0.1;
@@ -177,6 +178,9 @@ public class DriveCommands {
 
               // Check if desired angle is set (must check continuously, not just once)
               Rotation2d desiredAngle = drive.getDesiredAngle();
+              Logger.recordOutput(
+                  "DriveCommands/DesiredAngleDegrees",
+                  desiredAngle != null ? Math.toDegrees(desiredAngle.getRadians()) : Double.NaN);
               System.out.println("got desired angle: " + drive.getDesiredAngle());
               double omega;
 
