@@ -19,6 +19,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -251,12 +252,14 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    Translation2d targetPoint = new Translation2d(4.5, 4.026);
+
     controller
         .x()
         .onTrue(
-            new InstantCommand(
+            Commands.runOnce(
                 () -> {
-                  drive.setDesiredAngle(new Rotation2d(Math.toRadians(120)));
+                  drive.facePoint(targetPoint);
                 }));
 
     controller
@@ -264,7 +267,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  drive.setDesiredAngle(new Rotation2d(Math.toRadians(-120)));
+                  drive.clearTargetPoint();
                 }));
 
     controller_two

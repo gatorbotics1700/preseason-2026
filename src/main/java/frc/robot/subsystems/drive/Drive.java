@@ -500,21 +500,21 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   public void facePoint(Translation2d target) {
     this.targetPoint = target;
-    desiredAngleSupplier = 
-      () -> {
-        if (targetPoint == null){
-          return null;
-        }
-        Pose2d currentPose = getPose();
-        double deltaX = targetPoint.getX() - currentPose.getX();
-        double deltaY = targetPoint.getY() - currentPose.getY();
-        return angleToPoint(deltaX, deltaY);
-      };
+    desiredAngleSupplier =
+        () -> {
+          if (targetPoint == null) {
+            return null;
+          }
+          Pose2d currentPose = getPose();
+          double deltaX = targetPoint.getX() - currentPose.getX();
+          double deltaY = targetPoint.getY() - currentPose.getY();
+          return angleToPoint(deltaX, deltaY);
+        };
 
     desiredAngle = null;
   }
 
-  public void clearTargetPoint(){
+  public void clearTargetPoint() {
     targetPoint = null;
     desiredAngleSupplier = null;
   }
@@ -522,5 +522,4 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   public Translation2d getTargetPoint() {
     return targetPoint;
   }
-
 }
