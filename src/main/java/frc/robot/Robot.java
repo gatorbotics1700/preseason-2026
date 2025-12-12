@@ -156,6 +156,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
+    robotContainer.teleopInit();
     // robotContainer.configureButtonBindings();
 
     // This makes sure that the autonomous stops running when teleop starts

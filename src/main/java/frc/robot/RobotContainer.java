@@ -259,7 +259,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  drive.facePoint(targetPoint);
+                  drive.enableTargetPointFacing();
                 }));
 
     controller
@@ -267,7 +267,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  drive.clearTargetPoint();
+                  drive.disableTargetPointFacing();
                 }));
 
     controller_two
@@ -556,6 +556,10 @@ public class RobotContainer {
     }
 
     return value;
+  }
+
+  public void teleopInit() {
+    drive.enableTargetPointFacing();
   }
 
   /**
