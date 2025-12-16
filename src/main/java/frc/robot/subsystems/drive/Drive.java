@@ -138,7 +138,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
 
   private Pose2d targetPose = new Pose2d();
 
-  private Rotation2d desiredAngle = null;
   private Supplier<Rotation2d> desiredAngleSupplier = null;
   private boolean shouldFaceTargetPoint = false;
   private Translation2d targetPoint = null;
@@ -432,38 +431,12 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     this.targetPose = targetPose;
   }
 
-  public void setDesiredAngle(Rotation2d desiredAngle) {
-    // Clear supplier when setting a static angle
-    this.desiredAngleSupplier = null;
-
-    if (this.desiredAngle == null) {
-      System.out.println("setting desired angle to: " + desiredAngle);
-      this.desiredAngle = desiredAngle;
-    } else {
-      double angleDifference = Math.abs(this.desiredAngle.minus(desiredAngle).getRadians());
-
-      if (angleDifference > Math.PI) {
-        angleDifference = 2 * Math.PI - angleDifference;
-      }
-
-      if (angleDifference < 0.01) {
-        System.out.println("setting desired angle back to null");
-        this.desiredAngle = null;
-      } else {
-        System.out.println("setting desired angle to: " + desiredAngle);
-        this.desiredAngle = desiredAngle;
-      }
-    }
-  }
-
   /**
    * Sets a supplier for the desired angle. This allows the desired angle to be calculated
    * dynamically each cycle. The supplier will be called each time getDesiredAngle() is called.
    */
   public void setDesiredAngleSupplier(Supplier<Rotation2d> desiredAngleSupplier) {
     this.desiredAngleSupplier = desiredAngleSupplier;
-    // Clear static angle when setting a supplier
-    this.desiredAngle = null;
   }
 
   /** Returns true if a supplier is being used for the desired angle (dynamic angle). */
@@ -477,8 +450,8 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     if (desiredAngleSupplier != null) {
       return desiredAngleSupplier.get();
     }
-    // Otherwise, return the static stored angle
-    return desiredAngle;
+    // Otherwise, no desired angle
+    return null;
   }
 
   public Double getDesiredAngleDegrees() {
@@ -534,8 +507,6 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
           double deltaY = targetPoint.getY() - currentPose.getY();
           return angleToPoint(deltaX, deltaY);
         };
-
-    desiredAngle = null;
   }
 
   public void clearTargetPoint() {
