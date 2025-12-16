@@ -46,6 +46,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -57,6 +58,7 @@ import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
@@ -135,7 +137,14 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
   private final Consumer<Pose2d> resetSimulationPoseCallBack;
 
   private Pose2d targetPose = new Pose2d();
+
+  private Supplier<Rotation2d> desiredAngleSupplier = null;
+  private boolean shouldFaceTargetPoint = false;
+  private Translation2d targetPoint = null;
   private boolean slowDrive;
+
+  private static final Translation2d RED_TARGET_POINT = new Translation2d(13, 4.026);
+  private static final Translation2d BLUE_TARGET_POINT = new Translation2d(4.5, 4.026);
 
   public Drive(
       GyroIO gyroIO,
@@ -247,6 +256,13 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
     }
+
+    Rotation2d currentDesiredAngle = getDesiredAngle();
+    Logger.recordOutput(
+        "Robot/Desired Angle (Degrees)",
+        currentDesiredAngle != null
+            ? Math.toDegrees(currentDesiredAngle.getRadians())
+            : Double.NaN);
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
@@ -415,9 +431,95 @@ public class Drive extends SubsystemBase implements Vision.VisionConsumer {
     this.targetPose = targetPose;
   }
 
+  /**
+   * Sets a supplier for the desired angle. This allows the desired angle to be calculated
+   * dynamically each cycle. The supplier will be called each time getDesiredAngle() is called.
+   */
+  public void setDesiredAngleSupplier(Supplier<Rotation2d> desiredAngleSupplier) {
+    this.desiredAngleSupplier = desiredAngleSupplier;
+  }
+
+  /** Returns true if a supplier is being used for the desired angle (dynamic angle). */
+  public boolean isDesiredAngleDynamic() {
+    return desiredAngleSupplier != null;
+  }
+
+  /** Returns the desired angle, or null if no angle is set. */
+  public Rotation2d getDesiredAngle() {
+    // If a supplier is set, use it to get the current desired angle
+    if (desiredAngleSupplier != null) {
+      return desiredAngleSupplier.get();
+    }
+    // Otherwise, no desired angle
+    return null;
+  }
+
+  public Double getDesiredAngleDegrees() {
+    Rotation2d angle = getDesiredAngle();
+    return angle != null ? Math.toDegrees(angle.getRadians()) : null;
+  }
+
   /** Logs the target pose from lineup commands to AdvantageScope. */
   @AutoLogOutput(key = "Robot/TargetPose")
   public Pose2d getTargetPose() {
     return targetPose;
+  }
+
+  public Rotation2d angleToPoint(double deltaX, double deltaY) {
+    return new Rotation2d(Math.atan2(deltaY, deltaX));
+  }
+
+  public void enableTargetPointFacing() {
+    Translation2d allianceTargetPoint = getAllianceTargetPoint();
+    if (allianceTargetPoint != null) {
+      this.targetPoint = allianceTargetPoint;
+      this.shouldFaceTargetPoint = true;
+      updateDesiredAngleSupplier();
+    }
+  }
+
+  private Translation2d getAllianceTargetPoint() {
+    if (DriverStation.getAlliance().isPresent()) {
+      return DriverStation.getAlliance().get() == Alliance.Red
+          ? RED_TARGET_POINT
+          : BLUE_TARGET_POINT;
+    }
+    return null;
+  }
+
+  public void disableTargetPointFacing() {
+    desiredAngleSupplier = null;
+  }
+
+  private void updateDesiredAngleSupplier() {
+    if (targetPoint == null || !shouldFaceTargetPoint) {
+      desiredAngleSupplier = null;
+      return;
+    }
+
+    desiredAngleSupplier =
+        () -> {
+          if (targetPoint == null || !shouldFaceTargetPoint) {
+            return null;
+          }
+          Pose2d currentPose = getPose();
+          double deltaX = targetPoint.getX() - currentPose.getX();
+          double deltaY = targetPoint.getY() - currentPose.getY();
+          return angleToPoint(deltaX, deltaY);
+        };
+  }
+
+  public void clearTargetPoint() {
+    targetPoint = null;
+    shouldFaceTargetPoint = false;
+    desiredAngleSupplier = null;
+  }
+
+  public Translation2d getTargetPoint() {
+    return targetPoint;
+  }
+
+  public boolean isShouldFaceTargetPoint() {
+    return shouldFaceTargetPoint;
   }
 }

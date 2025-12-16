@@ -191,6 +191,7 @@ public class RobotContainer {
    */
   public void configureButtonBindings() {
     // Default command, normal field-relative drive
+    // Uses joystickDriveAtAngle when desiredAngle is set, otherwise uses joystickDrive
     Trigger driverControl =
         new Trigger(
             () ->
@@ -201,7 +202,7 @@ public class RobotContainer {
     if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
       driverControl
           .whileTrue(
-              DriveCommands.joystickDrive(
+              DriveCommands.joystickDriveWithAutoRotation(
                   drive,
                   () -> modifyJoystickAxis(controller.getLeftY()), // Changed to raw values
                   () -> modifyJoystickAxis(controller.getLeftX()), // Changed to raw values
@@ -210,7 +211,7 @@ public class RobotContainer {
     } else if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Blue) {
       driverControl
           .whileTrue(
-              DriveCommands.joystickDrive(
+              DriveCommands.joystickDriveWithAutoRotation(
                   drive,
                   () -> modifyJoystickAxis(-controller.getLeftY()), // Changed to raw values
                   () -> modifyJoystickAxis(-controller.getLeftX()), // Changed to raw values
@@ -250,12 +251,37 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    controller
+        .x()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drive.enableTargetPointFacing();
+                }));
+
+    controller
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drive.disableTargetPointFacing();
+                }));
+
     controller_two
         .back()
         .onTrue(
             Commands.runOnce(
                 () -> {
                   drive.setPose(new Pose2d(4, 2, new Rotation2d(Math.toRadians(0))));
+                },
+                drive));
+
+    controller
+        .rightBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  drive.setSlowDrive();
                 },
                 drive));
 
@@ -505,6 +531,10 @@ public class RobotContainer {
     }
 
     return value;
+  }
+
+  public void teleopInit() {
+    drive.enableTargetPointFacing();
   }
 
   /**
