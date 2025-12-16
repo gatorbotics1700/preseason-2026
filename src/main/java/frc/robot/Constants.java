@@ -17,15 +17,27 @@ import static edu.wpi.first.units.Units.Centimeters;
 
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.util.RobotConfigLoader;
 
 /**
- * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
- * on a roboRIO. Change the value of "simMode" to switch between "sim" (physics sim) and "replay"
- * (log replay from a file).
+ * This class defines the runtime mode used by AdvantageKit and loads robot-specific configuration
+ * based on the roboRIO serial number. The mode is always "real" when running on a roboRIO. Change
+ * the value of "simMode" to switch between "sim" (physics sim) and "replay" (log replay from a
+ * file).
  */
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+  // Robot identification
+  public static final String ROBOT_SERIAL_NUMBER;
+
+  // Vision Constants (loaded from config)
+
+  static {
+    // Load configuration based on roboRIO serial number (auto-loads on first access)
+    ROBOT_SERIAL_NUMBER = RobotConfigLoader.getSerialNumber();
+  }
 
   public static enum Mode {
     /** Running on a real robot. */
