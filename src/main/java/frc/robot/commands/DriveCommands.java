@@ -162,10 +162,10 @@ public class DriveCommands {
     // Create PID controller for automatic rotation control (only used when desiredAngle is set)
     ProfiledPIDController angleController =
         new ProfiledPIDController(
-            ANGLE_KP * 9,
+            ANGLE_KP * 3,
             0.0,
             ANGLE_KD,
-            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY * 9, ANGLE_MAX_ACCELERATION * 9));
+            new TrapezoidProfile.Constraints(ANGLE_MAX_VELOCITY * 12, ANGLE_MAX_ACCELERATION * 12));
     angleController.enableContinuousInput(-Math.PI, Math.PI);
 
     Rotation2d[] lastDesiredAngle = {null};
